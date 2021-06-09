@@ -15,9 +15,10 @@ plt.close('all')
 get_ipython().magic('reset -sf')
 
 img = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Speckle_4-65-90-210-270_100pi_cm.png")
-height = img.shape[0]
-width = img.shape[1]
-
+heightpi = img.shape[0]
+widthpi = img.shape[1]
+height=29.7e-2#hauteur en m de l'image de reference
+width=21e-2#largeur en m de l'image de reference
 #Angles
 gamma = 80.0 #angle entre capteur et plan aile (deg)
 theta = 90.0-gamma #Angle entre normale capteur et plan aile (deg)
@@ -69,10 +70,10 @@ originR=originB/delta3 #Origine du plan rouge (projection de l'origine bleu sur 
 
 PntPrjtOnPng = np.zeros((4, 2),np.float32)
 POIOnPng = np.zeros((4, 2),np.float32)
-POIOnPng[:, 0] = (height/new_height)*POI[:, 1]+height/2
-POIOnPng[:, 1] = (width/new_width)*POI[:, 2]+width/2
-PntPrjtOnPng[:, 0] = (height/new_height)*Pntprojection[:, 1]+height/2
-PntPrjtOnPng[:, 1] = (width/new_width)*Pntprojection[:, 2]+width/2
+POIOnPng[:, 0] = (heightpi/new_height)*POI[:, 1]+heightpi/2
+POIOnPng[:, 1] = (widthpi/new_width)*POI[:, 2]+widthpi/2
+PntPrjtOnPng[:, 0] = (heightpi/new_height)*Pntprojection[:, 1]+heightpi/2
+PntPrjtOnPng[:, 1] = (widthpi/new_width)*Pntprojection[:, 2]+widthpi/2
 
 passage_horizontal_incline=np.array([[np.cos(gamma*np.pi/180), 0, -np.sin(gamma*np.pi/180)],
                                      [0,                      1,                       0],
@@ -90,20 +91,20 @@ hauteur = np.sqrt((Pntprojection[0,0]-Pntprojection[1,0])**2+(Pntprojection[0,1]
 largeur = np.sqrt((Pntprojection[1,0]-Pntprojection[2,0])**2+(Pntprojection[1,1]
         -Pntprojection[2,1])**2+(Pntprojection[1,2]-Pntprojection[2,2])**2)
 
-C=np.array([width/2, (B[0]-A[0])/hauteur * height])
+C=np.array([[widthpi/2, (B[0]-A[0])/hauteur * heightpi],
+           [(60e-2)/largeur * widthpi + widthpi/2, (B[0]-A[0])/hauteur * heightpi/2],
+           [widthpi/2, 0],
+           [-(60e-2)/largeur * widthpi + widthpi/2, (B[0]-A[0])/hauteur * heightpi/2]])
 
 PntPrjtOnPng2 = np.zeros((4, 2),np.float32)
 POIOnPng2 = np.zeros((4, 2),np.float32)
-POIOnPng2[:, 0] = (height/new_height)*POI[:, 1]+height/2
-POIOnPng2[:, 1] = (width/new_width)*POI[:, 2]+width/2
-PntPrjtOnPng2[:, 0] = (height/new_height)*PntprojCoorplanR[:, 1]+height/2
-PntPrjtOnPng2[:, 1] = (width/new_width)*PntprojCoorplanR[:, 2]+width/2
-# U=np.zeros((4, 2),np.float32)
-# V=np.zeros((4, 2),np.float32)
-# for i in range(0,4):
-#     for j in range(0,2):
-#         U[i,j]=PntprojCoorplanR[i,j+1]
-#         V[i,j]=POI[i,j+1]
+CadreAileOnPng = np.zeros((4, 2),np.float32)
+POIOnPng2[:, 0] = (heightpi/new_height)*POI[:, 1]+heightpi/2
+POIOnPng2[:, 1] = (widthpi/new_width)*POI[:, 2]+widthpi/2
+PntPrjtOnPng2[:, 0] = (heightpi/new_height)*PntprojCoorplanR[:, 1]+heightpi/2
+PntPrjtOnPng2[:, 1] = (widthpi/new_width)*PntprojCoorplanR[:, 2]+widthpi/2
+CadreAileOnPng[:, 0] = (heightpi/new_height)*CadreAile[:, 1]+heightpi/2
+CadreAileOnPng[:, 1] = (widthpi/new_width)*CadreAile[:, 2]+widthpi/2
 
 # Matrice de passage reference-deformée
 tform = cv2.getPerspectiveTransform(POIOnPng, PntPrjtOnPng)
@@ -112,12 +113,18 @@ tform2 = cv2.getPerspectiveTransform(POIOnPng2, PntPrjtOnPng2)
 delta2 = (xa*B[0]+ya*B[1]+za*B[2])/d
 D=B/delta2
 ratio=(np.sqrt((D[0]-A[0])**2+(D[1]-A[1])**2+(D[2]-A[2])**2))/(np.sqrt((B[0]-A[0])**2+(B[1]-A[1])**2+(B[2]-A[2])**2))
-
+ratio2=hauteur/np.sqrt((POI[2,0]-POI[2,1])**2)
 #Déformation image de reference
-tf_img_warp = cv2.warpPerspective(img, tform, (int(width), int(height)))
-tf_img_warp2 = cv2.warpPerspective(img, tform2, (int(width*2.5), int(height)*25))
+new_heightpi = heightpi*hauteur/height
+new_widthpi = widthpi*largeur/width
+
+tf_img_warp = cv2.warpPerspective(img, tform, (int(widthpi), int(heightpi)))
+tf_img_warp2 = cv2.warpPerspective(img, tform2, (int(new_widthpi), int(new_heightpi)))
+
 #cv2.imwrite('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Deformeecv2100pi_cmBoutdaile2.png', tf_img_warp)#Enregistrement de l'image déformée
-imgresize=tf_img_warp[0:int(C[1]), 0:tf_img_warp.shape[0]]
+imgresize=tf_img_warp[int(C[2,1]):int(C[0,1]), int(C[3,0]):int(C[1,0])]
+imgresize2=tf_img_warp2[int(C[2,1]):int(C[0,1]), int(C[3,0]):int(C[1,0])]
+
 #cv2.imwrite('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Deformeecv2100pi_cmBoutdAileResize2.png', imgresize)#Enregistrement de l'image déformée
 ##------------------------------AFFICHAGE-----------------------------------##
 fig = plt.figure(1)
@@ -135,9 +142,9 @@ ax.plot_surface(xgp, ygp, zplane, rstride=10, cstride=10, color='r', alpha=0.2)
 ax.set_xlabel('X')
 ax.set_ylabel('Y')
 ax.set_zlabel('Z')
-#ax.axes.set_xlim3d(left=0, right=8)
+ax.axes.set_xlim3d(left=0, right=7)
 ax.axes.set_ylim3d(bottom=-1, top=1)
-#ax.axes.set_zlim3d(bottom=-0.6, top=1)
+ax.axes.set_zlim3d(bottom=-0.6, top=4)
 plt.show()
 
 plt.figure(2)
@@ -150,7 +157,7 @@ plt.show()
 
 plt.figure(3)
 plt.imshow(tf_img_warp, origin='lower')
-#plt.plot(C[0],C[1], marker='+', color='red')
+plt.plot(C[:,0],C[:,1], marker='+', color='red')
 plt.xlabel('Columns')
 plt.ylabel('Rows')
 plt.title('Déformée')
@@ -158,7 +165,7 @@ plt.show()
 
 plt.figure(4)
 plt.imshow(imgresize, origin='lower')
-plt.plot(C[0],C[1], marker='+', color='red')
+plt.scatter(C[:,0],C[:,1], marker='+', color='red')
 plt.xlabel('Columns')
 plt.ylabel('Rows')
 plt.title('imgresize')
@@ -166,8 +173,16 @@ plt.show()
 
 plt.figure(5)
 plt.imshow(tf_img_warp2, origin='lower')
-plt.plot(C[0],C[1], marker='+', color='red')
+plt.scatter(C[:,0],C[:,1], marker='+', color='red')
 plt.xlabel('Columns')
 plt.ylabel('Rows')
 plt.title('Avec rotation')
+plt.show()
+
+plt.figure(6)
+plt.imshow(imgresize2, origin='lower')
+plt.scatter(C[:,0],C[:,1], marker='+', color='red')
+plt.xlabel('Columns')
+plt.ylabel('Rows')
+plt.title('Avec coordonnées réelles projetées resize')
 plt.show()
