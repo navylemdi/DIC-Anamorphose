@@ -14,6 +14,18 @@ from cv2 import cv2
 plt.close('all')
 get_ipython().magic('reset -sf')
 
+def Pix2Meter(Pospix, image, Lim_inf_H, Lim_max_H, Lim_inf_V, Lim_max_V):
+    Posmet = np.zeros((len(Pospix),2),np.float32)
+    Posmet[:, 0] = (Lim_max_V-Lim_inf_V)*Pospix[:,0]/image.shape[0]+Lim_inf_V
+    Posmet[:, 1] = (Lim_max_H-Lim_inf_H)*Pospix[:,1]/image.shape[1]+Lim_inf_H
+    return Posmet
+
+def Meter2Pix(Posmet, image, Lim_inf_H, Lim_max_H, Lim_inf_V, Lim_max_V):
+    Pospix = np.zeros((len(Posmet),2), np.float32)
+    Pospix[:, 0] = image.shape[0]*(Posmet[:,0]-Lim_inf_V)/(Lim_max_V-Lim_inf_V)
+    Pospix[:, 1] = image.shape[1]*(Posmet[:,1]-Lim_inf_H)/(Lim_max_H-Lim_inf_H)
+    return Pospix
+
 img = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Speckle_4-65-90-210-270_100pi_cm.png")
 heightpi = img.shape[0]
 widthpi = img.shape[1]
@@ -68,12 +80,8 @@ Pntprojection = POI/delta[:, None]# Coordonnées des points projetés
 delta3=(a*originB[0]+b*originB[1]+c*originB[2])/dprim
 originR=originB/delta3 #Origine du plan rouge (projection de l'origine bleu sur plan incliné)
 
-PntPrjtOnPng = np.zeros((4, 2),np.float32)
-POIOnPng = np.zeros((4, 2),np.float32)
-POIOnPng[:, 0] = (heightpi/new_height)*POI[:, 1]+heightpi/2
-POIOnPng[:, 1] = (widthpi/new_width)*POI[:, 2]+widthpi/2
-PntPrjtOnPng[:, 0] = (heightpi/new_height)*Pntprojection[:, 1]+heightpi/2
-PntPrjtOnPng[:, 1] = (widthpi/new_width)*Pntprojection[:, 2]+widthpi/2
+PntPrjtOnPng = Meter2Pix(Pntprojection[:, 1:3], img, -new_height/2, new_height/2, -new_width/2, new_width/2)#np.zeros((4, 2),np.float32)
+POIOnPng = Meter2Pix(POI[:, 1:3], img, -new_height/2, new_height/2, -new_width/2, new_width/2)#np.zeros((4, 2),np.float32)
 
 passage_horizontal_incline=np.array([[np.cos(gamma*np.pi/180), 0, -np.sin(gamma*np.pi/180)],
                                      [0,                      1,                       0],
@@ -96,15 +104,9 @@ C=np.array([[widthpi/2, (B[0]-A[0])/hauteur * heightpi],
            [widthpi/2, 0],
            [-(60e-2)/largeur * widthpi + widthpi/2, (B[0]-A[0])/hauteur * heightpi/2]])
 
-PntPrjtOnPng2 = np.zeros((4, 2),np.float32)
-POIOnPng2 = np.zeros((4, 2),np.float32)
-CadreAileOnPng = np.zeros((4, 2),np.float32)
-POIOnPng2[:, 0] = (heightpi/new_height)*POI[:, 1]+heightpi/2
-POIOnPng2[:, 1] = (widthpi/new_width)*POI[:, 2]+widthpi/2
-PntPrjtOnPng2[:, 0] = (heightpi/new_height)*PntprojCoorplanR[:, 1]+heightpi/2
-PntPrjtOnPng2[:, 1] = (widthpi/new_width)*PntprojCoorplanR[:, 2]+widthpi/2
-CadreAileOnPng[:, 0] = (heightpi/new_height)*CadreAile[:, 1]+heightpi/2
-CadreAileOnPng[:, 1] = (widthpi/new_width)*CadreAile[:, 2]+widthpi/2
+PntPrjtOnPng2 = Meter2Pix(PntprojCoorplanR[:, 1:3], img, -new_height/2, new_height/2, -new_width/2, new_width/2)#np.zeros((4, 2),np.float32)
+POIOnPng2 = Meter2Pix(POI[:, 1:3], img, -new_height/2, new_height/2, -new_width/2, new_width/2)#np.zeros((4, 2),np.float32)
+CadreAileOnPng = Meter2Pix(CadreAile[:, 1:3], img, -new_height/2, new_height/2, -new_width/2, new_width/2)# np.zeros((4, 2),np.float32)
 
 # Matrice de passage reference-deformée
 tform = cv2.getPerspectiveTransform(POIOnPng, PntPrjtOnPng)
