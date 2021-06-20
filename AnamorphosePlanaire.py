@@ -14,6 +14,8 @@ from cv2 import cv2
 plt.close('all')
 get_ipython().magic('reset -sf')
 
+##--------------------------------FONCTIONS----------------------------------##
+
 def Pix2Meter(Pospix, image, Lim_inf_H, Lim_max_H, Lim_inf_V, Lim_max_V):
     Posmet = np.zeros((len(Pospix),2),np.float32)
     Posmet[:, 0] = (Lim_max_V-Lim_inf_V)*Pospix[:,0]/image.shape[0]+Lim_inf_V
@@ -25,6 +27,9 @@ def Meter2Pix(Posmet, image, Lim_inf_H, Lim_max_H, Lim_inf_V, Lim_max_V):
     Pospix[:, 0] = image.shape[0]*(Posmet[:,0]-Lim_inf_V)/(Lim_max_V-Lim_inf_V)
     Pospix[:, 1] = image.shape[1]*(Posmet[:,1]-Lim_inf_H)/(Lim_max_H-Lim_inf_H)
     return Pospix
+##------------------------------FIN FONCTIONS--------------------------------##
+
+##-------------------------------CONSTANTES----------------------------------##
 
 img = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Speckle_4-65-90-210-270_100pi_cm.png")
 heightpi = img.shape[0]
@@ -72,6 +77,10 @@ POI = np.array([[d, -new_width/2, -new_height/2],
                 [d, -new_width/2, new_height/2],
                 [d, new_width/2, new_height/2],
                 [d, new_width/2, -new_height/2]], np.float32)
+
+##------------------------------FIN CONSTANTES-------------------------------##
+
+##---------------------------------WARPING-----------------------------------##
 
 originB = np.array([d, 0, 0], np.float32)#milieu du plan de l'image de reference
 delta = (a*POI[:, 0]+b*POI[:, 1]+c*POI[:, 2])/dprim
@@ -128,6 +137,8 @@ imgresize=tf_img_warp[int(C[2,1]):int(C[0,1]), int(C[3,0]):int(C[1,0])]
 imgresize2=tf_img_warp2[int(C[2,1]):int(C[0,1]), int(C[3,0]):int(C[1,0])]
 
 #cv2.imwrite('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Deformeecv2100pi_cmBoutdAileResize2.png', imgresize)#Enregistrement de l'image déformée
+##-----------------------------FIN WARPING-----------------------------------##
+
 ##------------------------------AFFICHAGE-----------------------------------##
 fig = plt.figure(1)
 ax = fig.add_subplot(111, projection='3d')
