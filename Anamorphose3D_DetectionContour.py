@@ -20,10 +20,10 @@ plt.close('all')
 
 ##--------------------------------FONCTIONS----------------------------------##
 
-def Pix2Meter(Pospix, image, Lim_inf_H, Lim_max_H, Lim_inf_V, Lim_max_V):
+def Pix2Meter(Pospix, image, Lim_inf_H, Lim_max_H, Lim_inf_V, Lim_max_V, CentreH, CentreV):
     Posmet = np.zeros((len(Pospix),2), np.float32)
-    Posmet[:, 1] = ((Lim_max_V-Lim_inf_V)*Pospix[:,1])/image.shape[0] + Lim_inf_V
-    Posmet[:, 0] = ((Lim_max_H-Lim_inf_H)*Pospix[:,0])/image.shape[1] + Lim_inf_H
+    Posmet[:, 1] = ((Lim_max_V-Lim_inf_V)*Pospix[:,1])/image.shape[0] + Lim_inf_V + CentreV
+    Posmet[:, 0] = ((Lim_max_H-Lim_inf_H)*Pospix[:,0])/image.shape[1] + Lim_inf_H + CentreH
     return Posmet
 
 def Meter2Pix(Posmet, image, Lim_inf_H, Lim_max_H, Lim_inf_V, Lim_max_V):
@@ -36,12 +36,14 @@ def Meter2Pix(Posmet, image, Lim_inf_H, Lim_max_H, Lim_inf_V, Lim_max_V):
 
 ##-------------------------------CONSTANTES----------------------------------##
 
-saut = 200 #Taille du saut de point dans la liste contours
+saut = 50 #Taille du saut de point dans la liste contours
 debut = 2 #Debut des boucles for pour les projections
-height = 30e-2#29.7e-2#hauteur en m de l'image de reference(m)
-width = 15e-2#21e-2#largeur en m de l'image de reference(m)
+height = 29.7e-2 #29.7e-2#hauteur en m de l'image de reference(m)
+width = 21e-2 #21e-2#largeur en m de l'image de reference(m)
 WingWidth = 60e-2 #largeur zone analyse de l'aile (m)
 WingHeight = 3 #hauteur zone analyse de l'aile (m)
+CentreH = 0.1 #Position horizontale du centre du speckle de référence
+CentreV = 0 #Position verticale du centre du speckle de référence
 
 image = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Speckle_4-65-90-210-270_100pi_cm.png")
 #cv2.imshow('Reference', image)
@@ -59,15 +61,16 @@ C1 = np.array([[(B[0]+A[0])/2, (WingWidth)/2, (B[2]+A[2])/2],
                [(B[0]+A[0])/2, (-WingWidth)/2, (B[2]+A[2])/2]])
 CadreAile = np.vstack((A, B, C1))#Points qui definissent les limites spatiales de l'aile
 
-D = np.array([[CadreAile[0, 0]**2, CadreAile[0, 1]**2, CadreAile[0, 2]],
-              [CadreAile[1, 0]**2, CadreAile[1, 1]**2, CadreAile[1, 2]],
-              [CadreAile[2, 0]**2, CadreAile[2, 1]**2, CadreAile[2, 2]]])
-E = np.array([-1,-1,-1])
+# D = np.array([[CadreAile[0, 0]**2, CadreAile[0, 1]**2, CadreAile[0, 2]],
+#               [CadreAile[1, 0]**2, CadreAile[1, 1]**2, CadreAile[1, 2]],
+#               [CadreAile[2, 0]**2, CadreAile[2, 1]**2, CadreAile[2, 2]]])
+# E = np.array([-1,-1,-1])
+
 #Plane aile - normal vector
-a = -0.02#np.sin(theta*np.pi/180)#
-b = 1#-np.sin(theta*np.pi/180)#np.linalg.solve(D,E)[1]
-c = 1#np.cos(theta*np.pi/180)#np.linalg.solve(D,E)[2]#
-dprim = a*A[0]**2+b*A[1]**2+c*A[2]
+a = -np.sin(theta*np.pi/180)# -0.02#
+b = 0#-np.sin(theta*np.pi/180)#np.linalg.solve(D,E)[1]
+c = np.cos(theta*np.pi/180)#1#np.linalg.solve(D,E)[2]#
+dprim = a*A[0]**1+b*A[1]**1+c*A[2]
 
 #Plane 1 - normal vector
 xa = 1
@@ -75,16 +78,16 @@ ya = 0
 za = 0
 d = A[0]#7.52928#
 
-POI = np.array([[d, -width/2, -height/2],
-                [d, -width/2, height/2],
-                [d, width/2, height/2],
-                [d, width/2, -height/2]], np.float32)
+# POI = np.array([[d, -width/2, -height/2],
+#                 [d, -width/2, height/2],
+#                 [d, width/2, height/2],
+#                 [d, width/2, -height/2]], np.float32)
 Pospix = np.array([[0, 0],
                    [0, image.shape[0]],
                    [image.shape[1], 0],
                    [image.shape[1], image.shape[0]]])
 
-Cadre = Pix2Meter(Pospix, image, -width/2, width/2, height/2, -height/2)
+Cadre = Pix2Meter(Pospix, image, -width/2, width/2, height/2, -height/2, CentreH, CentreV)
 
 #Creation des plans dans l'espace centré sur le centre optique
 yg1, zg1 = np.meshgrid(np.arange(-width/2, width/2, width/50),
@@ -92,7 +95,7 @@ yg1, zg1 = np.meshgrid(np.arange(-width/2, width/2, width/50),
 xg1 = (d-ya*yg1-za*zg1)/xa
 xgp, ygp = np.meshgrid(np.arange(A[0], B[0], (B[0]-A[0])/10),
                        np.arange(-WingWidth/2, WingWidth/2, WingWidth/10))
-zplane = (dprim-b*ygp**2-a*xgp**2)/c #A modifier avec l'equation de surface
+zplane = (dprim-b*ygp**1-a*xgp**1)/c #A modifier avec l'equation de surface
 
 ##------------------------------FIN CONSTANTES-------------------------------##
 
@@ -112,15 +115,17 @@ contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE,
 ##--------------------------------PROJECTION---------------------------------##
 
 x, y, z = Symbol('x'), Symbol('y'), Symbol('z')
-F = a*x**2+ b*(y)**2 + c*z - dprim #Fonction de surface 3D F(x,y,z) = 0 où (x,y,z) appartient à la surface 3D
+F = a*x**1+ b*(y)**1 + c*z - dprim #Fonction de surface 3D F(x,y,z) = 0 où (x,y,z) appartient à la surface 3D
 delta1 = Symbol('delta1', positive=True)
 
 # Transformation coordonées contours repère 2D en repère 3D
 contours3D = [None]*len(contours)
 for i in range(debut, len(contours), saut):
+    #Opencv met l'ordonnée en premiere position des tableau et l'abscisse en seconde
+    #C'est pour ca que les indices semblent inversés (H<->V) mais c'est normal
     contours3D[i] = np.empty( [len(contours[i]), 3], dtype=np.float32)
     temp = Pix2Meter(contours[i][:, 0], image,  -height/2, height/2,
-                     -width/2, width/2)
+                      -width/2, width/2, CentreV, CentreH)
     contours3D[i][:, 0] = d
     contours3D[i][:, 1] = temp[:, 1]
     contours3D[i][:, 2] = temp[:, 0]
@@ -131,15 +136,15 @@ print('Début calcul projection')
 start = time.time()
 for i in range(debut, len(contours), saut):
     Pntprojection[i] = np.empty( [len(contours[i]), 3], dtype=np.float32)
-    sys.stdout.write('\r' + str(round((i/(len(contours)-1))*100,2)) + '% ')
+    sys.stdout.write('\r' + str(round((i/(len(contours)-1))*100,2)) + '% ')#Affichage pourcentage de l'avancement
     for j in range(len(contours3D[i])):
         try:
-            sol = solve( F.subs([(x, contours3D[i][j,0]/delta1), (y, contours3D[i][j,1]/delta1), (z, contours3D[i][j,2]/delta1)]), delta1)[0]
+            sol = solve( F.subs([(x, contours3D[i][j,0]/delta1), (y, contours3D[i][j,1]/delta1), (z, contours3D[i][j,2]/delta1)]), delta1)[0]#Résolution de l'equation f(x/delta, y/delta, z/delta) = 0 avec delta l'inconnue
             Pntprojection[i][j,:] = contours3D[i][j,:]/sol# Coordonnées dans l'espace des points projetés
         except IndexError: 
-            print("Il n'existe pas de solution pour les cercles. Vérifier l'equation de la surface")
+            print("\nIl n'existe pas de solution pour les cercles. Vérifier l'equation de la surface")
     sys.stdout.flush()
-print('Fin calcul projection')
+print('\nFin calcul projection')
 end = time.time()
 print('Temps ecoulé: ', time.strftime("%H:%M:%S", time.gmtime(end-start)))
 
@@ -157,7 +162,7 @@ print('Début dépliage')
 start = time.time()
 for i in range(debut, len(contours), saut):
     UnfoldedPnt[i] = np.empty( [len(contours[i]), 3], dtype=np.float32)
-    sys.stdout.write('\r' + str(round((i/(len(contours)-1))*100,2)) + '% ')
+    sys.stdout.write('\r' + str(round((i/(len(contours)-1))*100,2)) + '% ')#Affichage pourcentage de l'avancement
     for j in range(len(contours3D[i])):
         NormalVector = np.array(GradF.subs([(x, Pntprojection[i][j, 0]), (y, Pntprojection[i][j, 1]), (z, Pntprojection[i][j, 2])])).astype(np.float64)/np.linalg.norm(np.array(GradF.subs([(x, Pntprojection[i][j, 0]), (y, Pntprojection[i][j, 1]), (z, Pntprojection[i][j, 2])])).astype(np.float64))
         v = np.cross(np.squeeze(NormalVector), ProjVector)
@@ -167,7 +172,8 @@ for i in range(debut, len(contours), saut):
                           [-v[1], v[0], 0]])
         rotation_matrix = np.eye(3) + kmat + kmat.dot(kmat) * (1/(1+c))
         UnfoldedPnt[i][j, :] = np.dot(rotation_matrix, Pntprojection[i][j, :])
-print('Fin dépliage')
+    sys.stdout.flush()
+print('\nFin dépliage')
 end = time.time()
 print('Temps ecoulé: ', time.strftime("%H:%M:%S", time.gmtime(end-start)))
 
@@ -190,12 +196,12 @@ ax.scatter(0, 0, 0, color='b')
 for i in range (debut, len(contours), saut):
     ax.plot(contours3D[i][:, 0], contours3D[i][:, 1], contours3D[i][:, 2], color='k', marker=None)
     ax.plot(Pntprojection[i][:, 0], Pntprojection[i][:, 1], Pntprojection[i][:, 2], color='k', marker=None)
-    #ax.plot(PntprojCoorplanR[i][:, 0], PntprojCoorplanR[i][:, 1], PntprojCoorplanR[i][:, 2], color='r', marker=None)
+    #ax.plot(UnfoldedPnt[i][:, 0], UnfoldedPnt[i][:, 1], -UnfoldedPnt[i][:, 2], color='r', marker=None)
 ax.plot_surface(xg1, yg1, zg1, color='b', alpha=0.5)
 ax.plot_surface(xgp, ygp, zplane, color='r', alpha=0.5)
-#ax.scatter(CadreAile[:,0], CadreAile[:,1], CadreAile[:,2], color='r')
+ax.scatter(CadreAile[:,0], CadreAile[:,1], CadreAile[:,2], color='r')
 ax.scatter([d]*4, Cadre[:,0], Cadre[:,1], color='r')
-ax.scatter(POI[:,0], POI[:,1], POI[:,2])
+#ax.scatter(POI[:,0], POI[:,1], POI[:,2])
 ax.set_xlabel('X')
 ax.set_ylabel('Y')
 ax.set_zlabel('Z')
@@ -207,8 +213,17 @@ for i in range(debut, len(contours), saut):
       plt.plot(UnfoldedPnt[i][:, 1], -UnfoldedPnt[i][:, 2], color='black')
       plt.fill(UnfoldedPnt[i][:, 1], -UnfoldedPnt[i][:, 2], color='black')
 plt.title('Dépliée')
-plt.axis('equal')
+#plt.axis('equal')
 plt.grid()
 plt.show()
+
+# fig4=plt.figure(4)
+# for i in range(debut, len(contours), saut):
+#       plt.plot(Pntprojection[i][:, 1], Pntprojection[i][:, 0], color='black')
+#       plt.fill(Pntprojection[i][:, 1], Pntprojection[i][:, 0], color='black')
+# plt.title('Dépliée')
+# #plt.axis('equal')
+# plt.grid()
+# plt.show()
 ##----------------------------FIN AFFICHAGE----------------------------------##
 
