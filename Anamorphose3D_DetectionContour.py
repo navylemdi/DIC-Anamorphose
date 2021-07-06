@@ -36,14 +36,16 @@ def Meter2Pix(Posmet, image, Lim_inf_H, Lim_max_H, Lim_inf_V, Lim_max_V):
 
 ##-------------------------------CONSTANTES----------------------------------##
 
-saut = 50 #Taille du saut de point dans la liste contours
+saut = 100 #Taille du saut de point dans la liste contours
 debut = 2 #Debut des boucles for pour les projections
 height = 29.7e-2 #29.7e-2#hauteur en m de l'image de reference(m)
 width = 21e-2 #21e-2#largeur en m de l'image de reference(m)
 WingWidth = 60e-2 #largeur zone analyse de l'aile (m)
 WingHeight = 3 #hauteur zone analyse de l'aile (m)
 CentreH = 0.1 #Position horizontale du centre du speckle de référence
-CentreV = 0 #Position verticale du centre du speckle de référence
+CentreV = -0.1 #Position verticale du centre du speckle de référence
+heightPrintable = 27.9e-2
+widthPrintable = 21.6e-2
 
 image = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Speckle_4-65-90-210-270_100pi_cm.png")
 #cv2.imshow('Reference', image)
@@ -156,7 +158,7 @@ print('Temps ecoulé: ', time.strftime("%H:%M:%S", time.gmtime(end-start)))
 #rotation est ensuite appliqué sur la position du point donné pour obtenir un
 #point déplié sur un plan horizontal
 GradF = sym.Matrix([sym.diff(F,x), sym.diff(F,y), sym.diff(F,z)]) #Gradient (vecteur normal) de la surface obtenu à partir de l'equation de la surface
-ProjVector = np.array([1, 0, 0])#Direction de dépliage de la surface 3D
+ProjVector = np.array([-1, 0, 0])#Direction de dépliage de la surface 3D
 UnfoldedPnt = [None]*len(contours)
 print('Début dépliage')
 start = time.time()
@@ -177,6 +179,20 @@ print('\nFin dépliage')
 end = time.time()
 print('Temps ecoulé: ', time.strftime("%H:%M:%S", time.gmtime(end-start)))
 
+#Dépliage du cadre de l'aile
+CadreAileUnfolded = np.zeros((4,3))
+for i in range(4):
+    NormalVector = np.array(GradF.subs([(x, CadreAile[i,0]), (y, CadreAile[i, 1]), (z, CadreAile[i, 2])])).astype(np.float64)/np.linalg.norm(np.array(GradF.subs([(x, CadreAile[i,0]), (y, CadreAile[i,1]), (z, CadreAile[i,2])])).astype(np.float64))
+    v = np.cross(np.squeeze(NormalVector), ProjVector)
+    c = np.dot(np.squeeze(NormalVector), ProjVector)
+    kmat = np.array([[0, -v[2], v[1]], 
+                     [v[2], 0, -v[0]], 
+                     [-v[1], v[0], 0]])
+    rotation_matrix = np.eye(3) + kmat + kmat.dot(kmat) * (1/(1+c))
+    CadreAileUnfolded[i,:] = np.dot(rotation_matrix, CadreAile[i,:])
+    
+yf, zf  = np.meshgrid(np.arange(min(CadreAileUnfolded[:,1]), max(CadreAileUnfolded[:,1]) + widthPrintable, widthPrintable), np.arange(min(CadreAileUnfolded[:,2]), max(CadreAileUnfolded[:,2]) + heightPrintable, heightPrintable))
+NbFeuille = (yf.shape[1]-1) * (zf.shape[0]-1)
 ##------------------------------FIN DEPLIAGE---------------------------------##
 
 ##--------------------------------AFFICHAGE----------------------------------##
@@ -210,12 +226,40 @@ plt.show()
 
 fig3=plt.figure(3)
 for i in range(debut, len(contours), saut):
-      plt.plot(UnfoldedPnt[i][:, 1], -UnfoldedPnt[i][:, 2], color='black')
-      plt.fill(UnfoldedPnt[i][:, 1], -UnfoldedPnt[i][:, 2], color='black')
+      plt.plot(UnfoldedPnt[i][:, 1], UnfoldedPnt[i][:, 2], color='black')
+      plt.fill(UnfoldedPnt[i][:, 1], UnfoldedPnt[i][:, 2], color='black')
+plt.scatter(CadreAileUnfolded[:,1], CadreAileUnfolded[:,2], color='red', marker='+')
+plt.scatter( yf, zf, marker='+', color='blue')
+for i in range (yf.shape[0]-1):
+    for j in range (yf.shape[1]-1):
+        plt.text((yf[i,j]+yf[i,j+1])/2, (zf[i,j]+zf[i+1,j])/2, str((i+1)*(j+1)), color='black')
 plt.title('Dépliée')
 #plt.axis('equal')
 plt.grid()
 plt.show()
+
+for i in range (yf.shape[0]-1):
+    for j in range (yf.shape[1]-1):
+        fig = plt.figure((i+1)*(j+1)+4)
+        fig.set_size_inches(widthPrintable/0.0254, heightPrintable/0.0254)
+        ax = fig.add_subplot(111, aspect='equal')
+        axe = plt.gca()
+        x_axis = axe.axes.get_xaxis()
+        x_axis.set_visible(False)
+        y_axis = axe.axes.get_yaxis()
+        y_axis.set_visible(False)
+        for l in range(debut, len(contours), saut):
+            plt.plot(UnfoldedPnt[l][:, 1], UnfoldedPnt[l][:, 2], color='black')
+            plt.fill(UnfoldedPnt[l][:, 1], UnfoldedPnt[l][:, 2], color='black')
+        plt.scatter(CadreAileUnfolded[:,1], CadreAileUnfolded[:,2], color='red', marker='+')
+        plt.scatter(yf, zf, marker='+', color='blue')
+        plt.axis('equal')
+        plt.xlim(yf[0][j], yf[0][j+1])
+        plt.ylim(zf[i][0], zf[i+1][0])
+        plt.box(False)
+        #plt.show()
+        plt.close(fig)
+        fig.savefig('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/AnamorphosePlane/ImagePrintable/Image'+str(i+1)+','+str(j+1)+'.pdf', bbox_inches='tight')
 
 # fig4=plt.figure(4)
 # for i in range(debut, len(contours), saut):
