@@ -11,6 +11,7 @@ import Fonction
 import time
 import sys
 from sympy.solvers import solve
+import matplotlib.pyplot as plt
 
 class Feuille:
     
@@ -83,3 +84,11 @@ class Feuille:
         print('Temps ecoulé: ', time.strftime("%H:%M:%S", time.gmtime(end-start)))
         return UnfoldedPnt
     
+    def Affichage_reference(self, debut, saut, n, gcolor):
+        fig=plt.figure(n)
+        ax = fig.add_subplot(111, aspect='equal')
+        for i in range(debut, len(self.contours), saut):
+            plt.plot(self.contours[i][:, 0][:, 0], self.contours[i][:, 0][:, 1], marker=None, color=gcolor)
+            ax.fill(self.contours[i][:, 0][:, 0], self.contours[i][:, 0][:, 1], gcolor,zorder=10)
+        plt.title('Image référence '+ str(n) +' (pix)')
+        plt.show()
