@@ -9,26 +9,27 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sympy as sym
 from sympy import Symbol
-from IPython import get_ipython
+#from IPython import get_ipython
 import cv2 as cv2
 from Feuille import Feuille
 import Fonction
 
-get_ipython().magic('reset -sf')
+#get_ipython().magic('reset -sf')
 plt.close('all')
 
 ##-------------------------------CONSTANTES----------------------------------##
 
-saut = 1 #Taille du saut de point dans la liste contours
+saut = 100 #Taille du saut de point dans la liste contours
 debut = 2 #Debut des boucles for pour les projections
+debut2 = 4
 height = 27e-2 #29.7e-2#hauteur en m de l'image de reference(m)
 width = 21e-2 #21e-2#largeur en m de l'image de reference(m)
 WingWidth = 60e-2 #largeur zone analyse de l'aile (m)
 WingHeight = 3 #hauteur zone analyse de l'aile (m)
-CentreH1 = 0.1 #Position horizontale du centre du speckle de référence
-CentreV1 = -0.1 #Position verticale du centre du speckle de référence
-CentreH2 = -0.1 #Position horizontale du centre du speckle de référence
-CentreV2 = -0.1 #Position verticale du centre du speckle de référence
+CentreH1 = 0.1 #Position horizontale du centre du speckle de référence 1
+CentreV1 = -0.1 #Position verticale du centre du speckle de référence 1
+CentreH2 = -0.1 #Position horizontale du centre du speckle de référence 2
+CentreV2 = -0.1 #Position verticale du centre du speckle de référence 2
 heightPrintable = 27.9e-2
 widthPrintable = 21.6e-2
 
@@ -48,11 +49,6 @@ B = np.array([A[0] + (5.5-2.5)*np.cos(beta*np.pi/180), 0, A[2] + (5.5-2.5)*np.si
 C1 = np.array([[(B[0]+A[0])/2, (WingWidth)/2, (B[2]+A[2])/2],
                [(B[0]+A[0])/2, (-WingWidth)/2, (B[2]+A[2])/2]])
 CadreAile = np.vstack((A, B, C1))#Points qui definissent les limites spatiales de l'aile
-
-# D = np.array([[CadreAile[0, 0]**2, CadreAile[0, 1]**2, CadreAile[0, 2]],
-#               [CadreAile[1, 0]**2, CadreAile[1, 1]**2, CadreAile[1, 2]],
-#               [CadreAile[2, 0]**2, CadreAile[2, 1]**2, CadreAile[2, 2]]])
-# E = np.array([-1,-1,-1])
 
 #Plane aile - normal vector
 a = -np.sin(theta*np.pi/180)# -0.02#
@@ -81,18 +77,24 @@ xgp, ygp = np.meshgrid(np.arange(A[0], B[0], (B[0]-A[0])/10),
                        np.arange(-WingWidth/2, WingWidth/2, WingWidth/10))
 zplane = (dprim-b*ygp**1-a*xgp**1)/c #A modifier avec l'equation de surface
 
-##------------------------------FIN CONSTANTES-------------------------------##
-
-##--------------------------------PROJECTION---------------------------------##
-
 x, y, z = Symbol('x'), Symbol('y'), Symbol('z')
 F = a*x**1+ b*(y)**1 + c*z - dprim #Fonction de surface 3D F(x,y,z) = 0 où (x,y,z) appartient à la surface 3D
 delta1 = Symbol('delta1', positive=True)
 
+
+##------------------------------FIN CONSTANTES-------------------------------##
+
+##---------------------------------FEUILLES----------------------------------##
+
 Feuille1 = Feuille(CentreH1, CentreV1, image1, height, width, debut, saut, d)
-Feuille2 = Feuille(CentreH2, CentreV2, image2, height, width, debut, saut, d)
+Feuille2 = Feuille(CentreH2, CentreV2, image2, height, width, debut2, saut, d)
+
+##-----------------------------FIN FEUILLES----------------------------------##
+
+##--------------------------------PROJECTION---------------------------------##
+
 Pntprojection1 = Feuille1.projection(debut, saut, F, x, y, z, delta1)
-Pntprojection2 = Feuille2.projection(debut, saut, F, x, y, z, delta1)
+Pntprojection2 = Feuille2.projection(debut2, saut, F, x, y, z, delta1)
 
 ##------------------------------FIN PROJECTION-------------------------------##
 
@@ -105,7 +107,7 @@ GradF = sym.Matrix([sym.diff(F,x), sym.diff(F,y), sym.diff(F,z)]) #Gradient (vec
 ProjVector = np.array([-1, 0, 0])#Direction de dépliage de la surface 3D
 
 UnfoldedPnt1 = Feuille1.depliage(debut, saut, x, y, z, GradF, ProjVector, Pntprojection1)
-UnfoldedPnt2 = Feuille2.depliage(debut, saut, x, y, z, GradF, ProjVector, Pntprojection2)
+UnfoldedPnt2 = Feuille2.depliage(debut2, saut, x, y, z, GradF, ProjVector, Pntprojection2)
 
 #Dépliage du cadre de l'aile
 CadreAileUnfolded = np.zeros((4,3))
@@ -135,9 +137,9 @@ plt.scatter(Pospix[:,0],Pospix[:,1], marker ='+')
 plt.title('Image référence (pix)')
 plt.show()
 
-fig5=plt.figure(5)
-ax = fig5.add_subplot(111, aspect='equal')
-for i in range(debut, len(Feuille2.contours), saut):
+fig0=plt.figure(0)
+ax = fig0.add_subplot(111, aspect='equal')
+for i in range(debut2, len(Feuille2.contours), saut):
     plt.plot(Feuille2.contours[i][:, 0][:, 0], Feuille2.contours[i][:, 0][:, 1], marker=None, color='blue')
     ax.fill(Feuille2.contours[i][:, 0][:, 0], Feuille2.contours[i][:, 0][:, 1],'b',zorder=10)
 plt.scatter(Pospix[:,0],Pospix[:,1], marker ='+')
@@ -151,7 +153,7 @@ for i in range (debut, len(Feuille1.contours), saut):
     ax.plot(Feuille1.contours3D[i][:, 0], Feuille1.contours3D[i][:, 1], Feuille1.contours3D[i][:, 2], color='k', marker=None)
     ax.plot(Pntprojection1[i][:, 0], Pntprojection1[i][:, 1], Pntprojection1[i][:, 2], color='k', marker=None)
     
-for i in range(debut, len(Feuille2.contours), saut):
+for i in range(debut2, len(Feuille2.contours), saut):
     ax.plot(Feuille2.contours3D[i][:, 0], Feuille2.contours3D[i][:, 1], Feuille2.contours3D[i][:, 2], color='b', marker=None)
     ax.plot(Pntprojection2[i][:, 0], Pntprojection2[i][:, 1], Pntprojection2[i][:, 2], color='b', marker=None)
     #ax.plot(UnfoldedPnt[i][:, 0], UnfoldedPnt[i][:, 1], -UnfoldedPnt[i][:, 2], color='r', marker=None)
@@ -170,7 +172,8 @@ fig3=plt.figure(3)
 for i in range(debut, len(Feuille1.contours), saut):
       plt.plot(UnfoldedPnt1[i][:, 1], UnfoldedPnt1[i][:, 2], color='black')
       plt.fill(UnfoldedPnt1[i][:, 1], UnfoldedPnt1[i][:, 2], color='black')
-for i in range(debut, len(Feuille2.contours), saut):
+      
+for i in range(debut2, len(Feuille2.contours), saut):
       plt.plot(UnfoldedPnt2[i][:, 1], UnfoldedPnt2[i][:, 2], color='blue')
       plt.fill(UnfoldedPnt2[i][:, 1], UnfoldedPnt2[i][:, 2], color='blue')     
 plt.scatter(CadreAileUnfolded[:,1], CadreAileUnfolded[:,2], color='red', marker='+')
@@ -198,7 +201,7 @@ for i in range (yf.shape[0]-1):
         for l in range(debut, len(Feuille1.contours), saut):
             plt.plot(UnfoldedPnt1[l][:, 1], UnfoldedPnt1[l][:, 2], color='black')
             plt.fill(UnfoldedPnt1[l][:, 1], UnfoldedPnt1[l][:, 2], color='black')
-        for l in range(debut, len(Feuille2.contours), saut):
+        for l in range(debut2, len(Feuille2.contours), saut):
             plt.plot(UnfoldedPnt2[l][:, 1], UnfoldedPnt2[l][:, 2], color='black')
             plt.fill(UnfoldedPnt2[l][:, 1], UnfoldedPnt2[l][:, 2], color='black')
         plt.scatter(CadreAileUnfolded[:,1], CadreAileUnfolded[:,2], color='red', marker='+')
