@@ -19,7 +19,7 @@ plt.close('all')
 
 ##-------------------------------CONSTANTES----------------------------------##
 
-saut = 10 #Taille du saut de point dans la liste contours
+saut = 500 #Taille du saut de point dans la liste contours
 
 debut = 1 #Debut des boucles for pour les projections
 debut2 = 1
@@ -231,7 +231,7 @@ plt.show()
 for i in range (yf.shape[0]-1):
     for j in range (yf.shape[1]-1):
         fig = plt.figure((i+1)*(j+1)+6)
-        fig.set_size_inches(widthPrintable/0.0254*1.28, heightPrintable/0.0254*1.28)
+        fig.set_size_inches(widthPrintable/0.0254, heightPrintable/0.0254)
         ax = fig.add_subplot(111, aspect='equal')
         axe = plt.gca()
         x_axis = axe.axes.get_xaxis()
@@ -258,6 +258,7 @@ for i in range (yf.shape[0]-1):
         plt.box(False)
         #plt.show()
         plt.close(fig)
-        fig.savefig('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/AnamorphosePlane/ImagePrintable/Image'+str(i+1)+','+str(j+1)+'.pdf', bbox_inches='tight')
+        fig.tight_layout()
+        fig.savefig('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/AnamorphosePlane/ImagePrintable/Image'+str(i+1)+','+str(j+1)+'.pdf')
         
 ##------------------------Fin Decoupage Impression---------------------------##
