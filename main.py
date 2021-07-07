@@ -19,13 +19,13 @@ plt.close('all')
 
 ##-------------------------------CONSTANTES----------------------------------##
 
-saut = 500 #Taille du saut de point dans la liste contours
+saut = 1 #Taille du saut de point dans la liste contours
 
 debut = 1 #Debut des boucles for pour les projections
 debut2 = 1
 debut3 = 1
 debut4 = 2
-debut5 = 0
+debut5 = 2
 
 height = 21e-2#27e-2 #29.7e-2#hauteur en m de l'image de reference(m)
 width = 27e-2#21e-2 #21e-2#largeur en m de l'image de reference(m)
@@ -155,23 +155,6 @@ NbFeuille = (yf.shape[1]-1) * (zf.shape[0]-1)
 
 ##--------------------------------AFFICHAGE----------------------------------##
 
-# fig1=plt.figure(1)
-# ax = fig1.add_subplot(111, aspect='equal')
-# for i in range(debut, len(Feuille1.contours), saut):
-#     plt.plot(Feuille1.contours[i][:, 0][:, 0], Feuille1.contours[i][:, 0][:, 1], marker=None, color='black')
-#     ax.fill(Feuille1.contours[i][:, 0][:, 0], Feuille1.contours[i][:, 0][:, 1],'k',zorder=10)
-# #plt.scatter(Pospix[:,0],Pospix[:,1], marker ='+')
-# plt.title('Image référence (pix)')
-# plt.show()
-
-# fig0=plt.figure(0)
-# ax = fig0.add_subplot(111, aspect='equal')
-# for i in range(debut2, len(Feuille2.contours), saut):
-#     plt.plot(Feuille2.contours[i][:, 0][:, 0], Feuille2.contours[i][:, 0][:, 1], marker=None, color='blue')
-#     ax.fill(Feuille2.contours[i][:, 0][:, 0], Feuille2.contours[i][:, 0][:, 1],'b',zorder=10)
-# plt.scatter(Pospix[:,0],Pospix[:,1], marker ='+')
-# plt.title('Image référence (pix)')
-# plt.show()
 Feuille1.Affichage_reference(debut, saut, 1, 'k')
 Feuille2.Affichage_reference(debut2, saut, 2, 'b')
 Feuille3.Affichage_reference(debut3, saut, 3, 'y')
@@ -243,42 +226,45 @@ plt.ylim(min(CadreAileUnfolded[:,2]), max(CadreAileUnfolded[:,2]))
 plt.grid()
 plt.show()
 
-##--------------------------Decoupage Impression-----------------------------##
+##-----------------------------FIN AFFICHAGE---------------------------------##
 
-# for i in range (yf.shape[0]-1):
-#     for j in range (yf.shape[1]-1):
-#         fig = plt.figure((i+1)*(j+1)+7)
-#         fig.set_size_inches(widthPrintable/0.0254, heightPrintable/0.0254)
-#         ax = fig.add_subplot(111, aspect='equal')
-#         axe = plt.gca()
-#         x_axis = axe.axes.get_xaxis()
-#         x_axis.set_visible(False)
-#         y_axis = axe.axes.get_yaxis()
-#         y_axis.set_visible(False)
-#         for l in range(debut, len(Feuille1.contours), saut):
-#             plt.plot(UnfoldedPnt1[l][:, 1], UnfoldedPnt1[l][:, 2], color='k')
-#             plt.fill(UnfoldedPnt1[l][:, 1], UnfoldedPnt1[l][:, 2], color='k')
-#         for l in range(debut2, len(Feuille2.contours), saut):
-#             plt.plot(UnfoldedPnt2[l][:, 1], UnfoldedPnt2[l][:, 2], color='b')
-#             plt.fill(UnfoldedPnt2[l][:, 1], UnfoldedPnt2[l][:, 2], color='b')
-#         for l in range(debut3, len(Feuille3.contours), saut):
-#             plt.plot(UnfoldedPnt3[l][:, 1], UnfoldedPnt3[l][:, 2], color='y')
-#             plt.fill(UnfoldedPnt3[l][:, 1], UnfoldedPnt3[l][:, 2], color='y')
-#         for l in range(debut4, len(Feuille4.contours), saut):
-#             plt.plot(UnfoldedPnt4[l][:, 1], UnfoldedPnt4[l][:, 2], color='r')
-#             plt.fill(UnfoldedPnt4[l][:, 1], UnfoldedPnt4[l][:, 2], color='r')
-#         for l in range(debut5, len(Feuille5.contours), saut):
-#             plt.plot(UnfoldedPnt5[l][:, 1], UnfoldedPnt5[l][:, 2], color='g')
-#             plt.fill(UnfoldedPnt5[l][:, 1], UnfoldedPnt5[l][:, 2], color='g')
-#         plt.scatter(CadreAileUnfolded[:,1], CadreAileUnfolded[:,2], color='c', marker='+')
-#         plt.scatter(yf, zf, marker='+', color='m')
-#         plt.axis('equal')
-#         plt.xlim(yf[0][j], yf[0][j+1])
-#         plt.ylim(zf[i][0], zf[i+1][0])
-#         plt.box(False)
-#         #plt.show()
-#         plt.close(fig)
-#         fig.tight_layout()
-#         fig.savefig('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/AnamorphosePlane/ImagePrintable/Image'+str(i+1)+','+str(j+1)+'.pdf')
+##--------------------------DECOUPAGE IMPRESSION-----------------------------##
+#Decoupe la derniere figure en morceau de taille (widthPrintable,heightPrintable)
+#pour pouvoir l'imprimer facilement
+for i in range (yf.shape[0]-1):
+    for j in range (yf.shape[1]-1):
+        fig = plt.figure((i+1)*(j+1)+7)
+        fig.set_size_inches(widthPrintable/0.0254, heightPrintable/0.0254)
+        ax = fig.add_subplot(111, aspect='equal')
+        axe = plt.gca()
+        x_axis = axe.axes.get_xaxis()
+        x_axis.set_visible(False)
+        y_axis = axe.axes.get_yaxis()
+        y_axis.set_visible(False)
+        for l in range(debut, len(Feuille1.contours), saut):
+            plt.plot(UnfoldedPnt1[l][:, 1], UnfoldedPnt1[l][:, 2], color='k')
+            plt.fill(UnfoldedPnt1[l][:, 1], UnfoldedPnt1[l][:, 2], color='k')
+        for l in range(debut2, len(Feuille2.contours), saut):
+            plt.plot(UnfoldedPnt2[l][:, 1], UnfoldedPnt2[l][:, 2], color='b')
+            plt.fill(UnfoldedPnt2[l][:, 1], UnfoldedPnt2[l][:, 2], color='b')
+        for l in range(debut3, len(Feuille3.contours), saut):
+            plt.plot(UnfoldedPnt3[l][:, 1], UnfoldedPnt3[l][:, 2], color='y')
+            plt.fill(UnfoldedPnt3[l][:, 1], UnfoldedPnt3[l][:, 2], color='y')
+        for l in range(debut4, len(Feuille4.contours), saut):
+            plt.plot(UnfoldedPnt4[l][:, 1], UnfoldedPnt4[l][:, 2], color='r')
+            plt.fill(UnfoldedPnt4[l][:, 1], UnfoldedPnt4[l][:, 2], color='r')
+        for l in range(debut5, len(Feuille5.contours), saut):
+            plt.plot(UnfoldedPnt5[l][:, 1], UnfoldedPnt5[l][:, 2], color='g')
+            plt.fill(UnfoldedPnt5[l][:, 1], UnfoldedPnt5[l][:, 2], color='g')
+        plt.scatter(CadreAileUnfolded[:,1], CadreAileUnfolded[:,2], color='c', marker='+')
+        plt.scatter(yf, zf, marker='+', color='m')
+        plt.axis('equal')
+        plt.xlim(yf[0][j], yf[0][j+1])
+        plt.ylim(zf[i][0], zf[i+1][0])
+        plt.box(False)
+        #plt.show()
+        plt.close(fig)
+        fig.tight_layout()#Supprime les marges
+        fig.savefig('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/AnamorphosePlane/ImagePrintable/Image'+str(i+1)+','+str(j+1)+'.pdf')
         
-##------------------------Fin Decoupage Impression---------------------------##
+##------------------------FIN DECOUPAGE IMPRESSION---------------------------##
