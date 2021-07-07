@@ -31,7 +31,7 @@ def Meter2Pix(Posmet, image, Lim_inf_H, Lim_max_H, Lim_inf_V, Lim_max_V):
 
 ##-------------------------------CONSTANTES----------------------------------##
 
-saut = 1 #Taille du saut de point dans la liste contours
+saut = 500 #Taille du saut de point dans la liste contours
 debut = 2 #Debut des boucles for pour les projections
 height = 27.9e-2#29.7e-2#hauteur en m de l'image de reference(m)
 width = 21.6e-2#21e-2#largeur en m de l'image de reference(m)
@@ -83,7 +83,7 @@ zplane = (dprim-b*ygp-a*xgp)/c
 ##------------------------------FIN CONSTANTES-------------------------------##
 
 ##--------------------------------CONTOURS-----------------------------------##
-image = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Speckle_4-65-90-210-270_100pi_cm.png")
+image = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Banque_Speckle/speckle_1.png")
 #cv2.imshow('Reference', image)
 image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 #cv2.imshow('Gray scale', image_gray)
@@ -159,7 +159,7 @@ plt.title('Image référence et projetée 3D (m)')
 plt.show()
 
 fig3 = plt.figure(3)
-fig3.set_size_inches(width/0.0254, height/0.0254)
+fig3.set_size_inches(WingWidth/0.0254, WingHeight/0.0254)
 ax = fig3.add_subplot(111, aspect='equal')
 axe = plt.gca()
 x_axis = axe.axes.get_xaxis()
@@ -177,7 +177,8 @@ plt.ylim( min(CadreAileCoorPlanR[:,2]), max(CadreAileCoorPlanR[:,2]) )
 plt.box(False)
 plt.grid()
 plt.show()
-fig3.savefig("SpeckleAnamorphose(m)LETTERCTA.pdf", bbox_inches='tight')
+fig3.tight_layout()
+fig3.savefig("SpeckleAnamorphose(m)LETTERCTA.pdf")
 
 # fig4 = plt.figure(4)
 # ax = fig4.add_subplot(111, aspect='equal')

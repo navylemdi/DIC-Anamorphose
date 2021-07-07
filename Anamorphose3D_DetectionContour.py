@@ -259,7 +259,8 @@ for i in range (yf.shape[0]-1):
         plt.box(False)
         #plt.show()
         plt.close(fig)
-        fig.savefig('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/AnamorphosePlane/ImagePrintable/Image'+str(i+1)+','+str(j+1)+'.pdf', bbox_inches='tight')
+        fig.tight_layout()
+        fig.savefig('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/AnamorphosePlane/ImagePrintable/Image'+str(i+1)+','+str(j+1)+'.pdf')
 
 # fig4=plt.figure(4)
 # for i in range(debut, len(contours), saut):

@@ -25,6 +25,7 @@ debut = 1 #Debut des boucles for pour les projections
 debut2 = 1
 debut3 = 1
 debut4 = 2
+debut5 = 0
 
 height = 21e-2#27e-2 #29.7e-2#hauteur en m de l'image de reference(m)
 width = 27e-2#21e-2 #21e-2#largeur en m de l'image de reference(m)
@@ -39,6 +40,8 @@ image1 = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Banque_Sp
 image2 = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Banque_Speckle/speckle_2.png")
 image3 = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Banque_Speckle/speckle_3.png")
 image4 = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Banque_Speckle/speckle_4.png")
+image5 = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Banque_Speckle/speckle_5.png")
+
 #cv2.imshow('Reference', image)
 
 #Angles
@@ -62,6 +65,8 @@ CentreH3 = CentreH1 #Position horizontale du centre du speckle de référence 3
 CentreV3 = height + CentreV1 #Position verticale du centre du speckle de référence 3
 CentreH4 = CentreH2 #Position horizontale du centre du speckle de référence 4
 CentreV4 = CentreV3 #Position verticale du centre du speckle de référence 4
+CentreH5 = CentreH2-width #Position horizontale du centre du speckle de référence 4
+CentreV5 = CentreV2 #Position verticale du centre du speckle de référence 4
 #Plane aile - normal vector
 a = -np.sin(theta*np.pi/180)# -0.02#
 b = 0#-np.sin(theta*np.pi/180)#np.linalg.solve(D,E)[1]
@@ -80,9 +85,10 @@ Pospix = np.array([[0, 0],
                    [image1.shape[1], image1.shape[0]]])
 
 Cadre1 = Fonction.Pix2Meter(Pospix, image1, -width/2, width/2, height/2, -height/2, CentreH1, CentreV1)
-Cadre2 = Fonction.Pix2Meter(Pospix, image1, -width/2, width/2, height/2, -height/2, CentreH2, CentreV2)
-Cadre3 = Fonction.Pix2Meter(Pospix, image1, -width/2, width/2, height/2, -height/2, CentreH3, CentreV3)
-Cadre4 = Fonction.Pix2Meter(Pospix, image1, -width/2, width/2, height/2, -height/2, CentreH4, CentreV4)
+Cadre2 = Fonction.Pix2Meter(Pospix, image2, -width/2, width/2, height/2, -height/2, CentreH2, CentreV2)
+Cadre3 = Fonction.Pix2Meter(Pospix, image3, -width/2, width/2, height/2, -height/2, CentreH3, CentreV3)
+Cadre4 = Fonction.Pix2Meter(Pospix, image4, -width/2, width/2, height/2, -height/2, CentreH4, CentreV4)
+Cadre5 = Fonction.Pix2Meter(Pospix, image5, -width/2, width/2, height/2, -height/2, CentreH5, CentreV5)
 #Creation des plans dans l'espace centré sur le centre optique
 yg1, zg1 = np.meshgrid(np.arange(-width/2, width/2, width/50),
                        np.arange(-height/2, height/2, height/50))
@@ -104,6 +110,7 @@ Feuille1 = Feuille(CentreH1, CentreV1, image1, height, width, debut, saut, d)
 Feuille2 = Feuille(CentreH2, CentreV2, image2, height, width, debut2, saut, d)
 Feuille3 = Feuille(CentreH3, CentreV3, image3, height, width, debut3, saut, d)
 Feuille4 = Feuille(CentreH4, CentreV4, image4, height, width, debut4, saut, d)
+Feuille5 = Feuille(CentreH5, CentreV5, image5, height, width, debut5, saut, d)
 ##-----------------------------FIN FEUILLES----------------------------------##
 
 ##--------------------------------PROJECTION---------------------------------##
@@ -112,6 +119,7 @@ Pntprojection1 = Feuille1.projection(debut, saut, F, x, y, z, delta1)
 Pntprojection2 = Feuille2.projection(debut2, saut, F, x, y, z, delta1)
 Pntprojection3 = Feuille3.projection(debut3, saut, F, x, y, z, delta1)
 Pntprojection4 = Feuille4.projection(debut4, saut, F, x, y, z, delta1)
+Pntprojection5 = Feuille5.projection(debut5, saut, F, x, y, z, delta1)
 ##------------------------------FIN PROJECTION-------------------------------##
 
 ##--------------------------------DEPLIAGE-----------------------------------##
@@ -126,6 +134,7 @@ UnfoldedPnt1 = Feuille1.depliage(debut, saut, x, y, z, GradF, ProjVector, Pntpro
 UnfoldedPnt2 = Feuille2.depliage(debut2, saut, x, y, z, GradF, ProjVector, Pntprojection2)
 UnfoldedPnt3 = Feuille3.depliage(debut3, saut, x, y, z, GradF, ProjVector, Pntprojection3)
 UnfoldedPnt4 = Feuille4.depliage(debut4, saut, x, y, z, GradF, ProjVector, Pntprojection4)
+UnfoldedPnt5 = Feuille5.depliage(debut5, saut, x, y, z, GradF, ProjVector, Pntprojection5)
 
 #Dépliage du cadre de l'aile
 CadreAileUnfolded = np.zeros((4,3))
@@ -167,8 +176,9 @@ Feuille1.Affichage_reference(debut, saut, 1, 'k')
 Feuille2.Affichage_reference(debut2, saut, 2, 'b')
 Feuille3.Affichage_reference(debut3, saut, 3, 'y')
 Feuille4.Affichage_reference(debut4, saut, 4, 'r')
+Feuille5.Affichage_reference(debut5, saut, 5, 'g')
 
-fig2 = plt.figure(5)
+fig2 = plt.figure(6)
 ax = fig2.add_subplot(111, projection='3d')
 ax.scatter(0, 0, 0, color='b')
 for i in range (debut, len(Feuille1.contours), saut):
@@ -186,6 +196,9 @@ for i in range(debut3, len(Feuille3.contours), saut):
 for i in range(debut4, len(Feuille4.contours), saut):
     ax.plot(Feuille4.contours3D[i][:, 0], Feuille4.contours3D[i][:, 1], Feuille4.contours3D[i][:, 2], color='r', marker=None)
     ax.plot(Pntprojection4[i][:, 0], Pntprojection4[i][:, 1], Pntprojection4[i][:, 2], color='r', marker=None)
+for i in range(debut5, len(Feuille5.contours), saut):
+    ax.plot(Feuille5.contours3D[i][:, 0], Feuille5.contours3D[i][:, 1], Feuille5.contours3D[i][:, 2], color='g', marker=None)
+    ax.plot(Pntprojection5[i][:, 0], Pntprojection5[i][:, 1], Pntprojection5[i][:, 2], color='g', marker=None)
     #ax.plot(UnfoldedPnt[i][:, 0], UnfoldedPnt[i][:, 1], -UnfoldedPnt[i][:, 2], color='r', marker=None)
 ax.plot_surface(xg1, yg1, zg1, color='b', alpha=0.2)
 ax.plot_surface(xgp, ygp, zplane, color='c', alpha=0.2)
@@ -194,6 +207,7 @@ ax.scatter([d]*4, Cadre1[:,0], Cadre1[:,1], color='k')
 ax.scatter([d]*4, Cadre2[:,0], Cadre2[:,1], color='b')
 ax.scatter([d]*4, Cadre3[:,0], Cadre3[:,1], color='y')
 ax.scatter([d]*4, Cadre4[:,0], Cadre4[:,1], color='r')
+ax.scatter([d]*4, Cadre5[:,0], Cadre5[:,1], color='g')
 #ax.scatter(POI[:,0], POI[:,1], POI[:,2])
 ax.set_xlabel('X')
 ax.set_ylabel('Y')
@@ -201,7 +215,7 @@ ax.set_zlabel('Z')
 plt.title('Image référence et projetée 3D (m)')
 plt.show()
 
-fig3=plt.figure(6)
+fig3=plt.figure(7)
 for i in range(debut, len(Feuille1.contours), saut):
       plt.plot(UnfoldedPnt1[i][:, 1], UnfoldedPnt1[i][:, 2], color='black')
       plt.fill(UnfoldedPnt1[i][:, 1], UnfoldedPnt1[i][:, 2], color='black')
@@ -213,7 +227,10 @@ for i in range(debut3, len(Feuille3.contours), saut):
       plt.fill(UnfoldedPnt3[i][:, 1], UnfoldedPnt3[i][:, 2], color='y')     
 for i in range(debut4, len(Feuille4.contours), saut):
       plt.plot(UnfoldedPnt4[i][:, 1], UnfoldedPnt4[i][:, 2], color='r')
-      plt.fill(UnfoldedPnt4[i][:, 1], UnfoldedPnt4[i][:, 2], color='r')     
+      plt.fill(UnfoldedPnt4[i][:, 1], UnfoldedPnt4[i][:, 2], color='r')  
+for i in range(debut5, len(Feuille5.contours), saut):
+      plt.plot(UnfoldedPnt5[i][:, 1], UnfoldedPnt5[i][:, 2], color='g')
+      plt.fill(UnfoldedPnt5[i][:, 1], UnfoldedPnt5[i][:, 2], color='g')  
 plt.scatter(CadreAileUnfolded[:,1], CadreAileUnfolded[:,2], color='c', marker='+')
 plt.scatter( yf, zf, marker='+', color='m')
 for i in range (yf.shape[0]-1):
@@ -228,37 +245,40 @@ plt.show()
 
 ##--------------------------Decoupage Impression-----------------------------##
 
-for i in range (yf.shape[0]-1):
-    for j in range (yf.shape[1]-1):
-        fig = plt.figure((i+1)*(j+1)+6)
-        fig.set_size_inches(widthPrintable/0.0254, heightPrintable/0.0254)
-        ax = fig.add_subplot(111, aspect='equal')
-        axe = plt.gca()
-        x_axis = axe.axes.get_xaxis()
-        x_axis.set_visible(False)
-        y_axis = axe.axes.get_yaxis()
-        y_axis.set_visible(False)
-        for l in range(debut, len(Feuille1.contours), saut):
-            plt.plot(UnfoldedPnt1[l][:, 1], UnfoldedPnt1[l][:, 2], color='k')
-            plt.fill(UnfoldedPnt1[l][:, 1], UnfoldedPnt1[l][:, 2], color='k')
-        for l in range(debut2, len(Feuille2.contours), saut):
-            plt.plot(UnfoldedPnt2[l][:, 1], UnfoldedPnt2[l][:, 2], color='b')
-            plt.fill(UnfoldedPnt2[l][:, 1], UnfoldedPnt2[l][:, 2], color='b')
-        for l in range(debut3, len(Feuille3.contours), saut):
-            plt.plot(UnfoldedPnt3[l][:, 1], UnfoldedPnt3[l][:, 2], color='y')
-            plt.fill(UnfoldedPnt3[l][:, 1], UnfoldedPnt3[l][:, 2], color='y')
-        for l in range(debut4, len(Feuille4.contours), saut):
-            plt.plot(UnfoldedPnt4[l][:, 1], UnfoldedPnt4[l][:, 2], color='r')
-            plt.fill(UnfoldedPnt4[l][:, 1], UnfoldedPnt4[l][:, 2], color='r')
-        plt.scatter(CadreAileUnfolded[:,1], CadreAileUnfolded[:,2], color='c', marker='+')
-        plt.scatter(yf, zf, marker='+', color='m')
-        plt.axis('equal')
-        plt.xlim(yf[0][j], yf[0][j+1])
-        plt.ylim(zf[i][0], zf[i+1][0])
-        plt.box(False)
-        #plt.show()
-        plt.close(fig)
-        fig.tight_layout()
-        fig.savefig('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/AnamorphosePlane/ImagePrintable/Image'+str(i+1)+','+str(j+1)+'.pdf')
+# for i in range (yf.shape[0]-1):
+#     for j in range (yf.shape[1]-1):
+#         fig = plt.figure((i+1)*(j+1)+7)
+#         fig.set_size_inches(widthPrintable/0.0254, heightPrintable/0.0254)
+#         ax = fig.add_subplot(111, aspect='equal')
+#         axe = plt.gca()
+#         x_axis = axe.axes.get_xaxis()
+#         x_axis.set_visible(False)
+#         y_axis = axe.axes.get_yaxis()
+#         y_axis.set_visible(False)
+#         for l in range(debut, len(Feuille1.contours), saut):
+#             plt.plot(UnfoldedPnt1[l][:, 1], UnfoldedPnt1[l][:, 2], color='k')
+#             plt.fill(UnfoldedPnt1[l][:, 1], UnfoldedPnt1[l][:, 2], color='k')
+#         for l in range(debut2, len(Feuille2.contours), saut):
+#             plt.plot(UnfoldedPnt2[l][:, 1], UnfoldedPnt2[l][:, 2], color='b')
+#             plt.fill(UnfoldedPnt2[l][:, 1], UnfoldedPnt2[l][:, 2], color='b')
+#         for l in range(debut3, len(Feuille3.contours), saut):
+#             plt.plot(UnfoldedPnt3[l][:, 1], UnfoldedPnt3[l][:, 2], color='y')
+#             plt.fill(UnfoldedPnt3[l][:, 1], UnfoldedPnt3[l][:, 2], color='y')
+#         for l in range(debut4, len(Feuille4.contours), saut):
+#             plt.plot(UnfoldedPnt4[l][:, 1], UnfoldedPnt4[l][:, 2], color='r')
+#             plt.fill(UnfoldedPnt4[l][:, 1], UnfoldedPnt4[l][:, 2], color='r')
+#         for l in range(debut5, len(Feuille5.contours), saut):
+#             plt.plot(UnfoldedPnt5[l][:, 1], UnfoldedPnt5[l][:, 2], color='g')
+#             plt.fill(UnfoldedPnt5[l][:, 1], UnfoldedPnt5[l][:, 2], color='g')
+#         plt.scatter(CadreAileUnfolded[:,1], CadreAileUnfolded[:,2], color='c', marker='+')
+#         plt.scatter(yf, zf, marker='+', color='m')
+#         plt.axis('equal')
+#         plt.xlim(yf[0][j], yf[0][j+1])
+#         plt.ylim(zf[i][0], zf[i+1][0])
+#         plt.box(False)
+#         #plt.show()
+#         plt.close(fig)
+#         fig.tight_layout()
+#         fig.savefig('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/AnamorphosePlane/ImagePrintable/Image'+str(i+1)+','+str(j+1)+'.pdf')
         
 ##------------------------Fin Decoupage Impression---------------------------##
