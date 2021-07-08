@@ -19,7 +19,7 @@ plt.close('all')
 
 ##-------------------------------CONSTANTES----------------------------------##
 
-saut = 1 #Taille du saut de point dans la liste contours
+saut = 6 #Taille du saut de point dans la liste contours
 
 debut = 1 #Debut des boucles for pour les projections
 debut2 = 1
@@ -45,10 +45,10 @@ image5 = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Banque_Sp
 #cv2.imshow('Reference', image)
 
 #Angles
-alpha = 10.0#Angle de champ de vue
-beta = 10 #Angle aigu entre aile et axe optique
-gamma = 180-90-beta #angle entre capteur et plan aile (deg)
+gamma = 80.0 #angle entre capteur et plan aile (deg)
 theta = 90.0-gamma #Angle entre normale capteur et plan aile (deg)
+alpha = 10.0#Angle de champ de vue 
+beta = 180.0-165.0-alpha/2.0 #Angle aigu entre aile et axe optique
 
 l = np.sqrt(0.9**2 + 2.5**2 + 0.9*2.5*np.cos(105*np.pi/180))
 A = np.array([l*np.cos((alpha/2)*np.pi/180), 0, l*np.sin((-alpha/2)*np.pi/180)])
@@ -115,7 +115,7 @@ Feuille5 = Feuille(CentreH5, CentreV5, image5, height, width, debut5, saut, d)
 
 ##--------------------------------PROJECTION---------------------------------##
 
-Pntprojection1 = Feuille1.projection(debut, saut, F, x, y, z, delta1)
+Pntprojection1 = Feuille1.projection(debut, saut, F, x, y, z, delta1)#Coordonée des points de projectoin de la feuille1
 Pntprojection2 = Feuille2.projection(debut2, saut, F, x, y, z, delta1)
 Pntprojection3 = Feuille3.projection(debut3, saut, F, x, y, z, delta1)
 Pntprojection4 = Feuille4.projection(debut4, saut, F, x, y, z, delta1)
@@ -130,7 +130,7 @@ Pntprojection5 = Feuille5.projection(debut5, saut, F, x, y, z, delta1)
 GradF = sym.Matrix([sym.diff(F,x), sym.diff(F,y), sym.diff(F,z)]) #Gradient (vecteur normal) de la surface obtenu à partir de l'equation de la surface
 ProjVector = np.array([-1, 0, 0])#Direction de dépliage de la surface 3D
 
-UnfoldedPnt1 = Feuille1.depliage(debut, saut, x, y, z, GradF, ProjVector, Pntprojection1)
+UnfoldedPnt1 = Feuille1.depliage(debut, saut, x, y, z, GradF, ProjVector, Pntprojection1)#Coordonée de la déformée des points de projection
 UnfoldedPnt2 = Feuille2.depliage(debut2, saut, x, y, z, GradF, ProjVector, Pntprojection2)
 UnfoldedPnt3 = Feuille3.depliage(debut3, saut, x, y, z, GradF, ProjVector, Pntprojection3)
 UnfoldedPnt4 = Feuille4.depliage(debut4, saut, x, y, z, GradF, ProjVector, Pntprojection4)
@@ -196,6 +196,7 @@ ax.set_xlabel('X')
 ax.set_ylabel('Y')
 ax.set_zlabel('Z')
 plt.title('Image référence et projetée 3D (m)')
+Fonction.set_aspect_equal_3d(ax)
 plt.show()
 
 fig3=plt.figure(7)
@@ -245,17 +246,17 @@ for i in range (yf.shape[0]-1):
             plt.plot(UnfoldedPnt1[l][:, 1], UnfoldedPnt1[l][:, 2], color='k')
             plt.fill(UnfoldedPnt1[l][:, 1], UnfoldedPnt1[l][:, 2], color='k')
         for l in range(debut2, len(Feuille2.contours), saut):
-            plt.plot(UnfoldedPnt2[l][:, 1], UnfoldedPnt2[l][:, 2], color='b')
-            plt.fill(UnfoldedPnt2[l][:, 1], UnfoldedPnt2[l][:, 2], color='b')
+            plt.plot(UnfoldedPnt2[l][:, 1], UnfoldedPnt2[l][:, 2], color='k')
+            plt.fill(UnfoldedPnt2[l][:, 1], UnfoldedPnt2[l][:, 2], color='k')
         for l in range(debut3, len(Feuille3.contours), saut):
-            plt.plot(UnfoldedPnt3[l][:, 1], UnfoldedPnt3[l][:, 2], color='y')
-            plt.fill(UnfoldedPnt3[l][:, 1], UnfoldedPnt3[l][:, 2], color='y')
+            plt.plot(UnfoldedPnt3[l][:, 1], UnfoldedPnt3[l][:, 2], color='k')
+            plt.fill(UnfoldedPnt3[l][:, 1], UnfoldedPnt3[l][:, 2], color='k')
         for l in range(debut4, len(Feuille4.contours), saut):
-            plt.plot(UnfoldedPnt4[l][:, 1], UnfoldedPnt4[l][:, 2], color='r')
-            plt.fill(UnfoldedPnt4[l][:, 1], UnfoldedPnt4[l][:, 2], color='r')
+            plt.plot(UnfoldedPnt4[l][:, 1], UnfoldedPnt4[l][:, 2], color='k')
+            plt.fill(UnfoldedPnt4[l][:, 1], UnfoldedPnt4[l][:, 2], color='k')
         for l in range(debut5, len(Feuille5.contours), saut):
-            plt.plot(UnfoldedPnt5[l][:, 1], UnfoldedPnt5[l][:, 2], color='g')
-            plt.fill(UnfoldedPnt5[l][:, 1], UnfoldedPnt5[l][:, 2], color='g')
+            plt.plot(UnfoldedPnt5[l][:, 1], UnfoldedPnt5[l][:, 2], color='k')
+            plt.fill(UnfoldedPnt5[l][:, 1], UnfoldedPnt5[l][:, 2], color='k')
         plt.scatter(CadreAileUnfolded[:,1], CadreAileUnfolded[:,2], color='c', marker='+')
         plt.scatter(yf, zf, marker='+', color='m')
         plt.axis('equal')
