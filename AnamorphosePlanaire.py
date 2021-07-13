@@ -8,18 +8,18 @@ Created on Tue May 25 11:51:13 2021
 
 import numpy as np
 import matplotlib.pyplot as plt
-from IPython import get_ipython
+#from IPython import get_ipython
 from cv2 import cv2
 
 plt.close('all')
-get_ipython().magic('reset -sf')
+#get_ipython().magic('reset -sf')
 
 ##--------------------------------FONCTIONS----------------------------------##
 
 def Pix2Meter(Pospix, image, Lim_inf_H, Lim_max_H, Lim_inf_V, Lim_max_V):
     Posmet = np.zeros((len(Pospix),2),np.float32)
-    Posmet[:, 0] = (Lim_max_V-Lim_inf_V)*Pospix[:,0]/image.shape[0]+Lim_inf_V
-    Posmet[:, 1] = (Lim_max_H-Lim_inf_H)*Pospix[:,1]/image.shape[1]+Lim_inf_H
+    Posmet[:, 0] = (Lim_max_V-Lim_inf_V)*Pospix[:,0]/image.shape[1]+Lim_inf_V
+    Posmet[:, 1] = (Lim_max_H-Lim_inf_H)*Pospix[:,1]/image.shape[0]+Lim_inf_H
     return Posmet
 
 def Meter2Pix(Posmet, image, Lim_inf_H, Lim_max_H, Lim_inf_V, Lim_max_V):
@@ -27,11 +27,34 @@ def Meter2Pix(Posmet, image, Lim_inf_H, Lim_max_H, Lim_inf_V, Lim_max_V):
     Pospix[:, 0] = image.shape[0]*(Posmet[:,0]-Lim_inf_V)/(Lim_max_V-Lim_inf_V)
     Pospix[:, 1] = image.shape[1]*(Posmet[:,1]-Lim_inf_H)/(Lim_max_H-Lim_inf_H)
     return Pospix
+
+def set_aspect_equal_3d(ax):
+    """Fix equal aspect bug for 3D plots."""
+
+    xlim = ax.get_xlim3d()
+    ylim = ax.get_ylim3d()
+    zlim = ax.get_zlim3d()
+
+    from numpy import mean
+    xmean = mean(xlim)
+    ymean = mean(ylim)
+    zmean = mean(zlim)
+
+    plot_radius = max([abs(lim - mean_)
+                       for lims, mean_ in ((xlim, xmean),
+                                           (ylim, ymean),
+                                           (zlim, zmean))
+                       for lim in lims])
+
+    ax.set_xlim3d([xmean - plot_radius, xmean + plot_radius])
+    ax.set_ylim3d([ymean - plot_radius, ymean + plot_radius])
+    ax.set_zlim3d([zmean - plot_radius, zmean + plot_radius])
+    
 ##------------------------------FIN FONCTIONS--------------------------------##
 
 ##-------------------------------CONSTANTES----------------------------------##
 
-img = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Speckle_4-65-90-210-270_100pi_cm.png")
+img = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Banque_Speckle/4mm/speckle_1.png")
 heightpi = img.shape[0]
 widthpi = img.shape[1]
 height=29.7e-2#hauteur en m de l'image de reference
@@ -47,7 +70,7 @@ l = np.sqrt(0.9**2 + 2.5**2 + 0.9*2.5*np.cos(105*np.pi/180))
 A = np.array([l*np.cos((alpha/2)*np.pi/180), 0, l*np.sin((-alpha/2)*np.pi/180)])
 B = np.array([A[0] + (5.5-2.5)*np.cos(beta*np.pi/180), 0, A[2] + (5.5-2.5)*np.sin(beta*np.pi/180)])
 C1 = np.array([[(B[0]+A[0])/2, (60e-2)/2, (B[2]+A[2])/2],
- [(B[0]+A[0])/2, (-60e-2)/2, (B[2]+A[2])/2]])
+               [(B[0]+A[0])/2, (-60e-2)/2, (B[2]+A[2])/2]])
 CadreAile = np.vstack((A, B, C1))#Points qui definissent les limites spatiales de l'aile
 
 #Plane aile - normal vector
@@ -143,13 +166,13 @@ imgresize2=tf_img_warp2[int(C[2,1]):int(C[0,1]), int(C[3,0]):int(C[1,0])]
 fig = plt.figure(1)
 ax = fig.add_subplot(111, projection='3d')
 ax.scatter(0, 0, 0, color='b')
-ax.scatter(originB[0], originB[1], originB[2], color='b')
-ax.scatter(originR[0], originR[1], originR[2], color='b')
+#ax.scatter(originB[0], originB[1], originB[2], color='b')
+#ax.scatter(originR[0], originR[1], originR[2], color='b')
 ax.scatter(CadreAile[:,0], CadreAile[:,1], CadreAile[:,2], color='r')
-ax.scatter(D[0], D[1], D[2], color='g')
-ax.plot(POI[:, 0], POI[:, 1], POI[:, 2], color='k')
-ax.scatter(Pntprojection[:, 0], Pntprojection[:, 1], Pntprojection[:, 2], color='k')
-ax.plot(PntprojCoorplanR[:, 0], PntprojCoorplanR[:, 1], PntprojCoorplanR[:, 2], color='k')
+#ax.scatter(D[0], D[1], D[2], color='g')
+ax.plot(POI[:, 0], POI[:, 1], POI[:, 2], color='b', marker='o')
+ax.plot(Pntprojection[:, 0], Pntprojection[:, 1], Pntprojection[:, 2], color='k', marker='o')
+ax.plot(PntprojCoorplanR[:, 0], PntprojCoorplanR[:, 1], PntprojCoorplanR[:, 2], color='k', marker='o')
 ax.plot_surface(xg1, yg1, zg1, rstride=10, cstride=10, color='b', alpha=0.2)
 ax.plot_surface(xgp, ygp, zplane, rstride=10, cstride=10, color='r', alpha=0.2)
 ax.set_xlabel('X')
@@ -158,31 +181,32 @@ ax.set_zlabel('Z')
 ax.axes.set_xlim3d(left=0, right=7)
 ax.axes.set_ylim3d(bottom=-1, top=1)
 ax.axes.set_zlim3d(bottom=-0.6, top=4)
+#set_aspect_equal_3d(ax)
 plt.show()
 
 plt.figure(2)
 plt.imshow(img, origin='lower')
-plt.plot(POIOnPng[:, 1], POIOnPng[:, 0], marker='+', color='red')
+#plt.plot(POIOnPng[:, 1], POIOnPng[:, 0], marker='+', color='red')
 plt.xlabel('Columns')
 plt.ylabel('Rows')
 plt.title('Réference')
 plt.show()
 
-plt.figure(3)
-plt.imshow(tf_img_warp, origin='lower')
-plt.plot(C[:,0],C[:,1], marker='+', color='red')
-plt.xlabel('Columns')
-plt.ylabel('Rows')
-plt.title('Déformée')
-plt.show()
+# plt.figure(3)
+# plt.imshow(tf_img_warp, origin='lower')
+# plt.plot(C[:,0],C[:,1], marker='+', color='red')
+# plt.xlabel('Columns')
+# plt.ylabel('Rows')
+# plt.title('Déformée')
+# plt.show()
 
-plt.figure(4)
-plt.imshow(imgresize, origin='lower')
-plt.scatter(C[:,0],C[:,1], marker='+', color='red')
-plt.xlabel('Columns')
-plt.ylabel('Rows')
-plt.title('imgresize')
-plt.show()
+# plt.figure(4)
+# plt.imshow(imgresize, origin='lower')
+# plt.scatter(C[:,0],C[:,1], marker='+', color='red')
+# plt.xlabel('Columns')
+# plt.ylabel('Rows')
+# plt.title('imgresize')
+# plt.show()
 
 plt.figure(5)
 plt.imshow(tf_img_warp2, origin='lower')
@@ -199,3 +223,4 @@ plt.xlabel('Columns')
 plt.ylabel('Rows')
 plt.title('Avec coordonnées réelles projetées resize')
 plt.show()
+

@@ -1,0 +1,6 @@
+opencv-python
+numpy
+time
+sys
+sympy
+matplotlib.pyplot
