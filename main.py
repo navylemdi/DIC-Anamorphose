@@ -19,7 +19,7 @@ plt.close('all')
 
 ##-------------------------------CONSTANTES----------------------------------##
 
-saut = 6 #Taille du saut de point dans la liste contours
+saut = 500 #Taille du saut de point dans la liste contours
 
 debut = 1 #Debut des boucles for pour les projections
 debut2 = 1
@@ -79,16 +79,7 @@ ya = 0
 za = 0
 d = A[0]#7.52928#
 
-Pospix = np.array([[0, 0],
-                   [0, image1.shape[0]],
-                   [image1.shape[1], 0],
-                   [image1.shape[1], image1.shape[0]]])
 
-Cadre1 = Fonction.Pix2Meter(Pospix, image1, -width/2, width/2, height/2, -height/2, CentreH1, CentreV1)
-Cadre2 = Fonction.Pix2Meter(Pospix, image2, -width/2, width/2, height/2, -height/2, CentreH2, CentreV2)
-Cadre3 = Fonction.Pix2Meter(Pospix, image3, -width/2, width/2, height/2, -height/2, CentreH3, CentreV3)
-Cadre4 = Fonction.Pix2Meter(Pospix, image4, -width/2, width/2, height/2, -height/2, CentreH4, CentreV4)
-Cadre5 = Fonction.Pix2Meter(Pospix, image5, -width/2, width/2, height/2, -height/2, CentreH5, CentreV5)
 #Creation des plans dans l'espace centré sur le centre optique
 yg1, zg1 = np.meshgrid(np.arange(-width/2, width/2, width/50),
                        np.arange(-height/2, height/2, height/50))
@@ -111,15 +102,18 @@ Feuille2 = Feuille(CentreH2, CentreV2, image2, height, width, debut2, saut, d)
 Feuille3 = Feuille(CentreH3, CentreV3, image3, height, width, debut3, saut, d)
 Feuille4 = Feuille(CentreH4, CentreV4, image4, height, width, debut4, saut, d)
 Feuille5 = Feuille(CentreH5, CentreV5, image5, height, width, debut5, saut, d)
+
+Liste_Feuille=[Feuille1, Feuille2, Feuille3, Feuille4, Feuille5]
 ##-----------------------------FIN FEUILLES----------------------------------##
 
 ##--------------------------------PROJECTION---------------------------------##
 
-Pntprojection1 = Feuille1.projection(debut, saut, F, x, y, z, delta1)#Coordonée des points de projectoin de la feuille1
-Pntprojection2 = Feuille2.projection(debut2, saut, F, x, y, z, delta1)
-Pntprojection3 = Feuille3.projection(debut3, saut, F, x, y, z, delta1)
-Pntprojection4 = Feuille4.projection(debut4, saut, F, x, y, z, delta1)
-Pntprojection5 = Feuille5.projection(debut5, saut, F, x, y, z, delta1)
+Pntprojection1 = Feuille1.projection(saut, F, x, y, z, delta1)#Coordonée des points de projectoin de la feuille1
+Pntprojection2 = Feuille2.projection(saut, F, x, y, z, delta1)
+Pntprojection3 = Feuille3.projection(saut, F, x, y, z, delta1)
+Pntprojection4 = Feuille4.projection(saut, F, x, y, z, delta1)
+Pntprojection5 = Feuille5.projection(saut, F, x, y, z, delta1)
+
 ##------------------------------FIN PROJECTION-------------------------------##
 
 ##--------------------------------DEPLIAGE-----------------------------------##
@@ -130,11 +124,11 @@ Pntprojection5 = Feuille5.projection(debut5, saut, F, x, y, z, delta1)
 GradF = sym.Matrix([sym.diff(F,x), sym.diff(F,y), sym.diff(F,z)]) #Gradient (vecteur normal) de la surface obtenu à partir de l'equation de la surface
 ProjVector = np.array([-1, 0, 0])#Direction de dépliage de la surface 3D
 
-UnfoldedPnt1 = Feuille1.depliage(debut, saut, x, y, z, GradF, ProjVector, Pntprojection1)#Coordonée de la déformée des points de projection
-UnfoldedPnt2 = Feuille2.depliage(debut2, saut, x, y, z, GradF, ProjVector, Pntprojection2)
-UnfoldedPnt3 = Feuille3.depliage(debut3, saut, x, y, z, GradF, ProjVector, Pntprojection3)
-UnfoldedPnt4 = Feuille4.depliage(debut4, saut, x, y, z, GradF, ProjVector, Pntprojection4)
-UnfoldedPnt5 = Feuille5.depliage(debut5, saut, x, y, z, GradF, ProjVector, Pntprojection5)
+UnfoldedPnt1 = Feuille1.depliage(saut, x, y, z, GradF, ProjVector, Pntprojection1)#Coordonée de la déformée des points de projection
+UnfoldedPnt2 = Feuille2.depliage(saut, x, y, z, GradF, ProjVector, Pntprojection2)
+UnfoldedPnt3 = Feuille3.depliage(saut, x, y, z, GradF, ProjVector, Pntprojection3)
+UnfoldedPnt4 = Feuille4.depliage(saut, x, y, z, GradF, ProjVector, Pntprojection4)
+UnfoldedPnt5 = Feuille5.depliage(saut, x, y, z, GradF, ProjVector, Pntprojection5)
 
 #Dépliage du cadre de l'aile
 CadreAileUnfolded = np.zeros((4,3))
@@ -155,11 +149,11 @@ NbFeuille = (yf.shape[1]-1) * (zf.shape[0]-1)
 
 ##--------------------------------AFFICHAGE----------------------------------##
 
-Feuille1.Affichage_reference(debut, saut, 1, 'k')
-Feuille2.Affichage_reference(debut2, saut, 2, 'b')
-Feuille3.Affichage_reference(debut3, saut, 3, 'y')
-Feuille4.Affichage_reference(debut4, saut, 4, 'r')
-Feuille5.Affichage_reference(debut5, saut, 5, 'g')
+Feuille1.Affichage_reference(saut, 1, 'k')
+Feuille2.Affichage_reference(saut, 2, 'b')
+Feuille3.Affichage_reference(saut, 3, 'y')
+Feuille4.Affichage_reference(saut, 4, 'r')
+Feuille5.Affichage_reference(saut, 5, 'g')
 
 fig2 = plt.figure(6)
 ax = fig2.add_subplot(111, projection='3d')
@@ -179,6 +173,7 @@ for i in range(debut3, len(Feuille3.contours), saut):
 for i in range(debut4, len(Feuille4.contours), saut):
     ax.plot(Feuille4.contours3D[i][:, 0], Feuille4.contours3D[i][:, 1], Feuille4.contours3D[i][:, 2], color='r', marker=None)
     ax.plot(Pntprojection4[i][:, 0], Pntprojection4[i][:, 1], Pntprojection4[i][:, 2], color='r', marker=None)
+    
 for i in range(debut5, len(Feuille5.contours), saut):
     ax.plot(Feuille5.contours3D[i][:, 0], Feuille5.contours3D[i][:, 1], Feuille5.contours3D[i][:, 2], color='g', marker=None)
     ax.plot(Pntprojection5[i][:, 0], Pntprojection5[i][:, 1], Pntprojection5[i][:, 2], color='g', marker=None)
@@ -186,11 +181,11 @@ for i in range(debut5, len(Feuille5.contours), saut):
 ax.plot_surface(xg1, yg1, zg1, color='b', alpha=0.2)
 ax.plot_surface(xgp, ygp, zplane, color='c', alpha=0.2)
 ax.scatter(CadreAile[:,0], CadreAile[:,1], CadreAile[:,2], color='c')
-ax.scatter([d]*4, Cadre1[:,0], Cadre1[:,1], color='k')
-ax.scatter([d]*4, Cadre2[:,0], Cadre2[:,1], color='b')
-ax.scatter([d]*4, Cadre3[:,0], Cadre3[:,1], color='y')
-ax.scatter([d]*4, Cadre4[:,0], Cadre4[:,1], color='r')
-ax.scatter([d]*4, Cadre5[:,0], Cadre5[:,1], color='g')
+ax.scatter([d]*4, Feuille1.Cadre[:,0], Feuille1.Cadre[:,1], color='k')
+ax.scatter([d]*4, Feuille2.Cadre[:,0], Feuille2.Cadre[:,1], color='b')
+ax.scatter([d]*4, Feuille3.Cadre[:,0], Feuille3.Cadre[:,1], color='y')
+ax.scatter([d]*4, Feuille4.Cadre[:,0], Feuille4.Cadre[:,1], color='r')
+ax.scatter([d]*4, Feuille5.Cadre[:,0], Feuille5.Cadre[:,1], color='g')
 #ax.scatter(POI[:,0], POI[:,1], POI[:,2])
 ax.set_xlabel('X')
 ax.set_ylabel('Y')

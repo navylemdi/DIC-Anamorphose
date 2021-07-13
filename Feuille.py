@@ -20,7 +20,12 @@ class Feuille:
         self.centreV = centreV
         self.height = height
         self.width = width
- 
+        self.debut = debut
+        Pospix = np.array([[0, 0],
+                   [0, image.shape[0]],
+                   [image.shape[1], 0],
+                   [image.shape[1], image.shape[0]]])
+        self.Cadre = Fonction.Pix2Meter(Pospix, image, -width/2, width/2, height/2, -height/2, centreH, centreV)
         image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         #cv2.imshow('Gray scale', image_gray)
         #Conversion en NB
@@ -42,19 +47,19 @@ class Feuille:
             self.contours3D[i][:, 1] = temp[:, 1]
             self.contours3D[i][:, 2] = temp[:, 0]
         
-    def projection(self, debut, saut, F, x, y, z, delta1): 
+    def projection(self, saut, F, x, y, z, delta1): 
         #Calcul projection sur plan incliné
         Pntprojection = [None]*len(self.contours)
         print('Début calcul projection')
         start = time.time()
-        for i in range(debut, len(self.contours), saut):
+        for i in range(self.debut, len(self.contours), saut):
             Pntprojection[i] = np.empty( [len(self.contours[i]), 3], dtype=np.float32)
             sys.stdout.write('\r' + str(round((i/(len(self.contours)-1))*100,2)) + '% ')#Affichage pourcentage de l'avancement
             for j in range(len(self.contours3D[i])):
                 try:
                     sol = solve( F.subs([(x, self.contours3D[i][j,0]/delta1), (y, self.contours3D[i][j,1]/delta1), (z, self.contours3D[i][j,2]/delta1)]), delta1)[0]#Résolution de l'equation f(x/delta, y/delta, z/delta) = 0 avec delta l'inconnue
                     Pntprojection[i][j,:] = self.contours3D[i][j,:]/sol# Coordonnées dans l'espace des points projetés
-                except IndexError: 
+                except (IndexError, ValueError):
                     print("\nIl n'existe pas de solution pour les cercles. Vérifier l'equation de la surface")
             sys.stdout.flush()
         print('\nFin calcul projection')
@@ -62,11 +67,11 @@ class Feuille:
         print('Temps ecoulé: ', time.strftime("%H:%M:%S", time.gmtime(end-start)))
         return Pntprojection
     
-    def depliage(self,debut, saut, x ,y ,z, GradF, ProjVector, Pntprojection):
+    def depliage(self, saut, x ,y ,z, GradF, ProjVector, Pntprojection):
         UnfoldedPnt = [None]*len(self.contours)
         print('Début dépliage')
         start = time.time()
-        for i in range(debut, len(self.contours), saut):
+        for i in range(self.debut, len(self.contours), saut):
             UnfoldedPnt[i] = np.empty( [len(self.contours[i]), 3], dtype=np.float32)
             sys.stdout.write('\r' + str(round((i/(len(self.contours)-1))*100,2)) + '% ')#Affichage pourcentage de l'avancement
             for j in range(len(self.contours3D[i])):
@@ -84,10 +89,10 @@ class Feuille:
         print('Temps ecoulé: ', time.strftime("%H:%M:%S", time.gmtime(end-start)))
         return UnfoldedPnt
     
-    def Affichage_reference(self, debut, saut, n, gcolor):
+    def Affichage_reference(self, saut, n, gcolor):
         fig=plt.figure(n)
         ax = fig.add_subplot(111, aspect='equal')
-        for i in range(debut, len(self.contours), saut):
+        for i in range(self.debut, len(self.contours), saut):
             plt.plot(self.contours[i][:, 0][:, 0], self.contours[i][:, 0][:, 1], marker=None, color=gcolor)
             ax.fill(self.contours[i][:, 0][:, 0], self.contours[i][:, 0][:, 1], gcolor,zorder=10)
         plt.title('Image référence '+ str(n) +' (pix)')
