@@ -41,3 +41,9 @@ def set_aspect_equal_3d(ax):
     ax.set_xlim3d([xmean - plot_radius, xmean + plot_radius])
     ax.set_ylim3d([ymean - plot_radius, ymean + plot_radius])
     ax.set_zlim3d([zmean - plot_radius, zmean + plot_radius])
+    
+def Translation(x, y,z):
+    return np.array([[1, 0, 0, x],
+                     [0, 1, 0, y],
+                     [0, 0, 1, z],
+                     [0, 0, 0, 1]])

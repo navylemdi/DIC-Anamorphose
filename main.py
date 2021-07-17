@@ -36,11 +36,11 @@ WingHeight = 3 #hauteur zone analyse de l'aile (m)
 heightPrintable = 27.9e-2
 widthPrintable = 21.6e-2
 
-image1 = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Banque_Speckle/4mm/speckle_1.png")
-image2 = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Banque_Speckle/4mm/speckle_2.png")
-image3 = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Banque_Speckle/4mm/speckle_3.png")
-image4 = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Banque_Speckle/4mm/speckle_4.png")
-image5 = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Banque_Speckle/4mm/speckle_5.png")
+image1 = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Banque_Speckle/2mm/Speckle_1.png")
+image2 = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Banque_Speckle/2mm/Speckle_2.png")
+image3 = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Banque_Speckle/2mm/Speckle_3.png")
+image4 = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Banque_Speckle/2mm/Speckle_4.png")
+image5 = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Banque_Speckle/2mm/Speckle_5.png")
 
 #cv2.imshow('Reference', image)
 
@@ -124,11 +124,11 @@ Pntprojection5 = Feuille5.projection(saut, F, x, y, z, delta1)
 GradF = sym.Matrix([sym.diff(F,x), sym.diff(F,y), sym.diff(F,z)]) #Gradient (vecteur normal) de la surface obtenu à partir de l'equation de la surface
 ProjVector = np.array([-1, 0, 0])#Direction de dépliage de la surface 3D
 
-UnfoldedPnt1 = Feuille1.depliage(saut, x, y, z, GradF, ProjVector, Pntprojection1)#Coordonée de la déformée des points de projection
-UnfoldedPnt2 = Feuille2.depliage(saut, x, y, z, GradF, ProjVector, Pntprojection2)
-UnfoldedPnt3 = Feuille3.depliage(saut, x, y, z, GradF, ProjVector, Pntprojection3)
-UnfoldedPnt4 = Feuille4.depliage(saut, x, y, z, GradF, ProjVector, Pntprojection4)
-UnfoldedPnt5 = Feuille5.depliage(saut, x, y, z, GradF, ProjVector, Pntprojection5)
+UnfoldedPnt1 = Feuille1.depliage(saut, x, y, z, GradF, ProjVector)#Coordonée de la déformée des points de projection
+UnfoldedPnt2 = Feuille2.depliage(saut, x, y, z, GradF, ProjVector)
+UnfoldedPnt3 = Feuille3.depliage(saut, x, y, z, GradF, ProjVector)
+UnfoldedPnt4 = Feuille4.depliage(saut, x, y, z, GradF, ProjVector)
+UnfoldedPnt5 = Feuille5.depliage(saut, x, y, z, GradF, ProjVector)
 
 #Dépliage du cadre de l'aile
 CadreAileUnfolded = np.zeros((4,3))
@@ -227,40 +227,40 @@ plt.show()
 ##--------------------------DECOUPAGE IMPRESSION-----------------------------##
 #Decoupe la derniere figure en morceau de taille (widthPrintable,heightPrintable)
 #pour pouvoir l'imprimer facilement
-for i in range (yf.shape[0]-1):
-    for j in range (yf.shape[1]-1):
-        fig = plt.figure((i+1)*(j+1)+7)
-        fig.set_size_inches(widthPrintable/0.0254, heightPrintable/0.0254)
-        ax = fig.add_subplot(111, aspect='equal')
-        axe = plt.gca()
-        x_axis = axe.axes.get_xaxis()
-        x_axis.set_visible(False)
-        y_axis = axe.axes.get_yaxis()
-        y_axis.set_visible(False)
-        for l in range(debut, len(Feuille1.contours), saut):
-            plt.plot(UnfoldedPnt1[l][:, 1], UnfoldedPnt1[l][:, 2], color='k')
-            plt.fill(UnfoldedPnt1[l][:, 1], UnfoldedPnt1[l][:, 2], color='k')
-        for l in range(debut2, len(Feuille2.contours), saut):
-            plt.plot(UnfoldedPnt2[l][:, 1], UnfoldedPnt2[l][:, 2], color='k')
-            plt.fill(UnfoldedPnt2[l][:, 1], UnfoldedPnt2[l][:, 2], color='k')
-        for l in range(debut3, len(Feuille3.contours), saut):
-            plt.plot(UnfoldedPnt3[l][:, 1], UnfoldedPnt3[l][:, 2], color='k')
-            plt.fill(UnfoldedPnt3[l][:, 1], UnfoldedPnt3[l][:, 2], color='k')
-        for l in range(debut4, len(Feuille4.contours), saut):
-            plt.plot(UnfoldedPnt4[l][:, 1], UnfoldedPnt4[l][:, 2], color='k')
-            plt.fill(UnfoldedPnt4[l][:, 1], UnfoldedPnt4[l][:, 2], color='k')
-        for l in range(debut5, len(Feuille5.contours), saut):
-            plt.plot(UnfoldedPnt5[l][:, 1], UnfoldedPnt5[l][:, 2], color='k')
-            plt.fill(UnfoldedPnt5[l][:, 1], UnfoldedPnt5[l][:, 2], color='k')
-        plt.scatter(CadreAileUnfolded[:,1], CadreAileUnfolded[:,2], color='c', marker='+')
-        plt.scatter(yf, zf, marker='+', color='m')
-        plt.axis('equal')
-        plt.xlim(yf[0][j], yf[0][j+1])
-        plt.ylim(zf[i][0], zf[i+1][0])
-        plt.box(False)
-        #plt.show()
-        plt.close(fig)
-        fig.tight_layout()#Supprime les marges
-        fig.savefig('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/AnamorphosePlane/ImagePrintable/Image'+str(i+1)+','+str(j+1)+'.pdf')
+# for i in range (yf.shape[0]-1):
+#     for j in range (yf.shape[1]-1):
+#         fig = plt.figure((i+1)*(j+1)+7)
+#         fig.set_size_inches(widthPrintable/0.0254, heightPrintable/0.0254)
+#         ax = fig.add_subplot(111, aspect='equal')
+#         axe = plt.gca()
+#         x_axis = axe.axes.get_xaxis()
+#         x_axis.set_visible(False)
+#         y_axis = axe.axes.get_yaxis()
+#         y_axis.set_visible(False)
+#         for l in range(debut, len(Feuille1.contours), saut):
+#             plt.plot(UnfoldedPnt1[l][:, 1], UnfoldedPnt1[l][:, 2], color='k')
+#             plt.fill(UnfoldedPnt1[l][:, 1], UnfoldedPnt1[l][:, 2], color='k')
+#         for l in range(debut2, len(Feuille2.contours), saut):
+#             plt.plot(UnfoldedPnt2[l][:, 1], UnfoldedPnt2[l][:, 2], color='k')
+#             plt.fill(UnfoldedPnt2[l][:, 1], UnfoldedPnt2[l][:, 2], color='k')
+#         for l in range(debut3, len(Feuille3.contours), saut):
+#             plt.plot(UnfoldedPnt3[l][:, 1], UnfoldedPnt3[l][:, 2], color='k')
+#             plt.fill(UnfoldedPnt3[l][:, 1], UnfoldedPnt3[l][:, 2], color='k')
+#         for l in range(debut4, len(Feuille4.contours), saut):
+#             plt.plot(UnfoldedPnt4[l][:, 1], UnfoldedPnt4[l][:, 2], color='k')
+#             plt.fill(UnfoldedPnt4[l][:, 1], UnfoldedPnt4[l][:, 2], color='k')
+#         for l in range(debut5, len(Feuille5.contours), saut):
+#             plt.plot(UnfoldedPnt5[l][:, 1], UnfoldedPnt5[l][:, 2], color='k')
+#             plt.fill(UnfoldedPnt5[l][:, 1], UnfoldedPnt5[l][:, 2], color='k')
+#         plt.scatter(CadreAileUnfolded[:,1], CadreAileUnfolded[:,2], color='c', marker='+')
+#         plt.scatter(yf, zf, marker='+', color='m')
+#         plt.axis('equal')
+#         plt.xlim(yf[0][j], yf[0][j+1])
+#         plt.ylim(zf[i][0], zf[i+1][0])
+#         plt.box(False)
+#         #plt.show()
+#         plt.close(fig)
+#         fig.tight_layout()#Supprime les marges
+#         fig.savefig('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/AnamorphosePlane/ImagePrintable/Image'+str(i+1)+','+str(j+1)+'.pdf')
         
 ##------------------------FIN DECOUPAGE IMPRESSION---------------------------##
