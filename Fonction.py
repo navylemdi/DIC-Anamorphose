@@ -9,7 +9,6 @@ Created on Tue Jul  6 09:33:40 2021
 import numpy as np
 import sys
 import time
-from sympy.solvers import solve
 
 def Pix2Meter(Pospix, image, Lim_inf_H, Lim_max_H, Lim_inf_V, Lim_max_V, CentreH, CentreV):
     Posmet = np.zeros((len(Pospix),2), np.float32)
@@ -63,10 +62,10 @@ def depliage(feuille, surface, saut, x ,y ,z, GradF, ProjVector):
                                       [-v[1], v[0], 0]])
                     rotation_matrix = np.eye(3) + kmat + kmat.dot(kmat) * (1/(1+c))
                     UnfoldedPnt[i][j, :] = np.dot(rotation_matrix, feuille.Pntprojection[i][j, :])
-            
+            roulement_matrix = None
         elif surface.SurfaceType == 'Cylindre':
-            ProjVector2 = np.array([1, 0, 0])#Vecteur horizontal vers les positifs
-            ProjVector3 = np.array([0, 0, 1])#Vecteur vertical vers les positifs
+            ProjVector2 = np.array([0, 1, 0])#Vecteur horizontal vers les positifs
+            ProjVector3 = np.array([-1, 0, 0])#Vecteur vertical vers les positifs
             CylAxe = np.array([surface.a, surface.b, surface.c])/np.linalg.norm(np.array([surface.a, surface.b, surface.c]))
             v = np.cross(CylAxe, ProjVector2)
             cos = np.dot(CylAxe, ProjVector2)
@@ -92,8 +91,8 @@ def depliage(feuille, surface, saut, x ,y ,z, GradF, ProjVector):
                         NormalVector = np.dot(rotation_matrix, np.squeeze(NormalVector))#Vecteur normaux à la surface tournée à l'horizontale
                         NormalVector = np.dot(roulement_matrix, np.squeeze(NormalVector))#Vecteur normaux à la surface tournée à la verticale
                         v2 = np.cross(NormalVector, ProjVector3)#Calcul des angles avec la verticale
-                        theta = np.arcsin(v2[0])
-                        UnfoldedPnt[i][j, :] = [RolledPnt[0], surface.Radius*theta, 0]
+                        theta = np.arcsin(v2[1])
+                        UnfoldedPnt[i][j, :] = [0, RolledPnt[1], -surface.Radius*theta]
             sys.stdout.flush()
         print('\nFin dépliage')
         end = time.time()
