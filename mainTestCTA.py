@@ -26,7 +26,7 @@ saut = 1 #Taille du saut de point dans la liste contours
 debut = 2 #Debut des boucles for pour les projections
 debut2 = 3
 debut3 = 2
-debut4 = 2
+debut4 = 4
 debut5 = 2
 
 height = 21e-2#27e-2 #29.7e-2#hauteur en m de l'image de reference(m)
@@ -82,7 +82,7 @@ Pos = np.array([0, 0, 0])
 #Parametres Position Mouchetis Reference
 xa = 1
 ya = 0
-za = 0
+za = 0 
 d = A[0]#7.52928#
 
 #Creation des plans dans l'espace centré sur le centre optique
@@ -265,16 +265,15 @@ for i in range (yf.shape[0]-1):
         for l in range(debut4, len(Feuille4.contours), saut):
             plt.plot(UnfoldedPnt4[l][:, 1], UnfoldedPnt4[l][:, 2], color='k')
             plt.fill(UnfoldedPnt4[l][:, 1], UnfoldedPnt4[l][:, 2], color='k')
-        # for l in range(debut5, len(Feuille5.contours), saut):
-        #     plt.plot(UnfoldedPnt5[l][:, 1], UnfoldedPnt5[l][:, 2], color='k')
-        #     plt.fill(UnfoldedPnt5[l][:, 1], UnfoldedPnt5[l][:, 2], color='k')
-        plt.scatter(CadreAileUnfolded[:,1], CadreAileUnfolded[:,2], color='c', marker='+')
+        for l in range(debut5, len(Feuille5.contours), saut):
+            plt.plot(UnfoldedPnt5[l][:, 1], UnfoldedPnt5[l][:, 2], color='k')
+            plt.fill(UnfoldedPnt5[l][:, 1], UnfoldedPnt5[l][:, 2], color='k')
+        plt.scatter(CadreAileUnfolded[:, 1], CadreAileUnfolded[:, 2], color='c', marker='+')
         plt.scatter(yf, zf, marker='+', color='m')
         plt.axis('equal')
         plt.xlim(yf[0][j], yf[0][j+1])
         plt.ylim(zf[i][0], zf[i+1][0])
         plt.box(False)
-        #plt.show()
         plt.close(fig)
         fig.tight_layout()#Supprime les marges
         fig.savefig('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/AnamorphosePlane/ImagePrintable2mmLETTERCTA/Image'+str(i+1)+','+str(j+1)+'.pdf')

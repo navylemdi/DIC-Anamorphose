@@ -16,12 +16,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sympy as sym
 from sympy import Symbol
-#from IPython import get_ipython
 import cv2 as cv2
 from Feuille import Feuille
 import Fonction
 
-#get_ipython().magic('reset -sf')
 plt.close('all')
 
 ##-------------------------------CONSTANTES----------------------------------##
