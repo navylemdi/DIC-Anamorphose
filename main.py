@@ -20,7 +20,7 @@ plt.close('all')
 
 ##-------------------------------CONSTANTES----------------------------------##
 
-saut = 1000 #Taille du saut de point dans la liste contours
+saut = 100 #Taille du saut de point dans la liste contours
 
 debut = 2 #Debut des boucles for pour les projections
 debut2 = 2
@@ -64,16 +64,16 @@ CentreV5 = CentreV2 #Position verticale du centre du speckle de référence 4
 
 #Parametre Position aile
 a = 0#-np.sin(theta*np.pi/180)# -0.02#
-b = 1#-np.sin(theta*np.pi/180)#np.linalg.solve(D,E)[1]
-c = 0#np.cos(theta*np.pi/180)#1#np.linalg.solve(D,E)[2]#
+b = 0#-np.sin(theta*np.pi/180)#np.linalg.solve(D,E)[1]
+c = 1#np.cos(theta*np.pi/180)#1#np.linalg.solve(D,E)[2]#
 dprim = 1#a*A[0]**1+b*A[1]**1+c*A[2]
-Radius = 0.2
+Radius = 0.1
 Pos = np.array([3, 0, 0])
 
-A = np.array([Pos[0], 0, -Radius])#np.array([l*np.cos((alpha/2)*np.pi/180), 0, l*np.sin((-alpha/2)*np.pi/180)])
-B = np.array([Pos[0], 0, Radius])#np.array([A[0] + (5.5-2.5)*np.cos(beta*np.pi/180), 0, A[2] + (5.5-2.5)*np.sin(beta*np.pi/180)])
-C1 = np.array([[Pos[0]-Radius, (WingWidth)/2, 0],
-               [Pos[0]-Radius, (-WingWidth)/2,0]])
+A = np.array([Pos[0]-Radius, 0, 0.2])#np.array([l*np.cos((alpha/2)*np.pi/180), 0, l*np.sin((-alpha/2)*np.pi/180)])
+B = np.array([Pos[0]-Radius, 0, -0.2])#np.array([A[0] + (5.5-2.5)*np.cos(beta*np.pi/180), 0, A[2] + (5.5-2.5)*np.sin(beta*np.pi/180)])
+C1 = np.array([[Pos[0], -Radius, 0],#(WingHeight)/2],
+               [Pos[0], Radius, 0]])#(-WingHeight)/2]])
 CadreAile = np.vstack((A, B, C1))#Points qui definissent les limites spatiales de l'aile
 
 #Parametres Position Mouchetis Reference
@@ -154,7 +154,6 @@ NbFeuille = (yf.shape[1]-1) * (zf.shape[0]-1)
 
 Feuille1.Affichage_reference(saut, 1, 'k')
 
-
 fig2 = plt.figure(6)
 ax = fig2.add_subplot(111, projection='3d')
 ax.scatter(0, 0, 0, color='b')
@@ -180,7 +179,7 @@ for i in range (debut, len(Feuille1.contours), saut):
 #ax.plot_surface(xg1, yg1, zg1, color='b', alpha=0.2)
 #ax.plot_surface(xgp, ygp, zplane, color='c', alpha=0.2)
 ax.scatter(CadreAile[:,0], CadreAile[:,1], CadreAile[:,2], color='c')
-ax.scatter([d]*4, Feuille1.Cadre[:,0], Feuille1.Cadre[:,1], color='k')
+ax.scatter([d]*4, Feuille1.Cadre[:,0], Feuille1.Cadre[:,1], color='k', marker='+')
 # ax.scatter([d]*4, Feuille2.Cadre[:,0], Feuille2.Cadre[:,1], color='b')
 # ax.scatter([d]*4, Feuille3.Cadre[:,0], Feuille3.Cadre[:,1], color='y')
 # ax.scatter([d]*4, Feuille4.Cadre[:,0], Feuille4.Cadre[:,1], color='r')
@@ -190,7 +189,6 @@ ax.set_ylabel('Y')
 ax.set_zlabel('Z')
 plt.title('Image référence et projetée 3D (m)')
 Fonction.set_aspect_equal_3d(ax)
-plt.show()
 
 fig3=plt.figure(7)
 for i in range(debut, len(Feuille1.contours), saut):
@@ -218,7 +216,6 @@ plt.axis('equal')
 plt.xlim(min(CadreAileUnfolded[:,1]), max(CadreAileUnfolded[:,1]))
 plt.ylim(min(CadreAileUnfolded[:,2]), max(CadreAileUnfolded[:,2]))
 plt.grid()
-plt.show()
 
 ##-----------------------------FIN AFFICHAGE---------------------------------##
 
@@ -263,5 +260,6 @@ for i in range (yf.shape[0]-1):
         plt.close(fig)
         fig.tight_layout()#Supprime les marges
         fig.savefig('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/AnamorphosePlane/ImagePrintable/Image'+str(i+1)+','+str(j+1)+'.pdf')
-        
+
+plt.show()
 ##------------------------FIN DECOUPAGE IMPRESSION---------------------------##

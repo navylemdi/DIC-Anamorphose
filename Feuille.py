@@ -60,7 +60,7 @@ class Feuille:
                     #On prends le max pour avoir le point le plus proche de la caméra
                     self.Pntprojection[i][j,:] = self.contours3D[i][j,:]/sol# Coordonnées dans l'espace des points projetés
                 except (IndexError, ValueError):
-                    print("\nIl n'existe pas de solution pour les cercles. Vérifier l'equation de la surface")
+                    print("Il n'existe pas de solution pour les cercles. Vérifier l'equation de la surface")
                     self.Pntprojection[i][j,:] = [None]*3
             sys.stdout.flush()
         print('\nFin calcul projection')
@@ -150,4 +150,3 @@ class Feuille:
             plt.plot(self.contours[i][:, 0][:, 0], self.contours[i][:, 0][:, 1], marker=None, color=gcolor)
             ax.fill(self.contours[i][:, 0][:, 0], self.contours[i][:, 0][:, 1], gcolor,zorder=10)
         plt.title('Image référence '+ str(n) +' (pix)')
-        plt.show()
