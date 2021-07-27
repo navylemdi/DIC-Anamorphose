@@ -20,7 +20,7 @@ plt.close('all')
 
 ##-------------------------------CONSTANTES----------------------------------##
 
-saut = 100 #Taille du saut de point dans la liste contours
+saut = 500 #Taille du saut de point dans la liste contours
 
 debut = 2 #Debut des boucles for pour les projections
 debut2 = 2
@@ -28,8 +28,8 @@ debut3 = 2
 debut4 = 2
 debut5 = 2
 
-height = 21e-2#27e-2 #29.7e-2#hauteur en m de l'image de reference(m)
-width = 27e-2#21e-2 #21e-2#largeur en m de l'image de reference(m)
+height = 27e-2#27e-2 #29.7e-2#hauteur en m de l'image de reference(m)
+width = 21e-2#21e-2 #21e-2#largeur en m de l'image de reference(m)
 WingWidth = 60e-2 #largeur zone analyse de l'aile (m)
 WingHeight = 3 #hauteur zone analyse de l'aile (m)
 
@@ -180,7 +180,7 @@ for i in range (debut, len(Feuille1.contours), saut):
 #ax.plot_surface(xgp, ygp, zplane, color='c', alpha=0.2)
 ax.scatter(CadreAile[:,0], CadreAile[:,1], CadreAile[:,2], color='c')
 ax.scatter([d]*4, Feuille1.Cadre[:,0], Feuille1.Cadre[:,1], color='k', marker='+')
-# ax.scatter([d]*4, Feuille2.Cadre[:,0], Feuille2.Cadre[:,1], color='b')
+#ax.scatter([d]*4, Feuille2.Cadre[:,0], Feuille2.Cadre[:,1], color='b')
 # ax.scatter([d]*4, Feuille3.Cadre[:,0], Feuille3.Cadre[:,1], color='y')
 # ax.scatter([d]*4, Feuille4.Cadre[:,0], Feuille4.Cadre[:,1], color='r')
 # ax.scatter([d]*4, Feuille5.Cadre[:,0], Feuille5.Cadre[:,1], color='g')
@@ -218,7 +218,7 @@ plt.ylim(min(CadreAileUnfolded[:,2]), max(CadreAileUnfolded[:,2]))
 plt.grid()
 
 ##-----------------------------FIN AFFICHAGE---------------------------------##
-
+'''
 ##--------------------------DECOUPAGE IMPRESSION-----------------------------##
 #Decoupe la derniere figure en morceau de taille (widthPrintable,heightPrintable)
 #pour pouvoir l'imprimer facilement. Sauvegarde dans un folder au format .pdf
@@ -260,6 +260,6 @@ for i in range (yf.shape[0]-1):
         plt.close(fig)
         fig.tight_layout()#Supprime les marges
         fig.savefig('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/AnamorphosePlane/ImagePrintable/Image'+str(i+1)+','+str(j+1)+'.pdf')
-
+'''
 plt.show()
 ##------------------------FIN DECOUPAGE IMPRESSION---------------------------##

@@ -22,9 +22,9 @@ class Feuille:
         self.width = width
         self.debut = debut
         Pospix = np.array([[0, 0],
-                   [0, image.shape[0]],
-                   [image.shape[1], 0],
-                   [image.shape[1], image.shape[0]]])
+                            [0, image.shape[0]],
+                            [image.shape[1], 0],
+                            [image.shape[1], image.shape[0]]])
         self.Cadre = Fonction.Pix2Meter(Pospix, image, -width/2, width/2, height/2, -height/2, centreH, centreV)
         image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         #Conversion en NB
@@ -39,11 +39,11 @@ class Feuille:
             C'est pour ca que les indices semblent inversés (H<->V) mais c'est normal'''
             self.contours3D[i] = np.empty( [len(self.contours[i]), 3], dtype=np.float32)
             
-            temp = Fonction.Pix2Meter(self.contours[i][:, 0], image,  -height/2, height/2,
-                              -width/2, width/2, centreV, centreH)
+            temp = Fonction.Pix2Meter(self.contours[i][:, 0], image,  -width/2, width/2,
+                              -height/2, height/2, centreH, centreV)
             self.contours3D[i][:, 0] = d
-            self.contours3D[i][:, 1] = temp[:, 1]
-            self.contours3D[i][:, 2] = temp[:, 0]
+            self.contours3D[i][:, 1] = temp[:, 0]
+            self.contours3D[i][:, 2] = temp[:, 1]
         self.Centre=np.array([d, 0, 0])
         
     def projection(self, saut, F, x, y, z, delta1): 

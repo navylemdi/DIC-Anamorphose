@@ -21,7 +21,7 @@ plt.close('all')
 
 ##-------------------------------CONSTANTES----------------------------------##
 
-saut = 1 #Taille du saut de point dans la liste contours
+saut = 1000 #Taille du saut de point dans la liste contours
 
 debut = 2 #Debut des boucles for pour les projections
 debut2 = 3
@@ -29,8 +29,8 @@ debut3 = 2
 debut4 = 4
 debut5 = 2
 
-height = 21e-2#27e-2 #29.7e-2#hauteur en m de l'image de reference(m)
-width = 27e-2#21e-2 #21e-2#largeur en m de l'image de reference(m)
+height = 27e-2#27e-2 #29.7e-2#hauteur en m de l'image de reference(m)
+width = 21e-2#21e-2 #21e-2#largeur en m de l'image de reference(m)
 WingWidth = 60e-2 #largeur zone analyse de l'aile (m)
 WingHeight = 3 #hauteur zone analyse de l'aile (m)
 
@@ -204,7 +204,6 @@ ax.set_ylabel('Y')
 ax.set_zlabel('Z')
 plt.title('Image référence et projetée 3D (m)')
 #Fonction.set_aspect_equal_3d(ax)
-plt.show()
 
 fig3=plt.figure(7)
 for i in range(debut, len(Feuille1.contours), saut):
@@ -232,7 +231,6 @@ plt.title('Dépliée')
 plt.xlim(min(CadreAileUnfolded[:,1]), max(CadreAileUnfolded[:,1]))
 plt.ylim(min(CadreAileUnfolded[:,2]), max(CadreAileUnfolded[:,2]))
 plt.grid()
-plt.show()
 
 ##-----------------------------FIN AFFICHAGE---------------------------------##
 
@@ -277,5 +275,5 @@ for i in range (yf.shape[0]-1):
         plt.close(fig)
         fig.tight_layout()#Supprime les marges
         fig.savefig('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/AnamorphosePlane/ImagePrintable2mmLETTERCTA/Image'+str(i+1)+','+str(j+1)+'.pdf')
-        
+plt.show()
 ##------------------------FIN DECOUPAGE IMPRESSION---------------------------##
