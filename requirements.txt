@@ -4,3 +4,5 @@ time
 sys
 sympy
 matplotlib.pyplot
+os
+glob
