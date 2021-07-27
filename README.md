@@ -12,3 +12,10 @@ Seul les cas plan et cylindre sont implémentés.
 ## AnamorphosePlanaire.py
 
 Déformation de l'image sur un plan grace à cv2.warpPerspective
+
+## Trucs à faire
+
+- Améliorer temps de traitements : Parallélisation du calcul des projections de chaque feuille.
+                                   Utilisation des equation analytique pour s'affranchir de sympy.solve.
+                                   Approximation numérique de la solution de la projection.
+- Déplier une surface polynomiale quelconque
