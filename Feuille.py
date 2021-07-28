@@ -53,7 +53,7 @@ class Feuille:
         start = time.time()
         for i in range(self.debut, len(self.contours), saut):
             self.Pntprojection[i] = np.empty( [len(self.contours[i]), 3], dtype=np.float32)
-            sys.stdout.write('\r' + str(round((i/(len(self.contours)-1))*100,2)) + '% ')#Affichage pourcentage de l'avancement
+            sys.stdout.write('\r' + str(round((i/(len(self.contours)-1))*100,2)) + '% \n')#Affichage pourcentage de l'avancement
             for j in range(len(self.contours3D[i])):
                 try:
                     sol = max(solve( F.subs([(x, self.contours3D[i][j,0]/delta1), (y, self.contours3D[i][j,1]/delta1), (z, self.contours3D[i][j,2]/delta1)]), delta1))#Résolution de l'equation f(x/delta, y/delta, z/delta) = 0 avec delta l'inconnue

@@ -231,7 +231,6 @@ for i in range (yf.shape[0]-1):
         plt.xlim(yf[0][j], yf[0][j+1])
         plt.ylim(zf[i][0], zf[i+1][0])
         plt.box(False)
-        #plt.show()
         plt.close(fig)
         fig.tight_layout()#Supprime les marges
         fig.savefig('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/AnamorphosePlane/ImagePrintable/Image'+str(i+1)+','+str(j+1)+'.pdf')
