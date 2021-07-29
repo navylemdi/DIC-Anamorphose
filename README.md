@@ -2,7 +2,7 @@
 
 ## Detection de contour multi-feuille
 
-Telecharger main.py, Fonction.py et Feuille.py
+Telecharger main.py, Fonction.py et Feuille.py, Surface.py ainsi que les bibliothèques de requirements.txt
 
 Modifier la partie Constantes avec la position de chacune des feuilles. 
 
