@@ -18,4 +18,5 @@ Déformation de l'image sur un plan grace à cv2.warpPerspective
 - Améliorer temps de traitements : Parallélisation du calcul des projections de chaque feuille.
                                    Utilisation des equations analytiques pour s'affranchir de sympy.solve.
                                    Approximation numérique de la solution de la projection.
-- Déplier une surface polynomiale quelconque
+- Déplier une surface polynomiale quelconque.
+- Effectuer l'anamorphose dans un espace où la caméra n'est plus le centre et orienté dans n'importe quelle direction.
