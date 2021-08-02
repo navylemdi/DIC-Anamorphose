@@ -4,7 +4,7 @@
 
 Telecharger main.py, Fonction.py et Feuille.py, Surface.py ainsi que les bibliothèques de requirements.txt
 
-Modifier la partie Constantes avec la position de chacune des feuilles. 
+Modifier la partie Constantes avec la position de chacune des feuilles. Modifier la position de l'aile dans la repère de la caméra. L'axe Ox est normal au plan du capteur 
 
 Modifier la variable saut pour choisir le nombre de point sautés (saut=1 <=> Tout les points sont pris en compte, saut=10 <=> 1/10 des points sont pris en compte). Cela permet de limiter le temps de calcul (~30 minutes pour une feuille complète de 4mm/ ~75 minutes pour une feuille complète de 2mm). 
 Seul les cas plan et cylindre sont implémentés. 
