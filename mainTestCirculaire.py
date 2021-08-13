@@ -20,25 +20,21 @@ plt.close('all')
 
 ##-------------------------------CONSTANTES----------------------------------##
 
-saut = 2 #Taille du saut de point dans la liste contours
+saut = 1 #Taille du saut de point dans la liste contours
 
 debut = 2 #Debut des boucles for pour les projections
-debut2 = 2
-debut3 = 2
-debut4 = 2
-debut5 = 2
+debut2 = 3
 
 height = 27e-2#27e-2 #29.7e-2#hauteur en m de l'image de reference(m)
 width = 21e-2#21e-2 #21e-2#largeur en m de l'image de reference(m)
 WingWidth = 8.4e-2 #largeur zone analyse de l'aile (m)
 WingHeight = 1 #hauteur zone analyse de l'aile (m)
 
-
 widthPrintable = 27.9e-2
 heightPrintable = 21.6e-2
 
-image1 = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Banque_Speckle/4mm/Speckle_1.png")
-image2 = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Banque_Speckle/4mm/Speckle_2.png")
+image1 = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Banque_Speckle/2mm/Speckle_1.png")
+image2 = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Banque_Speckle/2mm/Speckle_2.png")
 
 #cv2.imshow('Reference', image)
 
@@ -59,19 +55,13 @@ CentreH1 = 0 #CadreAile[2,1]-width/2 #Position horizontale du centre du speckle 
 CentreV1 = CadreAile[0,2]+height/2 #Position verticale du centre du speckle de référence 1
 CentreH2 = 0 #CentreH1 #Position horizontale du centre du speckle de référence 2
 CentreV2 = CentreV1 + height#Position verticale du centre du speckle de référence 2
-CentreH3 = CentreH1 #Position horizontale du centre du speckle de référence 3
-CentreV3 = height + CentreV1 #Position verticale du centre du speckle de référence 3
-CentreH4 = CentreH2 #Position horizontale du centre du speckle de référence 4
-CentreV4 = CentreV3 #Position verticale du centre du speckle de référence 4
-CentreH5 = CentreH2-width #Position horizontale du centre du speckle de référence 4
-CentreV5 = CentreV2 #Position verticale du centre du speckle de référence 4
 
 #Parametre Position aile
 a = (B-A)[0]#-np.sin(theta*np.pi/180)# -0.02#
 b = (B-A)[1]#-np.sin(theta*np.pi/180)#np.linalg.solve(D,E)[1]
 c = (B-A)[2]#np.cos(theta*np.pi/180)#1#np.linalg.solve(D,E)[2]#
 dprim = 1#a*A[0]**1+b*A[1]**1+c*A[2]
-Radius = 4.2e-2
+Radius = 3.75e-2
 Pos = np.array([A[0], A[1], A[2]])
 
 
@@ -232,7 +222,7 @@ plt.grid()
 ##--------------------------DECOUPAGE IMPRESSION-----------------------------##
 #Decoupe la derniere figure en morceau de taille (widthPrintable,heightPrintable)
 #pour pouvoir l'imprimer facilement. Sauvegarde dans un folder au format .pdf
-files = glob.glob('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/AnamorphosePlane/ImagePrintableTestCirculaire/*.pdf')
+files = glob.glob('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/AnamorphosePlane/ImagePrintable4mmTestCirculaire/*.pdf')
 for f in files:
     os.remove(f)
 
@@ -269,7 +259,7 @@ for i in range (yf.shape[0]-1):
         plt.box(False)
         plt.close(fig)
         fig.tight_layout()#Supprime les marges
-        fig.savefig('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/AnamorphosePlane/ImagePrintableTestCirculaire/Image'+str(i+1)+','+str(j+1)+'.pdf')
+        fig.savefig('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/AnamorphosePlane/ImagePrintable4mmTestCirculaire/Image'+str(i+1)+','+str(j+1)+'.pdf')
 
 plt.show()
 ##------------------------FIN DECOUPAGE IMPRESSION---------------------------##

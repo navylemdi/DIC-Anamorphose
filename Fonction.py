@@ -16,11 +16,11 @@ def Pix2Meter(Pospix, image, Lim_inf_H, Lim_max_H, Lim_inf_V, Lim_max_V, CentreH
     Posmet[:, 0] = ((Lim_max_H-Lim_inf_H)*Pospix[:,0])/image.shape[1] + Lim_inf_H + CentreH
     return Posmet
 
-def Meter2Pix(Posmet, image, Lim_inf_H, Lim_max_H, Lim_inf_V, Lim_max_V):
-    Pospix = np.zeros((len(Posmet),2), np.float32)
-    Pospix[:, 0] = image.shape[0]*(Posmet[:,0]-Lim_inf_V)/(Lim_max_V-Lim_inf_V)
-    Pospix[:, 1] = image.shape[1]*(Posmet[:,1]-Lim_inf_H)/(Lim_max_H-Lim_inf_H)
-    return Pospix
+#def Meter2Pix(Posmet, image, Lim_inf_H, Lim_max_H, Lim_inf_V, Lim_max_V):
+#    Pospix = np.zeros((len(Posmet),2), np.float32)
+#    Pospix[:, 0] = image.shape[0]*(Posmet[:,0]-Lim_inf_V)/(Lim_max_V-Lim_inf_V)
+#    Pospix[:, 1] = image.shape[1]*(Posmet[:,1]-Lim_inf_H)/(Lim_max_H-Lim_inf_H)
+#    return Pospix
 
 def set_aspect_equal_3d(ax):
     """Fix equal aspect bug for 3D plots."""
