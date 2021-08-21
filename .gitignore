@@ -386,3 +386,19 @@ FodyWeavers.xsd
 # JetBrains Rider
 .idea/
 *.sln.iml
+
+#macOS Files
+.DS_Store
+.gitignore
+*.png
+*.pdf
+ImagePrintable/
+ImagePrintable2mmLETTERCTA/
+ImagePrintable4mmLETTERCTA/
+ImagePrintable4mmTestCirculaire/
+ImagePrintableTestETS/
+TEST.py
+TestCercle.py
+Anamorphose3D_DetectionContour.py
+AnamorphosePlanaireTest.py
+DetectionContour.py
