@@ -2,7 +2,7 @@
 
 ## Detection de contour multi-feuille
 
-Telecharger main.py, Fonction.py et Feuille.py, Surface.py ainsi que les bibliothèques de requirements.txt
+Telecharger Anamorphose.py, Fonction.py et Feuille.py, Surface.py ainsi que les bibliothèques de requirements.txt
 
 Modifier la partie Constantes avec la position de chacune des feuilles. Modifier la position de l'aile dans la repère de la caméra. L'axe Ox est normal au plan du capteur 
 
