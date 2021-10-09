@@ -107,6 +107,7 @@ def depliage(feuille, surface, saut, ProjVector):
     
 def depliage_cadre_objet(CadreAile, SurfaceType, Gradient, rotation_matrix, roulement_matrix, ProjVector, widthPrintable, heightPrintable): 
     CadreAileUnfolded = np.zeros((4,3))
+    x ,y ,z = Symbol('x'), Symbol('y'), Symbol('z')
     if SurfaceType=='Plan':
         for i in range(4):
             NormalVector = np.array(Gradient.subs([(x, CadreAile[i,0]), (y, CadreAile[i, 1]), (z, CadreAile[i, 2])])).astype(np.float64)/np.linalg.norm(np.array(Gradient.subs([(x, CadreAile[i,0]), (y, CadreAile[i,1]), (z, CadreAile[i,2])])).astype(np.float64))
