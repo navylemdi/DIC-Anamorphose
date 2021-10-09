@@ -44,4 +44,3 @@ class Plot:
         plt.xlim(min(CadreAileUnfolded[:,1]), max(CadreAileUnfolded[:,1]))
         plt.ylim(min(CadreAileUnfolded[:,2]), max(CadreAileUnfolded[:,2]))
         plt.grid()
-            
