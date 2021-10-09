@@ -5,6 +5,8 @@ Created on Wed Jul 21 09:36:31 2021
 
 @author: yvan
 """
+import sympy as sym
+from sympy import Symbol
 
 class Surface:
     
@@ -18,15 +20,17 @@ class Surface:
         self.d = d
         self.Radius = Radius
         self.SurfaceType = SurfaceType
-        
-    def Equation(self, x, y, z):
+
+    def Equation(self):
         if self.SurfaceType =='Plan':
-            F = self.a*x + self.b*y + self.c*z -self.d
+            F = self.a*Symbol('x') + self.b*Symbol('y') + self.c*Symbol('z') -self.d
             
         elif self.SurfaceType == 'Cylindre':
-            F = (x-self.Posx)**2 + (z-self.Posz)**2 + (y-self.Posy)**2 - (self.a*(x-self.Posx) + self.b*(y-self.Posy) + self.c*(z-self.Posz))**2/(self.a**2+self.b**2+self.c**2) - self.Radius**2
+            F = (Symbol('x')-self.Posx)**2 + (Symbol('z')-self.Posz)**2 + (Symbol('y')-self.Posy)**2 - (self.a*(Symbol('x')-self.Posx) + self.b*(Symbol('y')-self.Posy) + self.c*(Symbol('z')-self.Posz))**2/(self.a**2+self.b**2+self.c**2) - self.Radius**2
         
         else:
             print('Surface non prise en compte')
         return F     
-         
+    
+    def Gradient(self):
+        return sym.Matrix([sym.diff(self.Equation(),Symbol('x')), sym.diff(self.Equation(),Symbol('y')), sym.diff(self.Equation(),Symbol('z'))])
