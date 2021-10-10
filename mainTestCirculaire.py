@@ -11,7 +11,7 @@ import sympy as sym
 from sympy import Symbol
 import cv2 as cv2
 from Surface import Surface
-from Feuille import Feuille
+from Sheets import Sheets
 import Fonction
 import os
 import glob
@@ -97,8 +97,8 @@ delta1 = Symbol('delta1', positive=True)
 
 ##---------------------------------FEUILLES----------------------------------##
  
-Feuille1 = Feuille(CentreH1, CentreV1, image1, height, width, debut, saut, d)
-Feuille2 = Feuille(CentreH2, CentreV2, image2, height, width, debut2, saut, d)
+Feuille1 = Sheets(CentreH1, CentreV1, image1, height, width, debut, saut, d)
+Feuille2 = Sheets(CentreH2, CentreV2, image2, height, width, debut2, saut, d)
 
 Liste_Feuille=[Feuille1, Feuille2]
 ##-----------------------------FIN FEUILLES----------------------------------##
@@ -117,9 +117,9 @@ Pntprojection2 = Feuille2.projection(saut, F, x, y, z, delta1)[0]
 #point déplié sur un plan horizontal
 GradF = sym.Matrix([sym.diff(F,x), sym.diff(F,y), sym.diff(F,z)]) #Gradient (vecteur normal) de la surface obtenu à partir de l'equation de la surface
 ProjVector = np.array([-1, 0, 0])#Direction de dépliage de la surface 3D
-Depliage = Fonction.depliage(Feuille1, S, saut, x, y, z, GradF, ProjVector)
+Depliage = Fonction.Unfold(Feuille1, S, saut, x, y, z, GradF, ProjVector)
 UnfoldedPnt1 = Depliage[0]#Coordonées de la déformée des points de projection
-UnfoldedPnt2 = Fonction.depliage(Feuille2, S, saut, x, y, z, GradF, ProjVector)[0]
+UnfoldedPnt2 = Fonction.Unfold(Feuille2, S, saut, x, y, z, GradF, ProjVector)[0]
 rotation_matrix = Depliage[1]
 roulement_matrix = Depliage[2]
 

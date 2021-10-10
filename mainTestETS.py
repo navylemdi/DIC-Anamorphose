@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 import sympy as sym
 from sympy import Symbol
 import cv2 as cv2
-from Feuille import Feuille
+from Sheets import Sheets
 import Fonction
 
 plt.close('all')
@@ -103,9 +103,9 @@ delta1 = Symbol('delta1', positive=True)
 
 ##---------------------------------FEUILLES----------------------------------##
 
-Feuille1 = Feuille(CentreH1, CentreV1, image1, height, width, debut, saut, d)
-Feuille2 = Feuille(CentreH2, CentreV2, image2, height, width, debut2, saut, d)
-Feuille3 = Feuille(CentreH3, CentreV3, image3, height, width, debut3, saut, d)
+Feuille1 = Sheets(CentreH1, CentreV1, image1, height, width, debut, saut, d)
+Feuille2 = Sheets(CentreH2, CentreV2, image2, height, width, debut2, saut, d)
+Feuille3 = Sheets(CentreH3, CentreV3, image3, height, width, debut3, saut, d)
 
 ##-----------------------------FIN FEUILLES----------------------------------##
 

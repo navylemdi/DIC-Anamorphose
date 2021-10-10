@@ -12,7 +12,7 @@ import sympy as sym
 from sympy import Symbol
 import cv2 as cv2
 from Surface import Surface
-from Feuille import Feuille
+from Sheets import Sheets
 import Fonction
 import os
 import glob
@@ -102,11 +102,11 @@ delta1 = Symbol('delta1', positive=True)
 
 ##---------------------------------FEUILLES----------------------------------##
  
-Feuille1 = Feuille(CentreH1, CentreV1, image1, height, width, debut, saut, d)
-Feuille2 = Feuille(CentreH2, CentreV2, image2, height, width, debut2, saut, d)
-Feuille3 = Feuille(CentreH3, CentreV3, image3, height, width, debut3, saut, d)
-Feuille4 = Feuille(CentreH4, CentreV4, image4, height, width, debut4, saut, d)
-Feuille5 = Feuille(CentreH5, CentreV5, image5, height, width, debut5, saut, d)
+Feuille1 = Sheets(CentreH1, CentreV1, image1, height, width, debut, saut, d)
+Feuille2 = Sheets(CentreH2, CentreV2, image2, height, width, debut2, saut, d)
+Feuille3 = Sheets(CentreH3, CentreV3, image3, height, width, debut3, saut, d)
+Feuille4 = Sheets(CentreH4, CentreV4, image4, height, width, debut4, saut, d)
+Feuille5 = Sheets(CentreH5, CentreV5, image5, height, width, debut5, saut, d)
 
 Liste_Feuille=[Feuille1]
 ##-----------------------------FIN FEUILLES----------------------------------##
@@ -129,11 +129,11 @@ Pntprojection5 = Feuille5.projection(saut, F, x, y, z, delta1)[0]
 GradF = sym.Matrix([sym.diff(F,x), sym.diff(F,y), sym.diff(F,z)]) #Gradient (vecteur normal) de la surface obtenu à partir de l'equation de la surface
 ProjVector = np.array([-1, 0, 0])#Direction de dépliage de la surface 3D
 
-UnfoldedPnt1 = Fonction.depliage(Feuille1, S, saut, x, y, z, GradF, ProjVector)[0]#Coordonées de la déformée des points de projection
-UnfoldedPnt2 = Fonction.depliage(Feuille2, S, saut, x, y, z, GradF, ProjVector)[0]
-UnfoldedPnt3 = Fonction.depliage(Feuille3, S, saut, x, y, z, GradF, ProjVector)[0]
-UnfoldedPnt4 = Fonction.depliage(Feuille4, S, saut, x, y, z, GradF, ProjVector)[0]
-UnfoldedPnt5 = Fonction.depliage(Feuille5, S, saut, x, y, z, GradF, ProjVector)[0]
+UnfoldedPnt1 = Fonction.Unfold(Feuille1, S, saut, x, y, z, GradF, ProjVector)[0]#Coordonées de la déformée des points de projection
+UnfoldedPnt2 = Fonction.Unfold(Feuille2, S, saut, x, y, z, GradF, ProjVector)[0]
+UnfoldedPnt3 = Fonction.Unfold(Feuille3, S, saut, x, y, z, GradF, ProjVector)[0]
+UnfoldedPnt4 = Fonction.Unfold(Feuille4, S, saut, x, y, z, GradF, ProjVector)[0]
+UnfoldedPnt5 = Fonction.Unfold(Feuille5, S, saut, x, y, z, GradF, ProjVector)[0]
 
 #Dépliage du cadre de l'aile
 CadreAileUnfolded = np.zeros((4,3))

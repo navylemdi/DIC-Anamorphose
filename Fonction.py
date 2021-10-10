@@ -48,14 +48,15 @@ def set_aspect_equal_3d(ax):
     ax.set_ylim3d([ymean - plot_radius, ymean + plot_radius])
     ax.set_zlim3d([zmean - plot_radius, zmean + plot_radius])
     
-def depliage(feuille, surface, saut, ProjVector):
+def Unfold(feuille, surface):
+    ProjVector = np.array([-1, 0, 0])
     x ,y ,z = Symbol('x'), Symbol('y'), Symbol('z')
     GradF = surface.Gradient()
     UnfoldedPnt = [None]*len(feuille.contours)
     print('Début dépliage')
     start = time.time()
     if surface.SurfaceType == 'Plan':
-        for i in range(feuille.debut, len(feuille.contours), saut):
+        for i in range(feuille.debut, len(feuille.contours), feuille.saut):
             UnfoldedPnt[i] = np.empty( [len(feuille.contours[i]), 3], dtype=np.float32)
             sys.stdout.write('\r' + str(round((i/(len(feuille.contours)-1))*100,2)) + '% ')#Affichage pourcentage de l'avancement
         
@@ -87,7 +88,7 @@ def depliage(feuille, surface, saut, ProjVector):
                          [v2[2], 0, -v2[0]], 
                          [-v2[1], v2[0], 0]], dtype='float64')
         roulement_matrix = np.eye(3) + kmat2 + kmat2.dot(kmat2) * (1/(1+cos2))
-        for i in range(feuille.debut, len(feuille.contours), saut):
+        for i in range(feuille.debut, len(feuille.contours), feuille.saut):
             UnfoldedPnt[i] = np.empty( [len(feuille.contours[i]), 3], dtype=np.float32)
             sys.stdout.write('\r' + str(round((i/(len(feuille.contours)-1))*100,2)) + '% ')#Affichage pourcentage de l'avancement    
             for j in range(len(feuille.contours3D[i])):
@@ -105,7 +106,7 @@ def depliage(feuille, surface, saut, ProjVector):
     print('Temps ecoulé: ', time.strftime("%H:%M:%S", time.gmtime(end-start)))
     return UnfoldedPnt, rotation_matrix, roulement_matrix
     
-def depliage_cadre_objet(CadreAile, SurfaceType, Gradient, rotation_matrix, roulement_matrix, ProjVector, widthPrintable, heightPrintable): 
+def Unfold_object_frame(CadreAile, SurfaceType, Gradient, rotation_matrix, roulement_matrix, ProjVector, widthPrintable, heightPrintable): 
     CadreAileUnfolded = np.zeros((4,3))
     x ,y ,z = Symbol('x'), Symbol('y'), Symbol('z')
     if SurfaceType=='Plan':
@@ -127,7 +128,7 @@ def depliage_cadre_objet(CadreAile, SurfaceType, Gradient, rotation_matrix, roul
         yf, zf  = np.meshgrid(np.arange(min(CadreAileUnfolded[:,1]), max(CadreAileUnfolded[:,1]) + widthPrintable, widthPrintable), np.arange(min(CadreAileUnfolded[:,2]), max(CadreAileUnfolded[:,2]) + heightPrintable, heightPrintable))
         return CadreAileUnfolded, yf, zf 
 
-def Print(PrintPath, yf, zf, widthPrintable, heightPrintable,Nbimage, debut, saut, Liste_Feuille, Liste_depliage, CadreAileUnfolded):
+def Print(PrintPath, yf, zf, widthPrintable, heightPrintable,Nbimage, Liste_Feuille, Liste_depliage, CadreAileUnfolded):
     files = glob.glob(PrintPath + '*.pdf')
     for f in files:
         os.remove(f)
@@ -143,7 +144,7 @@ def Print(PrintPath, yf, zf, widthPrintable, heightPrintable,Nbimage, debut, sau
             y_axis = axe.axes.get_yaxis()
             y_axis.set_visible(False)
             for m in range(Nbimage):
-                for l in range(debut, len(Liste_Feuille[m].contours), saut):
+                for l in range(Liste_Feuille[m].debut, len(Liste_Feuille[m].contours), Liste_Feuille[m].saut):
                     plt.plot(Liste_depliage[m][l][:, 1], Liste_depliage[m][l][:, 2], color='k')
                     plt.fill(Liste_depliage[m][l][:, 1], Liste_depliage[m][l][:, 2], color='k')
             plt.scatter(CadreAileUnfolded[:,1], CadreAileUnfolded[:,2], color='c', marker='+')
