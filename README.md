@@ -1,17 +1,35 @@
-# AnamorphosePlane
+# Anamorphosis
 
-## Detection de contour multi-feuille
+## Detection of edges and deformations on a surface of several sheets of speckles
+### Installation
+To begin, you have to download some packages listed in the requirements.txt file
+To use Anamorphose.py, you also have to download Fonction.py, Feuille.py, Surface.py and Plot.py files.
 
-Telecharger Anamorphose.py, Fonction.py et Feuille.py, Surface.py ainsi que les bibliothèques de requirements.txt
+### Constant section
 
-Modifier la partie Constantes avec la position de chacune des feuilles. Modifier la position de l'aile dans la repère de la caméra. L'axe Ox est normal au plan du capteur 
+In the Anamorphose.py, parameters of the anamorphosis as the surface properties and the speckle files have to be set in the *CONSTANTES* section.
 
-Modifier la variable saut pour choisir le nombre de point sautés (saut=1 <=> Tout les points sont pris en compte, saut=10 <=> 1/10 des points sont pris en compte). Cela permet de limiter le temps de calcul (~30 minutes pour une feuille complète de 4mm/ ~75 minutes pour une feuille complète de 2mm). 
-Seul les cas plan et cylindre sont implémentés. 
+Due to the multitude of points in the speckle, to test the code, we only anamorphose a few points. The variable *saut* represents the anamorphic step. `saut=2` will anamorphose half of all the points of a sheet of speckles.
+
+*debut* variable represents the first index of the contour list calculated by OpenCV to be considered ine the anamorphosis. Usually `debut=3` is sufficient to avoid black filling of the result by the algorithm.
+
+You need to implement the size of the speckle sheets you want to anamorphose and the size of the anamorphosed speckle sheets you want to get. Use the *height*, *width*, *heightPrintable* and *widthPrintable* variables to do so.
+
+*PrintPath* is the path of the anamorphosed speckle sheets folder.
+
+In the *List_image* list you must put all the images read by openCV you want to use. It has to be a numpy array.
+
+In the *Feuille_pos* list you must put the center position of all your sheet. With the height and the width respectively in the first and second position.
+
+Then you must to implement the surface properties. *(a, b, c)* vector represents the normal vector in case of a plane surface and the axis of a cylinder in the case of a cylinder surface case.
+
+If needed, you can also represent the frame of the wing with the *CadreAile* numpy array.
+Seuls les cas plan et cylindre sont implémentés. 
 
 ## AnamorphosePlanaire.py
 
-Déformation de l'image sur un plan grace à cv2.warpPerspective
+Image warping on a plane with cv2.warpPerspective.
+It was just a test program.
 
 ## Trucs à faire
 
