@@ -53,12 +53,14 @@ To unfold your anamorphed speckle, you have to use the `depliage(feuille, surfac
 Then you finally can plot all the results.
 
 To plot your speckle sheets use the `PlotReference(Nbimage, debut, saut, Liste_Feuille)` function of the Plot.py file.
+
 To plot the anamorphosed speckle in 3D use the `Plot3D(Nbimage, debut, saut, Liste_Feuille, Liste_Projection, CadreAile, d)` function of the Plot.py file.
+
 To plot the unfolded speckle use the `PlotUnfolded(Nbimage, debut, saut, Liste_Feuille, Liste_depliage, CadreAileUnfolded, yf, zf)` function of the Plot.py file.
 
 ### Print section
 
-To save your results use Fonction.Print(PrintPath, yf, zf, widthPrintable, heightPrintable,Nbimage, debut, saut, Liste_Feuille, Liste_depliage, CadreAileUnfolded)
+To save your results in pdf format, use Fonction.Print(PrintPath, yf, zf, widthPrintable, heightPrintable,Nbimage, debut, saut, Liste_Feuille, Liste_depliage, CadreAileUnfolded)
 
 ## AnamorphosePlanaire.py
 
