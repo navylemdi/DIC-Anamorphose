@@ -10,14 +10,14 @@ from sympy import Symbol
 
 class Surface:
     
-    def __init__(self, a, b, c, Posx, Posy, Posz, d, Radius, SurfaceType):
+    def __init__(self, a, b, c, Pos, Radius, SurfaceType):
         self.a = a
         self.b = b
         self.c = c
-        self.Posx = Posx
-        self.Posy = Posy
-        self.Posz = Posz
-        self.d = d
+        self.Posx = Pos[0]
+        self.Posy = Pos[1]
+        self.Posz = Pos[2]
+        self.d = self.a*self.Posx + self.b*self.Posy + self.c*self.Posz
         self.Radius = Radius
         self.SurfaceType = SurfaceType
 

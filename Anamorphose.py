@@ -13,23 +13,30 @@ import cv2 as cv2
 from Surface import Surface
 from Sheets import Sheets
 from Plot import Plot
+from Speckle import Speckle
+from data import Deck
 import Fonction
 import os
 import glob
 import sys
 
+
+deck = Deck('./deck.yaml')
+#print(deck.doc)
+
 plt.close('all')
 
-##-------------------------------CONSTANTES----------------------------------##
 
+##-------------------------------CONSTANTES----------------------------------##
+'''
 step = 500 #Taille du saut de point dans la liste contours
 
 begining = 3 #Debut des boucles for pour les projections
 
 height = 27e-2#27e-2 #29.7e-2#hauteur en m de l'image de reference(m)
 width = 21e-2#21e-2 #21e-2#largeur en m de l'image de reference(m)
-WingWidth = 60e-2 #largeur zone analyse de l'aile (m)
-WingHeight = 3 #hauteur zone analyse de l'aile (m)
+#WingWidth = 60e-2 #largeur zone analyse de l'aile (m)
+#WingHeight = 3 #hauteur zone analyse de l'aile (m)
 
 heightPrintable = 27.9e-2
 widthPrintable = 21.6e-2
@@ -52,7 +59,7 @@ CentreV2 = CentreV1 #Position verticale du centre du speckle de référence 2
 # CentreV5 = CentreV2 #Position verticale du centre du speckle de référence 4
 d = 2
 Sheets_pos = np.array([[CentreH1, CentreV1, d],
-                        [CentreH2,CentreV2, d]])
+                        [CentreH2,CentreV2, d]])'''
 #Parametre Position aile
 a = 0
 b = 0
@@ -72,22 +79,27 @@ WingFrame = np.vstack((A, B, C1))#Points qui definissent les limites spatiales d
 
 ##---------------------------------SURFACE----------------------------------##
 
-S = Surface(a, b, c, Pos[0], Pos[1], Pos[2], dprim, Radius, 'Cylindre')
+S = Surface(deck.a, deck.b, deck.c, deck.Position, deck.radius, deck.SurfaceType)
 
 ##---------------------------------FEUILLES----------------------------------##
 
-List_Sheets=[]
-for i in range(Nbimage):
-    List_Sheets.append(Sheets(Sheets_pos[i,0], Sheets_pos[i,1], Sheets_pos[i,2], List_image[i], height, width, begining, step))
+speckle = Speckle(deck.NbImage, deck.PositionCentre, deck.Images(), deck.height, deck.width, deck.begining, deck.step)
+
+#List_Sheets=[]
+#for i in range(Nbimage):
+#   List_Sheets.append(Sheets(Sheets_pos[i,0], Sheets_pos[i,1], Sheets_pos[i,2], List_image[i], height, width, begining, step))
 
 ##-----------------------------FIN FEUILLES----------------------------------##
 
 ##--------------------------------PROJECTION---------------------------------##
 
-Liste_Projection=[]
-for i in range(Nbimage):
-    Liste_Projection.append(List_Sheets[i].projection(S)[0])#Coordonnées des points de projection de la feuille1
+Liste_Projection = speckle.ProjectionSpeckle(S)
 
+#Liste_Projection=[]
+#for i in range(Nbimage):
+    #Liste_Projection.append(List_Sheets[i].projection(S)[0])#Coordonnées des points de projection de la feuille1
+#speckle = Speckle(Nbimage, Sheets_pos, List_image, height, width, begining, step)
+#Liste_Projection = speckle.ProjectionSpeckle(S)
 ##------------------------------FIN PROJECTION-------------------------------##
 
 ##--------------------------------DEPLIAGE-----------------------------------##
@@ -96,27 +108,26 @@ for i in range(Nbimage):
 #rotation est ensuite appliqué sur la position du point donné pour obtenir un
 #point déplié sur un plan horizontal
 
-ProjVector = np.array([-1, 0, 0])#Direction de dépliage de la surface 3D
 List_Unfolded=[]
-for i in range(Nbimage):
-    List_Unfolded.append(Fonction.Unfold(List_Sheets[i], S)[0])
-Depliage = Fonction.Unfold(List_Sheets[0], S)
+for i in range(deck.NbImage):
+    List_Unfolded.append(Fonction.Unfold(speckle.List_Sheets[i], S)[0])
+Depliage = Fonction.Unfold(speckle.List_Sheets[0], S)
 #UnfoldedPnt1 = Depliage[0]#Coordonées de la déformée des points de projection
 rotation_matrix = Depliage[1]
 roulement_matrix = Depliage[2]
 
 #Dépliage du cadre de l'aile
-WingFrameUnfolded, yf, zf = Fonction.Unfold_object_frame(WingFrame, S.SurfaceType, S.Gradient(), rotation_matrix, roulement_matrix, ProjVector, widthPrintable, heightPrintable)
+WingFrameUnfolded, yf, zf = Fonction.Unfold_object_frame(WingFrame, S.SurfaceType, S.Gradient(), rotation_matrix, roulement_matrix, deck.widthPrintable, deck.heightPrintable)
 
 ##------------------------------FIN DEPLIAGE---------------------------------##
 
 ##--------------------------------AFFICHAGE----------------------------------##
 
-Plot.PlotReference(Nbimage, List_Sheets)
+Plot.PlotReference(deck.NbImage, speckle.List_Sheets)
 
-Plot.Plot3D(Nbimage, List_Sheets, Liste_Projection, WingFrame)
+Plot.Plot3D(deck.NbImage, speckle.List_Sheets, Liste_Projection, WingFrame)
 
-Plot.PlotUnfolded(Nbimage, List_Sheets, List_Unfolded, WingFrameUnfolded, yf, zf)
+Plot.PlotUnfolded(deck.NbImage, speckle.List_Sheets, List_Unfolded, WingFrameUnfolded, yf, zf)
 
 ##-----------------------------FIN AFFICHAGE---------------------------------##
 
@@ -124,5 +135,5 @@ Plot.PlotUnfolded(Nbimage, List_Sheets, List_Unfolded, WingFrameUnfolded, yf, zf
 #Decoupe la derniere figure en morceau de taille (widthPrintable,heightPrintable)
 #pour pouvoir l'imprimer facilement. Sauvegarde dans un folder au format .pdf
 
-Fonction.Print(PrintPath, yf, zf, widthPrintable, heightPrintable, Nbimage, List_Sheets, List_Unfolded, WingFrameUnfolded)
+Fonction.Print(deck.PrintPath, yf, zf, deck.widthPrintable, deck.heightPrintable, deck.NbImage, speckle.List_Sheets, List_Unfolded, WingFrameUnfolded)
 ##------------------------FIN DECOUPAGE IMPRESSION---------------------------##

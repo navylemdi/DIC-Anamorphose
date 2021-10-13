@@ -68,7 +68,7 @@ class Sheets:
                     #On prends le max pour avoir le point le plus proche de la caméra
                     self.Pntprojection[i][j,:] = self.contours3D[i][j,:]/sol# Coordonnées dans l'espace des points projetés
                 except (IndexError, ValueError):
-                    print("No solution find for the dots.\n")
+                    print("No solution found for the dots.\n")
                     self.Pntprojection[i][j,:] = [None]*3
             sys.stdout.flush()
         print('\nEnd projection calculation')
@@ -78,7 +78,7 @@ class Sheets:
         try:
             sol4 = max(solve( F.subs([(x, self.Centre[0]/delta), (y, self.Centre[1]/delta), (z, self.Centre[2]/delta)]), delta))
         except:
-            print("No solution find for center frame.\n")
+            print("No solution found for center frame.\n")
         self.PntCentreCadreProjection = (self.Centre/sol4).astype(float)#delta[:,:,None]# Coordonnées des points projetés
         return self.Pntprojection,  self.PntCentreCadreProjection
 

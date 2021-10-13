@@ -106,7 +106,8 @@ def Unfold(feuille, surface):
     print('Temps ecoulé: ', time.strftime("%H:%M:%S", time.gmtime(end-start)))
     return UnfoldedPnt, rotation_matrix, roulement_matrix
     
-def Unfold_object_frame(CadreAile, SurfaceType, Gradient, rotation_matrix, roulement_matrix, ProjVector, widthPrintable, heightPrintable): 
+def Unfold_object_frame(CadreAile, SurfaceType, Gradient, rotation_matrix, roulement_matrix, widthPrintable, heightPrintable):   
+    ProjVector = np.array([-1, 0, 0])
     CadreAileUnfolded = np.zeros((4,3))
     x ,y ,z = Symbol('x'), Symbol('y'), Symbol('z')
     if SurfaceType=='Plan':
