@@ -14,7 +14,7 @@ import glob
 import sys
 
 
-deck = Deck('./deck.yaml')
+deck = Deck('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet technique/AnamorphosePlane/temp/deck.yaml')
 #print(deck.doc)
 
 plt.close('all')
@@ -54,17 +54,17 @@ d = 2
 Sheets_pos = np.array([[CentreH1, CentreV1, d],
                         [CentreH2,CentreV2, d]])'''
 #Parametre Position aile
-a = 0
+a = -1
 b = 0
 c = 1
 dprim = 1
 Radius = 0.4
 Pos = np.array([3, 0, 0])
 
-A = np.array([Pos[0]-Radius, 0, 0.2])#np.array([l*np.cos((alpha/2)*np.pi/180), 0, l*np.sin((-alpha/2)*np.pi/180)])
-B = np.array([Pos[0]-Radius, 0, -0.2])#np.array([A[0] + (5.5-2.5)*np.cos(beta*np.pi/180), 0, A[2] + (5.5-2.5)*np.sin(beta*np.pi/180)])
-C1 = np.array([[Pos[0], -Radius, 0],#(WingHeight)/2],
-               [Pos[0], Radius, 0]])#(-WingHeight)/2]])
+A = np.array([3+27e-2*np.cos(45*np.pi/180), 0, 0.2])#np.array([l*np.cos((alpha/2)*np.pi/180), 0, l*np.sin((-alpha/2)*np.pi/180)])
+B = np.array([3-27e-2*np.cos(45*np.pi/180), 0, -0.2])#np.array([A[0] + (5.5-2.5)*np.cos(beta*np.pi/180), 0, A[2] + (5.5-2.5)*np.sin(beta*np.pi/180)])
+C1 = np.array([[Pos[0], -20e-2, 0],#(WingHeight)/2],
+               [Pos[0], 20e-2, 0]])#(-WingHeight)/2]])
 WingFrame = np.vstack((A, B, C1))#Points qui definissent les limites spatiales de l'aile
 
 

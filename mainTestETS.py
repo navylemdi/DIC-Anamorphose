@@ -17,11 +17,46 @@ import matplotlib.pyplot as plt
 import sympy as sym
 from sympy import Symbol
 import cv2 as cv2
-from Sheets import Sheets
-import Fonction
-
+from Module import *
 plt.close('all')
 
+WingFrame = np.array([[ 2.65167603,  0.        , -0.46756203],
+       [ 5.5882631 ,  0.        ,  0.14599837],
+       [ 4.11996956,  0.3       , -0.16078183],
+       [ 4.11996956, -0.3       , -0.16078183]])
+
+deck = Deck('./TestETS/deck_ETS.yaml')
+
+S = Surface(deck.a, deck.b, deck.c, deck.Position, deck.radius, deck.SurfaceType)
+
+speckle = Speckle(deck.NbImage, deck.PositionCentre, deck.Images(), deck.height, deck.width, deck.begining, deck.step)
+
+Liste_Projection = speckle.ProjectionSpeckle(S)
+
+List_Unfolded = speckle.UnfoldSpeckle(S)
+
+rotation_matrix = List_Unfolded[1]
+roulement_matrix = List_Unfolded[2]
+
+WingFrameUnfolded, yf, zf = Fonction.Unfold_object_frame(WingFrame, S.SurfaceType, S.Gradient(), rotation_matrix, roulement_matrix, deck.widthPrintable, deck.heightPrintable)
+
+##--------------------------------AFFICHAGE----------------------------------##
+
+p=Plot()
+p.PlotReference(deck.NbImage, speckle.List_Sheets)
+
+p.Plot3D(deck.NbImage, speckle.List_Sheets, Liste_Projection, WingFrame)
+
+p.PlotUnfolded(deck.NbImage, speckle.List_Sheets, List_Unfolded[0], WingFrameUnfolded, yf, zf)
+
+##-----------------------------FIN AFFICHAGE---------------------------------##
+
+##--------------------------DECOUPAGE IMPRESSION-----------------------------##
+
+Fonction.Print(deck.PrintPath, yf, zf, deck.widthPrintable, deck.heightPrintable, deck.NbImage, speckle.List_Sheets, List_Unfolded[0], WingFrameUnfolded)
+
+
+'''
 ##-------------------------------CONSTANTES----------------------------------##
 
 saut = 4000 #Taille du saut de point dans la liste contours
@@ -59,7 +94,10 @@ A = np.array([l*np.cos(alpha/2*np.pi/180), 0, -l*np.sin(alpha/2*np.pi/180)])
 B = np.array([A[0] + 3*np.cos(beta*np.pi/180), 0, A[2] + 3*np.sin(beta*np.pi/180)])
 C1 = np.array([[(B[0]+A[0])/2, (WingWidth)/2, (B[2]+A[2])/2],
                [(B[0]+A[0])/2, (-WingWidth)/2, (B[2]+A[2])/2]])
-CadreAile = np.vstack((A, B, C1))#Points qui definissent les limites spatiales de l'aile
+CadreAile = np.array([[ 2.65167603,  0.        , -0.46756203],
+       [ 5.5882631 ,  0.        ,  0.14599837],
+       [ 4.11996956,  0.3       , -0.16078183],
+       [ 4.11996956, -0.3       , -0.16078183]])#Points qui definissent les limites spatiales de l'aile
 
 CentreH1 = 0#CadreAile[2,1] #Position horizontale du centre du speckle de référence 1
 CentreV1 = CadreAile[0,2]+height/2 #Position verticale du centre du speckle de référence 1
@@ -118,10 +156,10 @@ Pntprojection3 = Feuille3.projection(saut, F, x, y, z, delta1)
 ##------------------------------FIN PROJECTION-------------------------------##
 
 ##--------------------------------DEPLIAGE-----------------------------------##
-'''On récupère le vecteur normal à la surface en un point donné puis on effectue
+On récupère le vecteur normal à la surface en un point donné puis on effectue
 une rotation de ce vecteur pour avoir un vecteur horizontal. Cette matrice de
 rotation est ensuite appliqué sur la position du point donné pour obtenir un
-point déplié sur un plan horizontal'''
+point déplié sur un plan horizontal
 GradF = sym.Matrix([sym.diff(F,x), sym.diff(F,y), sym.diff(F,z)]) #Gradient (vecteur normal) de la surface obtenu à partir de l'equation de la surface
 ProjVector = np.array([-1, 0, 0])#Direction de dépliage de la surface 3D
 
@@ -204,8 +242,8 @@ plt.show()
 ##-----------------------------FIN AFFICHAGE---------------------------------##
 
 ##--------------------------DECOUPAGE IMPRESSION-----------------------------##
-'''Decoupe la derniere figure en morceau de taille (widthPrintable,heightPrintable)
-pour pouvoir l'imprimer facilement'''
+Decoupe la derniere figure en morceau de taille (widthPrintable,heightPrintable)
+pour pouvoir l'imprimer facilement
 for i in range (yf.shape[0]-1):
     for j in range (yf.shape[1]-1):
         fig = plt.figure((i+1)*(j+1)+7)
@@ -236,3 +274,4 @@ for i in range (yf.shape[0]-1):
         fig.savefig('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/AnamorphosePlane/ImagePrintable/Image'+str(i+1)+','+str(j+1)+'.pdf')
         
 ##------------------------FIN DECOUPAGE IMPRESSION---------------------------##
+'''

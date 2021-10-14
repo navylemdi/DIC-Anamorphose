@@ -1,6 +1,4 @@
 import numpy as np
-import sys
-import time
 from sympy import Symbol
 import os
 import glob
@@ -113,7 +111,7 @@ def Unfold_object_frame(CadreAile, SurfaceType, Gradient, rotation_matrix, roule
             rotation_matrix = np.eye(3) + kmat + kmat.dot(kmat) * (1/(1+c))
             CadreAileUnfolded[i,:] = np.dot(rotation_matrix, CadreAile[i,:])
         yf, zf  = np.meshgrid(np.arange(min(CadreAileUnfolded[:,1]), max(CadreAileUnfolded[:,1]) + widthPrintable, widthPrintable), np.arange(min(CadreAileUnfolded[:,2]), max(CadreAileUnfolded[:,2]) + heightPrintable, heightPrintable))
-        return yf,zf
+        return CadreAileUnfolded, yf,zf
     elif SurfaceType=='Cylindre':
         for i in range(4):
             CadreAileUnfolded[i,:] = np.dot(rotation_matrix, CadreAile[i,:])
@@ -124,7 +122,7 @@ def Unfold_object_frame(CadreAile, SurfaceType, Gradient, rotation_matrix, roule
 def Print(PrintPath, yf, zf, widthPrintable, heightPrintable,Nbimage, Liste_Feuille, Liste_depliage, CadreAileUnfolded):
     #Decoupe la derniere figure en morceau de taille (widthPrintable,heightPrintable)
     #pour pouvoir l'imprimer facilement. Sauvegarde dans un folder au format .pdf
-    files = glob.glob(PrintPath + '*.pdf')
+    files = glob.glob(PrintPath + '/*.pdf')
     for f in files:
         os.remove(f)
 

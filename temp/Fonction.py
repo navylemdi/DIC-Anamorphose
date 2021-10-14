@@ -60,15 +60,18 @@ def Unfold(feuille, surface):
             UnfoldedPnt[i] = np.empty( [len(feuille.contours[i]), 3], dtype=np.float32)
             sys.stdout.write('\r' + str(round((i/(len(feuille.contours)-1))*100,2)) + '% ')#Affichage pourcentage de l'avancement
         
-        for j in range(len(feuille.contours3D[i])):
-            NormalVector = np.array(GradF.subs([(x, feuille.Pntprojection[i][j, 0]), (y, feuille.Pntprojection[i][j, 1]), (z, feuille.Pntprojection[i][j, 2])])).astype(np.float64)/np.linalg.norm(np.array(GradF.subs([(x, feuille.Pntprojection[i][j, 0]), (y, feuille.Pntprojection[i][j, 1]), (z, feuille.Pntprojection[i][j, 2])])).astype(np.float64))
-            v = np.cross(np.squeeze(NormalVector), ProjVector)
-            c = np.dot(np.squeeze(NormalVector), ProjVector)
-            kmat = np.array([[0, -v[2], v[1]], 
+            for j in range(len(feuille.contours3D[i])):
+                NormalVector = np.array(GradF.subs([(x, feuille.Pntprojection[i][j, 0]), (y, feuille.Pntprojection[i][j, 1]), (z, feuille.Pntprojection[i][j, 2])])).astype(np.float64)/np.linalg.norm(np.array(GradF.subs([(x, feuille.Pntprojection[i][j, 0]), (y, feuille.Pntprojection[i][j, 1]), (z, feuille.Pntprojection[i][j, 2])])).astype(np.float64))
+                v = np.cross(np.squeeze(NormalVector), ProjVector)
+                c = np.dot(np.squeeze(NormalVector), ProjVector)
+                kmat = np.array([[0, -v[2], v[1]], 
                              [v[2], 0, -v[0]], 
                              [-v[1], v[0], 0]])
-            rotation_matrix = np.eye(3) + kmat + kmat.dot(kmat) * (1/(1+c))
-            UnfoldedPnt[i][j, :] = np.dot(rotation_matrix, feuille.Pntprojection[i][j, :])
+                rotation_matrix = np.eye(3) + kmat + kmat.dot(kmat) * (1/(1+c))
+            #print(rotation_matrix)
+            
+                UnfoldedPnt[i][j, :] = np.dot(rotation_matrix, feuille.Pntprojection[i][j, :])
+            
         roulement_matrix = None
     elif surface.SurfaceType == 'Cylindre':
         ProjVector2 = np.array([0, 1, 0])#Vecteur horizontal vers les positifs
@@ -104,6 +107,7 @@ def Unfold(feuille, surface):
     print('\nFin dépliage')
     end = time.time()
     print('Temps ecoulé: ', time.strftime("%H:%M:%S", time.gmtime(end-start)))
+    #print(UnfoldedPnt)
     return UnfoldedPnt, rotation_matrix, roulement_matrix
     
 def Unfold_object_frame(CadreAile, SurfaceType, Gradient, rotation_matrix, roulement_matrix, widthPrintable, heightPrintable):   
@@ -121,7 +125,7 @@ def Unfold_object_frame(CadreAile, SurfaceType, Gradient, rotation_matrix, roule
             rotation_matrix = np.eye(3) + kmat + kmat.dot(kmat) * (1/(1+c))
             CadreAileUnfolded[i,:] = np.dot(rotation_matrix, CadreAile[i,:])
         yf, zf  = np.meshgrid(np.arange(min(CadreAileUnfolded[:,1]), max(CadreAileUnfolded[:,1]) + widthPrintable, widthPrintable), np.arange(min(CadreAileUnfolded[:,2]), max(CadreAileUnfolded[:,2]) + heightPrintable, heightPrintable))
-        return yf,zf
+        return CadreAileUnfolded, yf,zf
     elif SurfaceType=='Cylindre':
         for i in range(4):
             CadreAileUnfolded[i,:] = np.dot(rotation_matrix, CadreAile[i,:])
@@ -130,7 +134,7 @@ def Unfold_object_frame(CadreAile, SurfaceType, Gradient, rotation_matrix, roule
         return CadreAileUnfolded, yf, zf 
 
 def Print(PrintPath, yf, zf, widthPrintable, heightPrintable,Nbimage, Liste_Feuille, Liste_depliage, CadreAileUnfolded):
-    files = glob.glob(PrintPath + '*.pdf')
+    files = glob.glob(PrintPath+ '/*.pdf')
     for f in files:
         os.remove(f)
 

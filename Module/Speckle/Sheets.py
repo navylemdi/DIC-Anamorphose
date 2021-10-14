@@ -33,7 +33,7 @@ class Sheets:
         self.contours3D = [None]*len(self.contours)
         for i in range(self.debut, len(self.contours), self.saut):
             '''Opencv met l'ordonnée en premiere position des tableau et l'abscisse en seconde
-            C'est pour ca que les indices semblent inversés (H<->V) mais c'est normal'''
+            C'est pour ca que les indices semblent inversés (H<->V)'''
             self.contours3D[i] = np.empty( [len(self.contours[i]), 3], dtype=np.float32)
             
             temp = self.Pix2Meter(self.contours[i][:, 0], image,  -width/2, width/2,
@@ -82,7 +82,7 @@ class Sheets:
     
     def Unfold(self, surface):
         ProjVector = np.array([-1, 0, 0])
-        x ,y ,z = Symbol('x'), Symbol('y'), Symbol('z')
+        x, y, z = Symbol('x'), Symbol('y'), Symbol('z')
         GradF = surface.Gradient()
         self.UnfoldedPnt = [None]*len(self.contours)
         print('Début dépliage')
@@ -92,15 +92,15 @@ class Sheets:
                 self.UnfoldedPnt[i] = np.empty( [len(self.contours[i]), 3], dtype=np.float32)
                 sys.stdout.write('\r' + str(round((i/(len(self.contours)-1))*100,2)) + '% ')#Affichage pourcentage de l'avancement
             
-            for j in range(len(self.contours3D[i])):
-                NormalVector = np.array(GradF.subs([(x, self.Pntprojection[i][j, 0]), (y, self.Pntprojection[i][j, 1]), (z, self.Pntprojection[i][j, 2])])).astype(np.float64)/np.linalg.norm(np.array(GradF.subs([(x, self.Pntprojection[i][j, 0]), (y, self.Pntprojection[i][j, 1]), (z, self.Pntprojection[i][j, 2])])).astype(np.float64))
-                v = np.cross(np.squeeze(NormalVector), ProjVector)
-                c = np.dot(np.squeeze(NormalVector), ProjVector)
-                kmat = np.array([[0, -v[2], v[1]], 
-                                [v[2], 0, -v[0]], 
-                                [-v[1], v[0], 0]])
-                self.rotation_matrix = np.eye(3) + kmat + kmat.dot(kmat) * (1/(1+c))
-                self.UnfoldedPnt[i][j, :] = np.dot(self.rotation_matrix, self.Pntprojection[i][j, :])
+                for j in range(len(self.contours3D[i])):
+                    NormalVector = np.array(GradF.subs([(x, self.Pntprojection[i][j, 0]), (y, self.Pntprojection[i][j, 1]), (z, self.Pntprojection[i][j, 2])])).astype(np.float64)/np.linalg.norm(np.array(GradF.subs([(x, self.Pntprojection[i][j, 0]), (y, self.Pntprojection[i][j, 1]), (z, self.Pntprojection[i][j, 2])])).astype(np.float64))
+                    v = np.cross(np.squeeze(NormalVector), ProjVector)
+                    c = np.dot(np.squeeze(NormalVector), ProjVector)
+                    kmat = np.array([[0, -v[2], v[1]], 
+                                    [v[2], 0, -v[0]], 
+                                    [-v[1], v[0], 0]])
+                    self.rotation_matrix = np.eye(3) + kmat + kmat.dot(kmat) * (1/(1+c))
+                    self.UnfoldedPnt[i][j, :] = np.dot(self.rotation_matrix, self.Pntprojection[i][j, :])
             self.roulement_matrix = None
         elif surface.SurfaceType == 'Cylindre':
             ProjVector2 = np.array([0, 1, 0])#Vecteur horizontal vers les positifs

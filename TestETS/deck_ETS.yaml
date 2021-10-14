@@ -1,0 +1,26 @@
+Input_Speckle: 
+  step: 500
+  begining: 3
+  height: 27e-2
+  width: 21e-2
+  Path: '/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet technique/Banque_Speckle/2mm/'
+  Generic_Name: 'Speckle_'
+  NbImage: 3
+  PositionCentre: [[0, -0.3325620275974964, 2.6516760266572756], 
+                   [0, -0.0625620275974964, 2.6516760266572756], 
+                   [0, 0.2074379724025036, 2.6516760266572756]]
+
+Surface : 
+  a: -0.20452013209152206
+  b: 0
+  c: 0.9788623578263015
+  d: 1
+  Radius : 0.4
+  Position : [2.65167603,  0.        ,-0.46756203]
+  Surface_Type : 'Plan'
+
+Output_Speckle:
+  heightPrintable: 27.9e-2
+  widthPrintable: 21.6e-2
+  PrintPath: './ImagePrintable'
+

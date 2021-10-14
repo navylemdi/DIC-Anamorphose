@@ -7,18 +7,49 @@ Created on Thu Jul 22 17:07:42 2021
 """
 
 import numpy as np
-import matplotlib.pyplot as plt
-import sympy as sym
-from sympy import Symbol
-import cv2 as cv2
-from Surface import Surface
-from Sheets import Sheets
-import Fonction
-import os
-import glob
+
+from Module import *
 
 plt.close('all')
 
+deck = Deck('./TestCTA/deck_CTA.yaml')
+
+WingFrame = np.array([[ 2.53543923,  0.        , -0.22182219],
+                        [ 5.48986248,  0.        ,  0.29912234],
+                        [ 4.01265085,  0.3       ,  0.03865008],
+                        [ 4.01265085, -0.3       ,  0.03865008]])#Points qui definissent les limites spatiales de l'aile
+
+#Creation of the surface object
+S = Surface(deck.a, deck.b, deck.c, deck.Position, deck.radius, deck.SurfaceType)
+
+speckle = Speckle(deck.NbImage, deck.PositionCentre, deck.Images(), deck.height, deck.width, deck.begining, deck.step)
+
+Liste_Projection = speckle.ProjectionSpeckle(S)
+
+List_Unfolded = speckle.UnfoldSpeckle(S)
+
+rotation_matrix = List_Unfolded[1]
+roulement_matrix = List_Unfolded[2]
+
+WingFrameUnfolded, yf, zf = Fonction.Unfold_object_frame(WingFrame, S.SurfaceType, S.Gradient(), rotation_matrix, roulement_matrix, deck.widthPrintable, deck.heightPrintable)
+
+##--------------------------------AFFICHAGE----------------------------------##
+
+p=Plot()
+p.PlotReference(deck.NbImage, speckle.List_Sheets)
+
+p.Plot3D(deck.NbImage, speckle.List_Sheets, Liste_Projection, WingFrame)
+
+p.PlotUnfolded(deck.NbImage, speckle.List_Sheets, List_Unfolded[0], WingFrameUnfolded, yf, zf)
+
+##-----------------------------FIN AFFICHAGE---------------------------------##
+
+##--------------------------DECOUPAGE IMPRESSION-----------------------------##
+
+Fonction.Print(deck.PrintPath, yf, zf, deck.widthPrintable, deck.heightPrintable, deck.NbImage, speckle.List_Sheets, List_Unfolded[0], WingFrameUnfolded)
+
+
+'''
 ##-------------------------------CONSTANTES----------------------------------##
 
 saut = 500 #Taille du saut de point dans la liste contours
@@ -277,3 +308,4 @@ for i in range (yf.shape[0]-1):
 
 plt.show()
 ##------------------------FIN DECOUPAGE IMPRESSION---------------------------##
+'''
