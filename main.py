@@ -2,14 +2,7 @@ from Module import *
 import sys
 import numpy as np
 
-deck = Deck('./deck.yaml')
-
-A = np.array([deck.Position[0]-deck.radius, 0, 0.2])
-B = np.array([deck.Position[0]-deck.radius, 0, -0.2])
-C1 = np.array([[deck.Position[0], -deck.radius, 0],
-               [deck.Position[0], deck.radius, 0]])
-WingFrame = np.vstack((A, B, C1))#Points qui definissent les limites spatiales de l'aile
-#print (WingFrame)
+deck = Deck('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet technique/AnamorphosePlane/deck.yaml')
 
 #Creation of the surface object
 S = Surface(deck.a, deck.b, deck.c, deck.Position, deck.radius, deck.SurfaceType)
@@ -28,14 +21,14 @@ roulement_matrix = List_Unfolded[2]
 # print(rotation_matrix)
 # print(roulement_matrix)
 
-WingFrameUnfolded, yf, zf = Fonction.Unfold_object_frame(WingFrame, S.SurfaceType, S.Gradient(), rotation_matrix, roulement_matrix, deck.widthPrintable, deck.heightPrintable)
+WingFrameUnfolded, yf, zf = Fonction.Unfold_object_frame(deck.WingFrame, S.SurfaceType, S.Gradient(), rotation_matrix, roulement_matrix, deck.widthPrintable, deck.heightPrintable)
 
 ##--------------------------------AFFICHAGE----------------------------------##
 
 p=Plot()
 p.PlotReference(deck.NbImage, speckle.List_Sheets)
 
-p.Plot3D(deck.NbImage, speckle.List_Sheets, Liste_Projection, WingFrame)
+p.Plot3D(deck.NbImage, speckle.List_Sheets, Liste_Projection, deck.WingFrame)
 
 p.PlotUnfolded(deck.NbImage, speckle.List_Sheets, List_Unfolded[0], WingFrameUnfolded, yf, zf)
 

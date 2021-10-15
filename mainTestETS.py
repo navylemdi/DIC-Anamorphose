@@ -12,20 +12,11 @@ Created on Tue Jul  6 09:34:39 2021
 
 @author: yvan
 """
-import numpy as np
 import matplotlib.pyplot as plt
-import sympy as sym
-from sympy import Symbol
-import cv2 as cv2
 from Module import *
 plt.close('all')
 
-WingFrame = np.array([[ 2.65167603,  0.        , -0.46756203],
-       [ 5.5882631 ,  0.        ,  0.14599837],
-       [ 4.11996956,  0.3       , -0.16078183],
-       [ 4.11996956, -0.3       , -0.16078183]])
-
-deck = Deck('./TestETS/deck_ETS.yaml')
+deck = Deck('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet technique/AnamorphosePlane/TestETS/deck_ETS.yaml')
 
 S = Surface(deck.a, deck.b, deck.c, deck.Position, deck.radius, deck.SurfaceType)
 
@@ -38,14 +29,14 @@ List_Unfolded = speckle.UnfoldSpeckle(S)
 rotation_matrix = List_Unfolded[1]
 roulement_matrix = List_Unfolded[2]
 
-WingFrameUnfolded, yf, zf = Fonction.Unfold_object_frame(WingFrame, S.SurfaceType, S.Gradient(), rotation_matrix, roulement_matrix, deck.widthPrintable, deck.heightPrintable)
+WingFrameUnfolded, yf, zf = Fonction.Unfold_object_frame(deck.WingFrame, S.SurfaceType, S.Gradient(), rotation_matrix, roulement_matrix, deck.widthPrintable, deck.heightPrintable)
 
 ##--------------------------------AFFICHAGE----------------------------------##
 
 p=Plot()
 p.PlotReference(deck.NbImage, speckle.List_Sheets)
 
-p.Plot3D(deck.NbImage, speckle.List_Sheets, Liste_Projection, WingFrame)
+p.Plot3D(deck.NbImage, speckle.List_Sheets, Liste_Projection, deck.WingFrame)
 
 p.PlotUnfolded(deck.NbImage, speckle.List_Sheets, List_Unfolded[0], WingFrameUnfolded, yf, zf)
 

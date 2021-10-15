@@ -12,13 +12,16 @@ Surface :
   a: 0
   b: 0
   c: 1
-  d: 1
   Radius : 0.4
   Position : [3, 0, 0]
   Surface_Type : 'Cylindre'
+  Wingframe : [[ 2.6,  0.,   0.2],
+               [ 2.6,  0.,  -0.2],
+               [ 3.,  -0.4,  0. ],
+               [ 3.,   0.4,  0. ]]
 
 Output_Speckle:
   heightPrintable: 27.9e-2
   widthPrintable: 21.6e-2
-  PrintPath: './ImagePrintable'
+  PrintPath: '/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet technique/AnamorphosePlane/ImagePrintable'
 

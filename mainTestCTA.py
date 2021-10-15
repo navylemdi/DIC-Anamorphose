@@ -5,19 +5,11 @@ Created on Thu Jul 22 17:07:42 2021
 
 @author: yvan
 """
-
-import numpy as np
-
 from Module import *
 
 plt.close('all')
 
-deck = Deck('./TestCTA/deck_CTA.yaml')
-
-WingFrame = np.array([[ 2.53543923,  0.        , -0.22182219],
-                        [ 5.48986248,  0.        ,  0.29912234],
-                        [ 4.01265085,  0.3       ,  0.03865008],
-                        [ 4.01265085, -0.3       ,  0.03865008]])#Points qui definissent les limites spatiales de l'aile
+deck = Deck('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet technique/AnamorphosePlane/TestCTA/deck_CTA.yaml')
 
 #Creation of the surface object
 S = Surface(deck.a, deck.b, deck.c, deck.Position, deck.radius, deck.SurfaceType)
@@ -31,14 +23,14 @@ List_Unfolded = speckle.UnfoldSpeckle(S)
 rotation_matrix = List_Unfolded[1]
 roulement_matrix = List_Unfolded[2]
 
-WingFrameUnfolded, yf, zf = Fonction.Unfold_object_frame(WingFrame, S.SurfaceType, S.Gradient(), rotation_matrix, roulement_matrix, deck.widthPrintable, deck.heightPrintable)
+WingFrameUnfolded, yf, zf = Fonction.Unfold_object_frame(deck.WingFrame, S.SurfaceType, S.Gradient(), rotation_matrix, roulement_matrix, deck.widthPrintable, deck.heightPrintable)
 
 ##--------------------------------AFFICHAGE----------------------------------##
 
 p=Plot()
 p.PlotReference(deck.NbImage, speckle.List_Sheets)
 
-p.Plot3D(deck.NbImage, speckle.List_Sheets, Liste_Projection, WingFrame)
+p.Plot3D(deck.NbImage, speckle.List_Sheets, Liste_Projection, deck.WingFrame)
 
 p.PlotUnfolded(deck.NbImage, speckle.List_Sheets, List_Unfolded[0], WingFrameUnfolded, yf, zf)
 

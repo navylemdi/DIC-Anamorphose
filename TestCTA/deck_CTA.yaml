@@ -16,13 +16,16 @@ Surface :
   a: -0.17364817766693033
   b: 0
   c: 0.984807753012208
-  d: -0.6587266128280083
   Radius : 0.2
   Position : [2.53543923,  0 ,-0.22182219]
   Surface_Type : 'Plan'
+  Wingframe : [[ 2.53543923,  0.        , -0.22182219],
+               [ 5.48986248,  0.        ,  0.29912234],
+               [ 4.01265085,  0.3       ,  0.03865008],
+               [ 4.01265085, -0.3       ,  0.03865008]]
 
 Output_Speckle:
   heightPrintable: 27.9e-2
   widthPrintable: 21.6e-2
-  PrintPath: './ImagePrintable'
+  PrintPath: '/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet technique/AnamorphosePlane/ImagePrintable'
 

@@ -29,6 +29,7 @@ class Deck():
                 self.Position = np.array(self.Surface['Position'], dtype = float)
                 self.radius = float(self.Surface['Radius'])
                 self.SurfaceType = self.Surface['Surface_Type']
+                self.WingFrame = np.array(self.Surface['Wingframe'], dtype = float)
 
                 self.Output_Speckle = self.doc['Output_Speckle']
                 self.heightPrintable = float(self.Output_Speckle['heightPrintable'])
