@@ -4,35 +4,82 @@
 
 ### Installation
 To begin, you have to download some packages listed in the requirements.txt file
-To use Anamorphose.py, you also have to download Fonction.py, Feuille.py, Surface.py and Plot.py files.
+To use main.py, you also have to download Module folder.
 
-### Constant section
+### deck.yaml initialisation
 
-In the Anamorphose.py, parameters of the anamorphosis as the surface properties and the speckle files have to be set in the *CONSTANTES* section.
+Main structure for `deck.yaml` file:
 
-Due to the multitude of points in the speckle, to test the code, we only anamorphose a few points. The variable *saut* represents the anamorphic step. `saut=2` will anamorphose half of all the points of a sheet of speckles.
+```
+Input_Speckle: 
+  step: 500
+  begining: 3
+  height: 27e-2
+  width: 21e-2
+  Path: '/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet technique/Banque_Speckle/2mm/'
+  Generic_Name: 'Speckle_'
+  NbImage: 3
+  PositionCentre: [[0, 0, 2], [-21e-2, 0, 2], [21e-2, 0, 2]]
 
-*debut* variable represents the first index of the contour list calculated by OpenCV to be considered ine the anamorphosis. Usually `debut=3` is sufficient to avoid black filling of the result by the algorithm.
+Surface : 
+  a: 0
+  b: 0
+  c: 1
+  Radius : 0.4
+  Position : [3, 0, 0]
+  Surface_Type : 'Cylindre'
+  Wingframe : [[ 2.6,  0.,   0.2],
+               [ 2.6,  0.,  -0.2],
+               [ 3.,  -0.4,  0. ],
+               [ 3.,   0.4,  0. ]]
 
-You need to implement the size of the speckle sheets you want to anamorphose and the size of the anamorphosed speckle sheets you want to get. Use the *height*, *width*, *heightPrintable* and *widthPrintable* variables to do so. The unit is meter.
+Output_Speckle:
+  heightPrintable: 27.9e-2
+  widthPrintable: 21.6e-2
+  PrintPath: '/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet technique/AnamorphosePlane/ImagePrintable'
+```
+#### Input_Speckle section
+```
+Input_Speckle: 
+  step: 500
+  begining: 3
+  height: 27e-2
+  width: 21e-2
+  Path: '/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet technique/Banque_Speckle/2mm/'
+  Generic_Name: 'Speckle_'
+  NbImage: 3
+  PositionCentre: [[0, 0, 2], [-21e-2, 0, 2], [21e-2, 0, 2]]
+```
+Due to the multitude of points in the speckle, to test the code, we only anamorphose a few points. The variable *step* represents the anamorphic step. `step=2` will anamorphose half of all the points of a sheet of speckles.
+
+*begining* variable represents the first index of the contour list calculated by OpenCV to be considered ine the anamorphosis. Usually `begining=3` is often sufficient to avoid black filling of the result by the algorithm.
+
+You need to implement the size of the speckle sheets you want to anamorphose and the size of the anamorphosed speckle sheets you want to get. Use the *height*, *width*. The unit is meter.
+
+*Path* is the path of the classic speckle sheets folder.
+
+*Generic_Name* is the name of your speckle sheets. It as to be the shape of *Generic_Name_XX* with XX a number.
+
+*NbImage* is the number of sheets you want to anamorphose.
+
+In the *PositionCentre* list you must put the center position of all your sheets. It is organised like [y,z,x] refering to the figure.
+
+
 
 *PrintPath* is the path of the anamorphosed speckle sheets folder.
-
+*heightPrintable* and *widthPrintable* variables to do so. 
 In the *List_image* list you must put all the images read by OpenCV you want to use. It has to be a numpy array.
-
-In the *Feuille_pos* list you must put the center position of all your sheet. With the height and the width respectively in the first and second position.
 
 If needed, you can also represent the frame of the wing with the *CadreAile* numpy array.
 
-### Surface implementation
+#### Surface section
 
 Then you must to implement the surface properties with the `Surface(a, b, c, Posx, Posy, Posz, d, Radius, SurfaceType)` class :
 - *(a, b, c)* vector represents the normal vector in case of a plane surface and the axis of a cylinder in the case of a cylinder surface case.
 - `Pos=[Posx, Posy, Posz]` array represents the position relative to the camera of a point belongs to the axis of the cylinder (if the surface is a cylinder).
--  *d* is the constant in your plane equation *a.X + b.Y + c.Z=d* in the case of plane. The position relative to the camera
 -  *Radius* is the radius of the cylinder in the case of a cylinder.
 -  *SurfaceType* is a string to tell the programm that you want to anamorphose on a `Cylindre` or on a `Plan`. Only cylinder or plane surface case are implemented.
-
+-  *Wingframe* is the border of your wing represented by 4 points.
 ### Feuille implementation
 
 Then you must to create your `Feuille(centreH, centreV, image, height, width, debut, saut, d)` object:
