@@ -85,7 +85,7 @@ Then you must to implement the surface properties :
 - `Pos=[Posx, Posy, Posz]` array represents the position relative to the camera of a point belongs to the axis of the cylinder (if the surface is a cylinder).
 - *Radius* is the radius of the cylinder in the case of a cylinder.
 - *SurfaceType* is a string to tell the programm that you want to anamorphose on a `Cylindre` or on a `Plan`. Only cylinder or plane surface case are implemented.
-- *Wingframe* is the border of your wing represented by 4 points. It is organised as [x, y, z].
+- *Wingframe* is the border of your wing represented by 4 points. It will be useful to represent your wing in 3D and print the anamorphosed speckle. It is organised as [x, y, z].
 
 #### Output_Speckle section
 ```
