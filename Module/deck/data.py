@@ -39,9 +39,12 @@ class Deck():
         list=[]
         i=0
         while len(list) < self.NbImage:
-            if type((cv2.imread(self.path + self.generic_name + str(i) + '.png'))) != type(None):
+            if type((cv2.imread(self.path + '/' + self.generic_name + str(i) + '.png'))) != type(None):
                 print(self.generic_name + str(i) + '.png loaded')
-                list.append(cv2.imread(self.path + self.generic_name + str(i) + '.png'))
+                list.append(cv2.imread(self.path + '/' + self.generic_name + str(i) + '.png'))
+            elif i == 100:
+                print('No .png file found until '+ self.generic_name + str(100)+'. Research abandoned.\nExit program')
+                sys.exit()
             else:
                 print(self.generic_name + str(i) + '.png not found')
             i+=1
