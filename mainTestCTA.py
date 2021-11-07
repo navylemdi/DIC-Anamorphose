@@ -10,7 +10,7 @@ from Module import *
 plt.close('all')
 
 deck = Deck('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet technique/AnamorphosePlane/TestCTA/deck_CTA.yaml')
-
+Camera = Camera(deck)
 #Creation of the surface object
 S = Surface(deck.a, deck.b, deck.c, deck.Position, deck.radius, deck.SurfaceType)
 
@@ -30,7 +30,7 @@ WingFrameUnfolded, yf, zf = Fonction.Unfold_object_frame(deck.WingFrame, S.Surfa
 p=Plot()
 p.PlotReference(deck.NbImage, speckle.List_Sheets)
 
-p.Plot3D(deck.NbImage, speckle.List_Sheets, Liste_Projection, deck.WingFrame)
+p.Plot3D(deck.NbImage, speckle.List_Sheets, Liste_Projection, deck.WingFrame, Camera)
 
 p.PlotUnfolded(deck.NbImage, speckle.List_Sheets, List_Unfolded[0], WingFrameUnfolded, yf, zf)
 

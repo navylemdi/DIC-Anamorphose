@@ -1,3 +1,7 @@
+Camera:
+  focal_length: 50
+  sensor_height: 29
+
 Input_Speckle: 
   step: 500
   begining: 4

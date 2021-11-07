@@ -12,6 +12,10 @@ class Deck():
             with open(inputhpath, 'r') as f:
                 self.doc = yaml.load(f, Loader=yaml.BaseLoader)
 
+                self.Camera = self.doc['Camera']
+                self.focal_length = float(self.Camera['focal_length'])
+                self.sensor_height = float(self.Camera['sensor_height'])
+
                 self.Input_Speckle = self.doc['Input_Speckle']
                 self.step = int(self.Input_Speckle['step'])
                 self.begining = int(self.Input_Speckle['begining'])

@@ -2,6 +2,7 @@ from Module import *
 
 deck = Deck('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet technique/AnamorphosePlane/deck.yaml')
 
+Camera = Camera(deck)
 #Creation of the surface object
 S = Surface(deck.a, deck.b, deck.c, deck.Position, deck.radius, deck.SurfaceType)
 #Creation of the speckle
@@ -21,7 +22,7 @@ WingFrameUnfolded, yf, zf = Fonction.Unfold_object_frame(deck.WingFrame, S.Surfa
 p=Plot()
 p.PlotReference(deck.NbImage, speckle.List_Sheets)#Plot the loaded speckle
 
-p.Plot3D(deck.NbImage, speckle.List_Sheets, Liste_Projection, deck.WingFrame)#Plot in 3D the loaded speckle and the anamorphosed
+p.Plot3D(deck.NbImage, speckle.List_Sheets, Liste_Projection, deck.WingFrame, Camera)#Plot in 3D the loaded speckle and the anamorphosed
 
 p.PlotUnfolded(deck.NbImage, speckle.List_Sheets, List_Unfolded[0], WingFrameUnfolded, yf, zf)#Plot the unfolded speckle
 

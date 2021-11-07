@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import numpy as np
 
 class Plot:
     def __init__(self) -> None:
@@ -25,8 +26,22 @@ class Plot:
         ax.set_xlim3d([xmean - plot_radius, xmean + plot_radius])
         ax.set_ylim3d([ymean - plot_radius, ymean + plot_radius])
         ax.set_zlim3d([zmean - plot_radius, zmean + plot_radius])
+    
+    
 
-    def Plot3D(self, Nbimage, Liste_Feuille, Liste_Projection, CadreAile):
+    def Plot3D(self, Nbimage, Liste_Feuille, Liste_Projection, CadreAile, Camera):
+        def cone(Wingframe, alpha):
+            zend = min(Wingframe[0,2],Wingframe[1,2])
+            if Wingframe[0,2] == zend:
+                v = Wingframe[0,:]
+            if Wingframe[1,2] == zend:
+                v = Wingframe[1,:]
+            rotation = np.array([[np.cos(2*alpha), 0, -np.sin(2*alpha)],
+                            [0,                 1,              0],
+                            [np.sin(2*alpha),     0,  np.cos(2*alpha)]], np.float32)
+            v1 = np.dot(rotation,v)
+            return v,v1
+        v,v1 = cone(CadreAile, Camera.fov/2)
         fig = plt.figure(Nbimage+1)
         ax = fig.add_subplot(111, projection='3d')
         ax.scatter(0, 0, 0, color='b')
@@ -36,6 +51,9 @@ class Plot:
                 ax.plot(Liste_Projection[j][i][:, 0], Liste_Projection[j][i][:, 1], Liste_Projection[j][i][:, 2], color='k', marker=None)
                 ax.scatter([Liste_Feuille[j].d]*4, Liste_Feuille[j].Cadre[:,0], Liste_Feuille[j].Cadre[:,1], color='k', marker='+')
         ax.scatter(CadreAile[:,0], CadreAile[:,1], CadreAile[:,2], color='c')
+
+        ax.plot([0,v[0]],[0,v[1]], [0,v[2]],  color='g')
+        ax.plot([0,v1[0]],[0,v1[1]], [0,v1[2]],  color='g')
         ax.set_xlabel('X')
         ax.set_ylabel('Y')
         ax.set_zlabel('Z')
@@ -67,3 +85,4 @@ class Plot:
         plt.xlim(min(CadreAileUnfolded[:,1]), max(CadreAileUnfolded[:,1]))
         plt.ylim(min(CadreAileUnfolded[:,2]), max(CadreAileUnfolded[:,2]))
         plt.grid()
+
