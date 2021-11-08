@@ -17,7 +17,7 @@ roulement_matrix = List_Unfolded[2]
 
 #Unfolding of the wingframe and meshing of the anamorphosed speckle for print
 WingFrameUnfolded, yf, zf = Fonction.Unfold_object_frame(deck.WingFrame, S.SurfaceType, S.Gradient(), rotation_matrix, roulement_matrix, deck.widthPrintable, deck.heightPrintable)
-'''
+
 ##--------------------------------AFFICHAGE----------------------------------##
 
 p=Plot()
@@ -32,4 +32,4 @@ p.PlotUnfolded(deck.NbImage, speckle.List_Sheets, List_Unfolded[0], WingFrameUnf
 ##--------------------------DECOUPAGE IMPRESSION-----------------------------##
 
 Fonction.Print(deck.PrintPath, yf, zf, deck.widthPrintable, deck.heightPrintable, deck.NbImage, speckle.List_Sheets, List_Unfolded[0], WingFrameUnfolded)
-##------------------------FIN DECOUPAGE IMPRESSION---------------------------##'''
+##------------------------FIN DECOUPAGE IMPRESSION---------------------------##
