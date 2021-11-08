@@ -29,21 +29,80 @@ class Plot:
     
     
 
-    def Plot3D(self, Nbimage, Liste_Feuille, Liste_Projection, CadreAile, Camera):
+    def Plot3D(self, deck, Liste_Feuille, Liste_Projection, Camera):
+        
+        def plan(a, b, c, Pos, Wingframe):
+            xmin = min(Wingframe[0,0],Wingframe[1,0])
+            xmax = max(Wingframe[0,0],Wingframe[1,0])
+            ymin = min(Wingframe[2,1],Wingframe[3,1])
+            ymax = max(Wingframe[2,1],Wingframe[3,1])
+            stepx = (xmax-xmin)/2
+            stepy = (ymax-ymin)/2
+            x, y = np.meshgrid(np.arange(xmin, xmax+stepx, stepx), np.arange(ymin, ymax+stepy, stepy))
+            z = (Pos[0]*a+Pos[1]*b+Pos[2]*c-b*y-a*x)/c
+            return x, y, z
+
+        def cylindre(a, b, c, Pos, R, Wingframe):
+            p0 = Wingframe[0,:]
+            p1 = Wingframe[1,:]
+            #vector in direction of axis
+            v = np.array([a,b,c])
+            #find magnitude of vector
+            mag = np.linalg.norm(p1-p0)
+            #unit vector in direction of axis
+            v = v / np.linalg.norm(v)
+            #make some vector not in the same direction as v
+            not_v = np.array([1, 0, 0])
+            if (v == not_v).all():
+                not_v = np.array([0, 1, 0])
+            #make vector perpendicular to v
+            n1 = np.cross(v, not_v)
+            #normalize n1
+            n1 /= np.linalg.norm(n1)
+            #make unit vector perpendicular to v and n1
+            n2 = np.cross(v, n1)
+            #surface ranges over t from 0 to length of axis and 0 to 2*pi
+            t = np.linspace(-mag/2,mag/2, 100)
+            theta = np.linspace(-np.pi/2, np.pi/2, 50)
+            #use meshgrid to make 2d arrays
+            t, theta = np.meshgrid(t, theta)
+            #generate coordinates for surface
+            x, y, z = [Pos[i] + v[i] * t + R * np.sin(theta) * n1[i] + R * np.cos(theta) * n2[i] for i in [0, 1, 2]]
+            return x, y, z
+
         def cone(Wingframe, alpha):
             zend = min(Wingframe[0,2],Wingframe[1,2])
             if Wingframe[0,2] == zend:
                 v = Wingframe[0,:]
+                #deltax = Wingframe[0,0]/Wingframe[1,0]
+                #deltay = Wingframe[0,1]/Wingframe[1,1]
+                delta = Wingframe[0,0]/Wingframe[1,0]
             if Wingframe[1,2] == zend:
                 v = Wingframe[1,:]
+                #deltax = Wingframe[1,0]/Wingframe[0,0]
+                #deltay = Wingframe[1,1]/Wingframe[0,1]
+                delta = Wingframe[1,0]/Wingframe[0,0]
             rotation = np.array([[np.cos(2*alpha), 0, -np.sin(2*alpha)],
-                            [0,                 1,              0],
-                            [np.sin(2*alpha),     0,  np.cos(2*alpha)]], np.float32)
+                            [0,                    1,                0],
+                            [np.sin(2*alpha),      0,  np.cos(2*alpha)]], np.float32)
             v1 = np.dot(rotation,v)
-            return v,v1
-        v,v1 = cone(CadreAile, Camera.fov/2)
+            v4 = v1/delta
+            return v,v1,v4
+
+        Nbimage = deck.NbImage
+        CadreAile = deck.WingFrame
+        v,v1,v4 = cone(CadreAile, Camera.fov/2)
+
         fig = plt.figure(Nbimage+1)
         ax = fig.add_subplot(111, projection='3d')
+
+        if deck.SurfaceType == 'Plan':
+            x,y,z = plan(deck.a, deck.b, deck.c, deck.Position, CadreAile)
+            ax.plot_surface(x, y, z, color='r', alpha=0.2)
+        if deck.SurfaceType == 'Cylindre':
+            x,y,z = cylindre(deck.a, deck.b, deck.c, deck.Position, deck.radius, CadreAile)
+            ax.plot_surface(x, y, z, color='r', alpha=0.2)
+
         ax.scatter(0, 0, 0, color='b')
         for j in range(Nbimage):
             for i in range (Liste_Feuille[j].debut, len(Liste_Feuille[j].contours), Liste_Feuille[j].saut):
@@ -54,6 +113,7 @@ class Plot:
 
         ax.plot([0,v[0]],[0,v[1]], [0,v[2]],  color='g')
         ax.plot([0,v1[0]],[0,v1[1]], [0,v1[2]],  color='g')
+        ax.plot([0,v4[0]],[0,v4[1]], [0,v4[2]],  color='r')
         ax.set_xlabel('X')
         ax.set_ylabel('Y')
         ax.set_zlabel('Z')

@@ -85,7 +85,7 @@ class Sheets:
         x, y, z = Symbol('x'), Symbol('y'), Symbol('z')
         GradF = surface.Gradient()
         self.UnfoldedPnt = [None]*len(self.contours)
-        print('Début dépliage')
+        print('Start of speckle unfolding')
         start = time.time()
         if surface.SurfaceType == 'Plan':
             for i in range(self.debut, len(self.contours), self.saut):
@@ -133,9 +133,9 @@ class Sheets:
                     theta = np.arcsin(v2[1])
                     self.UnfoldedPnt[i][j, :] = [0, RolledPnt[1], -surface.Radius*theta]
         sys.stdout.flush()
-        print('\nFin dépliage')
+        print('\nEnd of speckle Unfolding')
         end = time.time()
-        print('Temps ecoulé: ', time.strftime("%H:%M:%S", time.gmtime(end-start)))
+        print('Elapsed time: ', time.strftime("%H:%M:%S", time.gmtime(end-start)))
         return self.UnfoldedPnt, self.rotation_matrix, self.roulement_matrix
 
     def Affichage_reference(self, n, gcolor):

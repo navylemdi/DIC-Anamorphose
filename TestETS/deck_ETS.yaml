@@ -1,6 +1,6 @@
 Camera:
-  focal_length: 50
-  sensor_height: 29
+  focal_length: 50 #mm
+  sensor_height: 29 #mm
 
 Input_Speckle: 
   step: 500

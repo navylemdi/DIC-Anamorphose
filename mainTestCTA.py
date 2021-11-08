@@ -30,7 +30,7 @@ WingFrameUnfolded, yf, zf = Fonction.Unfold_object_frame(deck.WingFrame, S.Surfa
 p=Plot()
 p.PlotReference(deck.NbImage, speckle.List_Sheets)
 
-p.Plot3D(deck.NbImage, speckle.List_Sheets, Liste_Projection, deck.WingFrame, Camera)
+p.Plot3D(deck, speckle.List_Sheets, Liste_Projection, Camera)
 
 p.PlotUnfolded(deck.NbImage, speckle.List_Sheets, List_Unfolded[0], WingFrameUnfolded, yf, zf)
 

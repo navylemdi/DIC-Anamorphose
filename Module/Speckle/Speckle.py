@@ -17,8 +17,11 @@ class Speckle(Sheets):
 
     def UnfoldSpeckle(self, S):
         List_Unfolded = []
+        B = []
         for i in range(self.Nbimage):
-            List_Unfolded.append(self.List_Sheets[i].Unfold(S)[0])
-        rotation_matrix = self.List_Sheets[0].Unfold(S)[1]
-        roulement_matrix = self.List_Sheets[0].Unfold(S)[2]
+            if i ==0:
+                A, rotation_matrix,  roulement_matrix= self.List_Sheets[0].Unfold(S)
+                List_Unfolded.append(A)
+            else:
+                List_Unfolded.append(self.List_Sheets[i].Unfold(S)[0])
         return List_Unfolded, rotation_matrix, roulement_matrix
