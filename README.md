@@ -16,7 +16,7 @@ Input_Speckle:
   begining: 3
   height: 27e-2
   width: 21e-2
-  Path: './'
+  Path: '.'
   Generic_Name: 'Speckle_'
   NbImage: 3
   PositionCentre: [[0, 0, 2], [-21e-2, 0, 2], [21e-2, 0, 2]]
