@@ -60,7 +60,7 @@ def cylindre(a,b,c,Pos,R,Wingframe):
     #use meshgrid to make 2d arrays
     t, theta = np.meshgrid(t, theta)
     #generate coordinates for surface
-    x, y, z = [Pos[i] + v[i] * t + R * np.sin(theta) * n1[i] + R * np.cos(theta) * n2[i] for i in [0, 1, 2]]
+    x, y, z = [Pos[i] + v[i] * t+ R * np.sin(theta) * n1[i] + R * np.cos(theta) * n2[i] for i in [0, 1, 2]]
     return x, y, z
 
 def cone(Wingframe, alpha):
@@ -71,36 +71,45 @@ def cone(Wingframe, alpha):
     if Wingframe[1,2] == zend:
         v = Wingframe[1,:]
         delta = Wingframe[1,2]/Wingframe[0,2]
-    rotationy = np.array([[np.cos(2*alpha), 0, -np.sin(2*alpha)],
+    rotationy = np.array([[np.cos(alpha), 0, -np.sin(2*alpha)],
                      [0,                 1,              0],
                      [np.sin(2*alpha),     0,  np.cos(2*alpha)]], np.float32)
     rotationx = np.array([[1,               0,                0],
                           [0, np.cos(np.pi/2), -np.sin(np.pi/2)],
                           [0, np.sin(np.pi/2),  np.cos(np.pi/2)]], np.float32)
-    rotationz = np.array([[np.cos(-2*alpha), -np.sin(-2*alpha), 0],
-                          [np.sin(-2*alpha), np.cos(-2*alpha),  0],
+    rotationz = np.array([[np.cos(-alpha), -np.sin(-alpha), 0],
+                          [np.sin(-alpha), np.cos(-alpha),  0],
                           [0,            0,                   1]], np.float32)
-    v1 = np.dot(rotationy,v)
-    v2 = np.dot(rotationx,v)
-    v3 = np.dot(rotationz,v2)
-    v4 = v/delta
-    return v,v1,v2,v3,v4
+    rotation = np.array([[np.cos(alpha), 0, -np.sin(alpha)],
+                        [0,                 1,              0],
+                        [np.sin(alpha),     0,  np.cos(alpha)]], np.float32)
+    axeoptique = v.copy()
+    axeoptique = np.dot(rotation,v)
+    axeoptiquetemp = axeoptique/np.linalg.norm(axeoptique)
+    v1 = np.dot(rotation,axeoptique)
+    v2 = v*np.cos(np.pi/2) + np.cross(axeoptiquetemp,v)*np.sin(np.pi/2)+axeoptiquetemp*np.dot(axeoptiquetemp,v)*(1-np.cos(np.pi/2))
+    v2 = v2/np.linalg.norm(v2)*np.linalg.norm(v1)
+    v3 = np.dot(rotationz,axeoptique)
+    v3 = v3/np.linalg.norm(v3)*np.linalg.norm(v1)
+    return v,v1,v2,v3, axeoptique
 
 x,y,z = plan(a,b,c,Pos,xmin,ymin,xmax,ymax)
 x2,y2,z2 = cylindre(d,e,f,Pos,R,Wingframe)
-v,v1,v2,v3,v4 = cone(Wingframe, np.pi/4)
+v,v1,v2,v3, axeoptique = cone(Wingframe, np.pi/4)
 
 fig = plt.figure()
+
 ax = fig.add_subplot(111, projection='3d')
 ax.scatter(0, 0, 0, color='b')
 ax.scatter(Pos[0], Pos[1], Pos[2], color='k')
 ax.plot_surface(x, y, z, color='b', alpha=0.2)
 ax.plot_surface(x2, y2, z2, color='r', alpha=0.2)
-ax.plot([0, v[0]], [0, v[1]], [0, v[2]], color='g')
-ax.plot([0, v1[0]], [0, v1[1]], [0, v1[2]], color='g')
-ax.plot([0, v4[0]], [0, v4[1]], [0, v4[2]], color='r')
-#ax.plot([0, v2[0]], [0, v2[1]], [0, v2[2]], color='g')
-#ax.plot([0, v3[0]], [0, v3[1]], [0, v3[2]], color='g')
+ax.plot([0, v[0]], [0, v[1]], [0, v[2]], color='g', label='field of view')
+ax.plot([0, v1[0]], [0, v1[1]], [0, v1[2]], color='r')
+ax.plot([0, v2[0]], [0, v2[1]], [0, v2[2]], color='b')
+ax.plot([0, v3[0]], [0, v3[1]], [0, v3[2]], color='y')
+ax.plot([0, axeoptique[0]], [0, axeoptique[1]], [0, axeoptique[2]], '--k', linewidth= 1, label='axeoptique')
+ax.legend()
 ax.scatter(Wingframe[:,0],Wingframe[:,1],Wingframe[:,2])
 ax.scatter(Wingframe2[:,0],Wingframe2[:,1],Wingframe2[:,2])
 plt.show()

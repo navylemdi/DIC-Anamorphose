@@ -82,16 +82,25 @@ class Plot:
                 #deltax = Wingframe[1,0]/Wingframe[0,0]
                 #deltay = Wingframe[1,1]/Wingframe[0,1]
                 delta = Wingframe[1,0]/Wingframe[0,0]
-            rotation = np.array([[np.cos(2*alpha), 0, -np.sin(2*alpha)],
-                            [0,                    1,                0],
-                            [np.sin(2*alpha),      0,  np.cos(2*alpha)]], np.float32)
-            v1 = np.dot(rotation,v)
-            v4 = v1/delta
-            return v,v1,v4
+            rotationz = np.array([[np.cos(-alpha), -np.sin(-alpha), 0],
+                                [np.sin(-alpha), np.cos(-alpha),  0],
+                                [0,            0,                   1]], np.float32)
+            rotation = np.array([[np.cos(alpha), 0, -np.sin(alpha)],
+                                [0,                 1,              0],
+                                [np.sin(alpha),     0,  np.cos(alpha)]], np.float32)
+            axeoptique = v.copy()
+            axeoptique = np.dot(rotation,v)
+            axeoptiquetemp = axeoptique/np.linalg.norm(axeoptique)
+            v1 = np.dot(rotation,axeoptique)/delta
+            v2 = v*np.cos(np.pi/2) + np.cross(axeoptiquetemp,v)*np.sin(np.pi/2) + axeoptiquetemp*np.dot(axeoptiquetemp,v)*(1-np.cos(np.pi/2))
+            v2 = v2/np.linalg.norm(v2)*np.linalg.norm(v1)
+            v3 = np.dot(rotationz,axeoptique)
+            v3 = v3/np.linalg.norm(v3)*np.linalg.norm(v1)
+            return v,v1,v2,v3, axeoptique
 
         Nbimage = deck.NbImage
         CadreAile = deck.WingFrame
-        v,v1,v4 = cone(CadreAile, Camera.fov/2)
+        v,v1,v2,v3,axeoptique = cone(CadreAile, Camera.fov/2)
 
         fig = plt.figure(Nbimage+1)
         ax = fig.add_subplot(111, projection='3d')
@@ -103,20 +112,23 @@ class Plot:
             x,y,z = cylindre(deck.a, deck.b, deck.c, deck.Position, deck.radius, CadreAile)
             ax.plot_surface(x, y, z, color='r', alpha=0.2)
 
-        ax.scatter(0, 0, 0, color='b')
+        ax.scatter(0, 0, 0, color='b', label='Camera center')
         for j in range(Nbimage):
             for i in range (Liste_Feuille[j].debut, len(Liste_Feuille[j].contours), Liste_Feuille[j].saut):
                 ax.plot(Liste_Feuille[j].contours3D[i][:, 0], Liste_Feuille[j].contours3D[i][:, 1], Liste_Feuille[j].contours3D[i][:, 2], color='k', marker=None)
                 ax.plot(Liste_Projection[j][i][:, 0], Liste_Projection[j][i][:, 1], Liste_Projection[j][i][:, 2], color='k', marker=None)
                 ax.scatter([Liste_Feuille[j].d]*4, Liste_Feuille[j].Cadre[:,0], Liste_Feuille[j].Cadre[:,1], color='k', marker='+')
-        ax.scatter(CadreAile[:,0], CadreAile[:,1], CadreAile[:,2], color='c')
+        ax.scatter(CadreAile[:,0], CadreAile[:,1], CadreAile[:,2], color='c', label='Wingframe')
 
-        ax.plot([0,v[0]],[0,v[1]], [0,v[2]],  color='g')
+        ax.plot([0,v[0]],[0,v[1]], [0,v[2]],  color='g', label='Field of view')
         ax.plot([0,v1[0]],[0,v1[1]], [0,v1[2]],  color='g')
-        ax.plot([0,v4[0]],[0,v4[1]], [0,v4[2]],  color='r')
+        ax.plot([0,v2[0]],[0,v2[1]], [0,v2[2]],  color='g')
+        ax.plot([0,v3[0]],[0,v3[1]], [0,v3[2]],  color='g')
+        ax.plot([0, axeoptique[0]], [0, axeoptique[1]], [0, axeoptique[2]], '--k', linewidth= 1, label='Optical axis')
         ax.set_xlabel('X')
         ax.set_ylabel('Y')
         ax.set_zlabel('Z')
+        ax.legend()
         plt.title('Image référence et projetée 3D (m)')
         self.set_aspect_equal_3d(ax)
 
