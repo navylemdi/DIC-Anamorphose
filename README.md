@@ -11,6 +11,10 @@ To use main.py, you also have to download Module folder.
 Main structure for `deck.yaml` file:
 
 ```
+Camera:
+  focal_length: 50 #mm
+  sensor_height: 29 #mm
+  
 Input_Speckle: 
   step: 500
   begining: 3
@@ -38,6 +42,14 @@ Output_Speckle:
   widthPrintable: 21.6e-2
   PrintPath: './ImagePrintable'
 ```
+#### Camera section
+```
+Camera:
+  focal_length: 50 #mm
+  sensor_height: 29 #mm
+ ```
+ Enter your focal length and sensor height in mm in these variable. Field of view in degrees and radians will be calculated and printed out.
+ It is also used to plot the field of view cone in the 3D viewer.
 #### Input_Speckle section
 ```
 Input_Speckle: 
@@ -62,7 +74,7 @@ You need to implement the size of the speckle sheets you want to anamorphose and
 
 *NbImage* is the number of sheets you want to anamorphose.
 
-In the *PositionCentre* list you must put the center position of all your sheets. It is organised like [y,z,x] refering to the figure.
+In the *PositionCentre* list you must put the center position of all your sheets. It is organised like [x, y, z] refering to the figure.
 
 <img width="796" alt="Capture d’écran 2021-10-18 à 11 40 58" src="https://user-images.githubusercontent.com/84194324/137764384-164a5440-43dc-4f38-8fa8-75deda7809c8.png">
 
