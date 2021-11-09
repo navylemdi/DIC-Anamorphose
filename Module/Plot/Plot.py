@@ -72,6 +72,7 @@ class Plot:
 
         def cone(Wingframe, alpha):
             zend = min(Wingframe[0,2],Wingframe[1,2])
+            xend = max(Wingframe[:,0])
             if Wingframe[0,2] == zend:
                 v = Wingframe[0,:]
                 #deltax = Wingframe[0,0]/Wingframe[1,0]
@@ -82,20 +83,23 @@ class Plot:
                 #deltax = Wingframe[1,0]/Wingframe[0,0]
                 #deltay = Wingframe[1,1]/Wingframe[0,1]
                 delta = Wingframe[1,0]/Wingframe[0,0]
-            rotationz = np.array([[np.cos(-alpha), -np.sin(-alpha), 0],
-                                [np.sin(-alpha), np.cos(-alpha),  0],
-                                [0,            0,                   1]], np.float32)
-            rotation = np.array([[np.cos(alpha), 0, -np.sin(alpha)],
+            #rotationz = np.array([[np.cos(-alpha), -np.sin(-alpha), 0],
+                                #[np.sin(-alpha), np.cos(-alpha),  0],
+                                #[0,            0,                   1]], np.float32)
+            def rotationy(alpha):
+                return np.array([[np.cos(alpha), 0, -np.sin(alpha)],
                                 [0,                 1,              0],
                                 [np.sin(alpha),     0,  np.cos(alpha)]], np.float32)
-            axeoptique = v.copy()
-            axeoptique = np.dot(rotation,v)
-            axeoptiquetemp = axeoptique/np.linalg.norm(axeoptique)
-            v1 = np.dot(rotation,axeoptique)/delta
-            v2 = v*np.cos(np.pi/2) + np.cross(axeoptiquetemp,v)*np.sin(np.pi/2) + axeoptiquetemp*np.dot(axeoptiquetemp,v)*(1-np.cos(np.pi/2))
-            v2 = v2/np.linalg.norm(v2)*np.linalg.norm(v1)
-            v3 = np.dot(rotationz,axeoptique)
-            v3 = v3/np.linalg.norm(v3)*np.linalg.norm(v1)
+            def rotationz(alpha):
+                return np.array([[np.cos(alpha), -np.sin(alpha), 0],
+                                [np.sin(alpha), np.cos(alpha),  0],
+                                [0,            0,                   1]], np.float32)
+
+            axeoptique = np.array([1,0,0])*xend
+            v = np.dot(rotationy(alpha),axeoptique)
+            v1 = np.dot(rotationy(-alpha),axeoptique)
+            v2 = np.dot(rotationz(alpha), axeoptique)
+            v3 = np.dot(rotationz(-alpha),axeoptique)
             return v,v1,v2,v3, axeoptique
 
         Nbimage = deck.NbImage
