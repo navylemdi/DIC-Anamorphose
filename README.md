@@ -16,7 +16,7 @@ Input_Speckle:
   begining: 3
   height: 27e-2
   width: 21e-2
-  Path: '/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet technique/Banque_Speckle/2mm'
+  Path: './'
   Generic_Name: 'Speckle_'
   NbImage: 3
   PositionCentre: [[0, 0, 2], [-21e-2, 0, 2], [21e-2, 0, 2]]
@@ -45,7 +45,7 @@ Input_Speckle:
   begining: 3
   height: 27e-2
   width: 21e-2
-  Path: '/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet technique/Banque_Speckle/2mm'
+  Path: './'
   Generic_Name: 'Speckle_'
   NbImage: 3
   PositionCentre: [[0, 0, 2], [-21e-2, 0, 2], [21e-2, 0, 2]]
