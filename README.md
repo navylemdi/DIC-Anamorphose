@@ -1,7 +1,10 @@
 # Anamorphosis
 
 ## Detection of edges and deformations on a surface of several sheets of speckles
-<img width="935" alt="Capture d’écran 2021-11-10 à 09 02 57" src="https://user-images.githubusercontent.com/84194324/141127089-da3f65a4-66ff-4667-b41b-1c5d69b1e156.png">
+
+<p align="center">
+  <img width="700" alt="Capture d’écran 2021-11-10 à 09 02 57" src="https://user-images.githubusercontent.com/84194324/141127089-da3f65a4-66ff-4667-b41b-1c5d69b1e156.png">
+</p>
 
 ### Installation
 To begin, you have to download some packages listed in the requirements.txt file
@@ -77,7 +80,9 @@ You need to implement the size of the speckle sheets you want to anamorphose and
 
 In the *Position_centre* list you must put the center position of all your sheets. It is organised like [x, y, z] refering to the figure.
 
-<img width="628" alt="Capture d’écran 2021-11-09 à 20 24 42" src="https://user-images.githubusercontent.com/84194324/141032568-872ec514-2716-4acb-a321-eb7dfd5d4731.png">
+<p align="center">
+  <img width="628" alt="Capture d’écran 2021-11-09 à 20 24 42" src="https://user-images.githubusercontent.com/84194324/141032568-872ec514-2716-4acb-a321-eb7dfd5d4731.png">
+</p>
 
 #### Surface section
 ```
