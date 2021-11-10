@@ -1,6 +1,7 @@
 # Anamorphosis
 
 ## Detection of edges and deformations on a surface of several sheets of speckles
+![Capture d’écran 2021-11-10 à 08 21 27](https://user-images.githubusercontent.com/84194324/141120837-8dadb121-959d-4d43-b7f0-ddd1043bf8f9.png)
 
 ### Installation
 To begin, you have to download some packages listed in the requirements.txt file
