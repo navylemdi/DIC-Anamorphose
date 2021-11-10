@@ -138,7 +138,7 @@ def Print(deck, yf, zf, Liste_Feuille, Liste_depliage, CadreAileUnfolded):
 
     for i in range (yf.shape[0]-1):
         for j in range (yf.shape[1]-1):
-            fig = plt.figure((i+1)*(j+1)+7)
+            fig = plt.figure((i+1)*(j+1)+Nbimage+3)
             fig.set_size_inches(widthPrintable/0.0254, heightPrintable/0.0254)
             ax = fig.add_subplot(111, aspect='equal')
             axe = plt.gca()

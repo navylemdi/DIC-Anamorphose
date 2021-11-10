@@ -21,11 +21,11 @@ WingFrameUnfolded, yf, zf = Fonction.Unfold_object_frame(deck, S, rotation_matri
 ##--------------------------------AFFICHAGE----------------------------------##
 
 p=Plot()
-p.PlotReference(deck.NbImage, speckle.List_Sheets)#Plot the loaded speckle
+p.PlotReference(deck, speckle.List_Sheets)#Plot the loaded speckle
 
 p.Plot3D(deck, speckle.List_Sheets, Liste_Projection, Camera)#Plot in 3D the loaded speckle and the anamorphosed
 
-p.PlotUnfolded(deck.NbImage, speckle.List_Sheets, List_Unfolded[0], WingFrameUnfolded, yf, zf)#Plot the unfolded speckle
+p.PlotUnfolded(deck, speckle.List_Sheets, List_Unfolded[0], WingFrameUnfolded, yf, zf)#Plot the unfolded speckle
 
 ##-----------------------------FIN AFFICHAGE---------------------------------##
 

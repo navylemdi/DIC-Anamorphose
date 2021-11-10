@@ -71,7 +71,7 @@ class Sheets:
             sys.stdout.flush()
         print('\nEnd projection calculation')
         end = time.time()
-        print('Elapsed time: ', time.strftime("%H:%M:%S", time.gmtime(end-start)))
+        print('Elapsed time: ', time.strftime("%H:%M:%S", time.gmtime(end-start)) +'\n')
         sol4 = 0
         try:
             sol4 = max(solve( F.subs([(x, self.Centre[0]/delta), (y, self.Centre[1]/delta), (z, self.Centre[2]/delta)]), delta))
@@ -135,7 +135,7 @@ class Sheets:
         sys.stdout.flush()
         print('\nEnd of speckle Unfolding')
         end = time.time()
-        print('Elapsed time: ', time.strftime("%H:%M:%S", time.gmtime(end-start)))
+        print('Elapsed time: ', time.strftime("%H:%M:%S", time.gmtime(end-start))+'\n')
         return self.UnfoldedPnt, self.rotation_matrix, self.roulement_matrix
 
     def Affichage_reference(self, n, gcolor):

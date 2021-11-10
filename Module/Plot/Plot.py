@@ -3,6 +3,7 @@ import numpy as np
 
 class Plot:
     def __init__(self) -> None:
+        print("Display of the graphs")
         pass
 
     def set_aspect_equal_3d(self, ax):
@@ -138,34 +139,37 @@ class Plot:
         ax.set_ylabel('Y')
         ax.set_zlabel('Z')
         ax.legend()
-        plt.title('Image référence et projetée 3D (m)')
+        ax.set_title('Reference speckle and projected in 3D (m)')
         self.set_aspect_equal_3d(ax)
 
-    def PlotReference(self, Nbimage, Liste_Feuille):
+    def PlotReference(self, deck, Liste_Feuille):
+        Nbimage =deck.NbImage
         for i in range(Nbimage):
             fig=plt.figure(i+1)
             ax = fig.add_subplot(111, aspect='equal')
             for j in range(Liste_Feuille[i].debut, len(Liste_Feuille[i].contours), Liste_Feuille[i].saut):
-                plt.plot(Liste_Feuille[i].contours[j][:, 0][:, 0], Liste_Feuille[i].contours[j][:, 0][:, 1], marker=None, color='k')
+                ax.plot(Liste_Feuille[i].contours[j][:, 0][:, 0], Liste_Feuille[i].contours[j][:, 0][:, 1], marker=None, color='k')
                 ax.fill(Liste_Feuille[i].contours[j][:, 0][:, 0], Liste_Feuille[i].contours[j][:, 0][:, 1], 'k', zorder=10)
-            plt.title('Image référence '+ str(i+1) +' (pix)')
 
-    def PlotUnfolded(self, Nbimage, Liste_Feuille, Liste_depliage, CadreAileUnfolded, yf, zf):
+            ax.set_title('Image référence '+ str(i+1) +' (pix)')
+
+    def PlotUnfolded(self, deck, Liste_Feuille, Liste_depliage, CadreAileUnfolded, yf, zf):
+        Nbimage =deck.NbImage
         fig=plt.figure(Nbimage+2)
+        ax = fig.add_subplot(111, aspect='equal')
         for j in range(Nbimage):
             for i in range(Liste_Feuille[j].debut, len(Liste_Feuille[j].contours), Liste_Feuille[j].saut):
-                plt.plot(Liste_depliage[j][i][:, 1], Liste_depliage[j][i][:, 2], color='black')
-                plt.fill(Liste_depliage[j][i][:, 1], Liste_depliage[j][i][:, 2], color='black')
-        plt.scatter(CadreAileUnfolded[:,1], CadreAileUnfolded[:,2], color='c', marker='+')
+                ax.plot(Liste_depliage[j][i][:, 1], Liste_depliage[j][i][:, 2], color='black')
+                ax.fill(Liste_depliage[j][i][:, 1], Liste_depliage[j][i][:, 2], color='black')
+        ax.scatter(CadreAileUnfolded[:,1], CadreAileUnfolded[:,2], color='c', marker='+')
         for i in range (len(CadreAileUnfolded[:,0])):
-            plt.text(CadreAileUnfolded[i,1], CadreAileUnfolded[i,2], str(i+1), color='c')
-        plt.scatter( yf, zf, marker='+', color='m')
+            ax.text(CadreAileUnfolded[i,1], CadreAileUnfolded[i,2], str(i+1), color='c')
+        ax.scatter( yf, zf, marker='+', color='m')
         for i in range (yf.shape[0]-1):
             for j in range (yf.shape[1]-1):
-                plt.text((yf[i,j]+yf[i,j+1])/2, (zf[i,j]+zf[i+1,j])/2, str((i+1)*(j+1)), color='black')
-        plt.title('Dépliée')
-        plt.axis('equal')
-        plt.xlim(min(CadreAileUnfolded[:,1]), max(CadreAileUnfolded[:,1]))
-        plt.ylim(min(CadreAileUnfolded[:,2]), max(CadreAileUnfolded[:,2]))
-        plt.grid()
+                ax.text((yf[i,j]+yf[i,j+1])/2, (zf[i,j]+zf[i+1,j])/2, str((i+1)*(j+1)), color='black')
+        ax.set_title('Dépliée')
+        ax.set_xlim(min(CadreAileUnfolded[:,1]), max(CadreAileUnfolded[:,1]))
+        ax.set_ylim(min(CadreAileUnfolded[:,2]), max(CadreAileUnfolded[:,2]))
+        ax.grid()
 
