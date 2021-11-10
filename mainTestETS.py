@@ -1,21 +1,7 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Jul 12 14:55:32 2021
-
-@author: yvan
-"""
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Jul  6 09:34:39 2021
-
-@author: yvan
-"""
 #import matplotlib.pyplot as plt
 from Module import *
 
-deck = Deck('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet technique/AnamorphosePlane/TestETS/deck_ETS.yaml')
+deck = Deck('./TestETS/deck_ETS.yaml')
 Camera = Camera(deck)
 #Creation of the surface object
 S = Surface(deck)
@@ -67,9 +53,9 @@ WingHeight = 3 #hauteur zone analyse de l'aile (m)
 heightPrintable = 27.9e-2
 widthPrintable = 21.6e-2
 
-image1 = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Banque_Speckle/2mm/Speckle_1.png")
-image2 = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Banque_Speckle/2mm/Speckle_2.png")
-image3 = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Banque_Speckle/2mm/Speckle_3.png")
+image1 = cv2.imread("./Banque_Speckle/2mm/Speckle_1.png")
+image2 = cv2.imread("./Banque_Speckle/2mm/Speckle_2.png")
+image3 = cv2.imread("./Banque_Speckle/2mm/Speckle_3.png")
 
 #cv2.imshow('Reference', image)
 
@@ -264,7 +250,7 @@ for i in range (yf.shape[0]-1):
         plt.box(False)
         plt.close(fig)
         fig.tight_layout()#Supprime les marges
-        fig.savefig('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/AnamorphosePlane/ImagePrintable/Image'+str(i+1)+','+str(j+1)+'.pdf')
+        fig.savefig('./ImagePrintable/Image'+str(i+1)+','+str(j+1)+'.pdf')
         
 ##------------------------FIN DECOUPAGE IMPRESSION---------------------------##
 '''
