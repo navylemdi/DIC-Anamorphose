@@ -1,13 +1,6 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Jul 22 17:07:42 2021
-
-@author: yvan
-"""
 from Module import *
 
-deck = Deck('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet technique/AnamorphosePlane/TestCTA/deck_CTA.yaml')
+deck = Deck('./TestCTA/deck_CTA.yaml')
 Camera = Camera(deck)
 #Creation of the surface object
 S = Surface(deck)
@@ -61,11 +54,11 @@ WingHeight = 3 #hauteur zone analyse de l'aile (m)
 heightPrintable = 27.9e-2
 widthPrintable = 21.6e-2
 
-image1 = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Banque_Speckle/2mm/Speckle_1.png")
-image2 = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Banque_Speckle/2mm/Speckle_2.png")
-image3 = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Banque_Speckle/2mm/Speckle_3.png")
-image4 = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Banque_Speckle/2mm/Speckle_4.png")
-image5 = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Banque_Speckle/2mm/Speckle_5.png")
+image1 = cv2.imread("./Banque_Speckle/2mm/Speckle_1.png")
+image2 = cv2.imread("./Banque_Speckle/2mm/Speckle_2.png")
+image3 = cv2.imread("./Banque_Speckle/2mm/Speckle_3.png")
+image4 = cv2.imread("./Banque_Speckle/2mm/Speckle_4.png")
+image5 = cv2.imread("./Banque_Speckle/2mm/Speckle_5.png")
 
 
 #cv2.imshow('Reference', image)
@@ -259,7 +252,7 @@ plt.grid()
 ##--------------------------DECOUPAGE IMPRESSION-----------------------------##
 #Decoupe la derniere figure en morceau de taille (widthPrintable,heightPrintable)
 #pour pouvoir l'imprimer facilement. Sauvegarde dans un folder au format .pdf
-files = glob.glob('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/AnamorphosePlane/ImagePrintable2mmLETTERCTA/*.pdf')
+files = glob.glob('./ImagePrintable2mmLETTERCTA/*.pdf')
 for f in files:
     os.remove(f)
 
@@ -296,7 +289,7 @@ for i in range (yf.shape[0]-1):
         plt.box(False)
         plt.close(fig)
         fig.tight_layout()#Supprime les marges
-        fig.savefig('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/AnamorphosePlane/ImagePrintable2mmLETTERCTA/Image'+str(i+1)+','+str(j+1)+'.pdf')
+        fig.savefig('./ImagePrintable2mmLETTERCTA/Image'+str(i+1)+','+str(j+1)+'.pdf')
 
 plt.show()
 ##------------------------FIN DECOUPAGE IMPRESSION---------------------------##
