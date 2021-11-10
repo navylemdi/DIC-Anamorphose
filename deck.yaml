@@ -7,7 +7,7 @@ Input_speckle:
   Begining: 3
   Height: 27e-2
   Width: 21e-2
-  Path: '/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet technique/Banque_Speckle/2mm'
+  Path: './Banque_Speckle/2mm'
   Generic_name: 'Speckle_'
   NbImage: 1
   Position_centre: [[2, 0, 0], [2, -21e-2, 0], [2, 21e-2, 0]]
@@ -27,5 +27,5 @@ Surface :
 Output_speckle:
   Height_printable: 27.9e-2
   Width_printable: 21.6e-2
-  Print_path: '/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet technique/AnamorphosePlane/ImagePrintable'
+  Print_path: './ImagePrintable'
 
