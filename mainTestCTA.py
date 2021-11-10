@@ -7,7 +7,7 @@ Created on Thu Jul 22 17:07:42 2021
 """
 from Module import *
 
-deck = Deck('./TestCTA/deck_CTA.yaml')
+deck = Deck('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet technique/AnamorphosePlane/TestCTA/deck_CTA.yaml')
 Camera = Camera(deck)
 #Creation of the surface object
 S = Surface(deck)
