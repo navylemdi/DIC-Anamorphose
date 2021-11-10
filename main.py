@@ -4,9 +4,9 @@ deck = Deck('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet techniqu
 
 Camera = Camera(deck)
 #Creation of the surface object
-S = Surface(deck.a, deck.b, deck.c, deck.Position, deck.radius, deck.SurfaceType)
+S = Surface(deck)
 #Creation of the speckle
-speckle = Speckle(deck.NbImage, deck.PositionCentre, deck.Images(), deck.height, deck.width, deck.begining, deck.step)
+speckle = Speckle(deck)
 #Projection of the speckle
 Liste_Projection = speckle.ProjectionSpeckle(S)
 
@@ -16,7 +16,7 @@ rotation_matrix = List_Unfolded[1]
 roulement_matrix = List_Unfolded[2]
 
 #Unfolding of the wingframe and meshing of the anamorphosed speckle for print
-WingFrameUnfolded, yf, zf = Fonction.Unfold_object_frame(deck.WingFrame, S.SurfaceType, S.Gradient(), rotation_matrix, roulement_matrix, deck.widthPrintable, deck.heightPrintable)
+WingFrameUnfolded, yf, zf = Fonction.Unfold_object_frame(deck, S, rotation_matrix, roulement_matrix)
 
 ##--------------------------------AFFICHAGE----------------------------------##
 
@@ -31,5 +31,5 @@ p.PlotUnfolded(deck.NbImage, speckle.List_Sheets, List_Unfolded[0], WingFrameUnf
 
 ##--------------------------DECOUPAGE IMPRESSION-----------------------------##
 
-Fonction.Print(deck.PrintPath, yf, zf, deck.widthPrintable, deck.heightPrintable, deck.NbImage, speckle.List_Sheets, List_Unfolded[0], WingFrameUnfolded)
+Fonction.Print(deck, yf, zf, speckle.List_Sheets, List_Unfolded[0], WingFrameUnfolded)
 ##------------------------FIN DECOUPAGE IMPRESSION---------------------------##

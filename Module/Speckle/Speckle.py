@@ -3,8 +3,14 @@ from Module.Speckle.Sheets import Sheets
 
 class Speckle(Sheets):
     
-    def __init__(self, Nbimage, Sheets_pos, List_image, height, width, begining, step):
-        self.Nbimage = int(Nbimage)
+    def __init__(self, deck):
+        self.Nbimage = int(deck.NbImage)
+        Sheets_pos = deck.Position_centre
+        List_image = deck.Images()
+        height = deck.Height
+        width = deck.Width
+        begining = deck.Begining
+        step = deck.Step
         self.List_Sheets=[]
         for i in range(self.Nbimage):
             self.List_Sheets.append(Sheets(Sheets_pos[i, 0], Sheets_pos[i, 1], Sheets_pos[i, 2],  List_image[i], height, width, begining, step))

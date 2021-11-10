@@ -96,7 +96,12 @@ import matplotlib.pyplot as plt
 #     print('Temps ecoulé: ', time.strftime("%H:%M:%S", time.gmtime(end-start)))
 #     return UnfoldedPnt, rotation_matrix, roulement_matrix
     
-def Unfold_object_frame(CadreAile, SurfaceType, Gradient, rotation_matrix, roulement_matrix, widthPrintable, heightPrintable):   
+def Unfold_object_frame(deck, S, rotation_matrix, roulement_matrix):   
+    CadreAile = deck.Wingframe
+    SurfaceType = deck.Surface_type
+    Gradient = S.Gradient()
+    widthPrintable = deck.Width_printable
+    heightPrintable = deck.Height_printable
     ProjVector = np.array([-1, 0, 0])
     CadreAileUnfolded = np.zeros((4,3))
     x ,y ,z = Symbol('x'), Symbol('y'), Symbol('z')
@@ -119,7 +124,12 @@ def Unfold_object_frame(CadreAile, SurfaceType, Gradient, rotation_matrix, roule
         yf, zf  = np.meshgrid(np.arange(min(CadreAileUnfolded[:,1]), max(CadreAileUnfolded[:,1]) + widthPrintable, widthPrintable), np.arange(min(CadreAileUnfolded[:,2]), max(CadreAileUnfolded[:,2]) + heightPrintable, heightPrintable))
         return CadreAileUnfolded, yf, zf 
 
-def Print(PrintPath, yf, zf, widthPrintable, heightPrintable,Nbimage, Liste_Feuille, Liste_depliage, CadreAileUnfolded):
+def Print(deck, yf, zf, Liste_Feuille, Liste_depliage, CadreAileUnfolded):
+    PrintPath = deck.Print_path
+    widthPrintable = deck.Width_printable
+    heightPrintable = deck.Height_printable
+    Nbimage = deck.NbImage
+
     #Decoupe la derniere figure en morceau de taille (widthPrintable,heightPrintable)
     #pour pouvoir l'imprimer facilement. Sauvegarde dans un folder au format .pdf
     files = glob.glob(PrintPath + '/*.pdf')

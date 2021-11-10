@@ -103,17 +103,17 @@ class Plot:
             return v,v1,v2,v3, axeoptique
 
         Nbimage = deck.NbImage
-        CadreAile = deck.WingFrame
+        CadreAile = deck.Wingframe
         v,v1,v2,v3,axeoptique = cone(CadreAile, Camera.fov/2)
 
         fig = plt.figure(Nbimage+1)
         ax = fig.add_subplot(111, projection='3d')
 
-        if deck.SurfaceType == 'Plan':
+        if deck.Surface_type == 'Plan':
             x,y,z = plan(deck.a, deck.b, deck.c, deck.Position, CadreAile)
             ax.plot_surface(x, y, z, color='r', alpha=0.2)
-        if deck.SurfaceType == 'Cylindre':
-            x,y,z = cylindre(deck.a, deck.b, deck.c, deck.Position, deck.radius, CadreAile)
+        if deck.Surface_type == 'Cylindre':
+            x,y,z = cylindre(deck.a, deck.b, deck.c, deck.Position, deck.Radius, CadreAile)
             ax.plot_surface(x, y, z, color='r', alpha=0.2)
 
         ax.scatter(0, 0, 0, color='b', label='Camera center')

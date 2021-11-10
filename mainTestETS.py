@@ -12,39 +12,41 @@ Created on Tue Jul  6 09:34:39 2021
 
 @author: yvan
 """
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 from Module import *
-plt.close('all')
 
 deck = Deck('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet technique/AnamorphosePlane/TestETS/deck_ETS.yaml')
 Camera = Camera(deck)
-S = Surface(deck.a, deck.b, deck.c, deck.Position, deck.radius, deck.SurfaceType)
-
-speckle = Speckle(deck.NbImage, deck.PositionCentre, deck.Images(), deck.height, deck.width, deck.begining, deck.step)
-
+#Creation of the surface object
+S = Surface(deck)
+#Creation of the speckle
+speckle = Speckle(deck)
+#Projection of the speckle
 Liste_Projection = speckle.ProjectionSpeckle(S)
 
+#Unfolding of the speckle
 List_Unfolded = speckle.UnfoldSpeckle(S)
-
 rotation_matrix = List_Unfolded[1]
 roulement_matrix = List_Unfolded[2]
 
-WingFrameUnfolded, yf, zf = Fonction.Unfold_object_frame(deck.WingFrame, S.SurfaceType, S.Gradient(), rotation_matrix, roulement_matrix, deck.widthPrintable, deck.heightPrintable)
+#Unfolding of the wingframe and meshing of the anamorphosed speckle for print
+WingFrameUnfolded, yf, zf = Fonction.Unfold_object_frame(deck, S, rotation_matrix, roulement_matrix)
 
 ##--------------------------------AFFICHAGE----------------------------------##
 
 p=Plot()
-p.PlotReference(deck.NbImage, speckle.List_Sheets)
+p.PlotReference(deck.NbImage, speckle.List_Sheets)#Plot the loaded speckle
 
-p.Plot3D(deck, speckle.List_Sheets, Liste_Projection, Camera)
+p.Plot3D(deck, speckle.List_Sheets, Liste_Projection, Camera)#Plot in 3D the loaded speckle and the anamorphosed
 
-p.PlotUnfolded(deck.NbImage, speckle.List_Sheets, List_Unfolded[0], WingFrameUnfolded, yf, zf)
+p.PlotUnfolded(deck.NbImage, speckle.List_Sheets, List_Unfolded[0], WingFrameUnfolded, yf, zf)#Plot the unfolded speckle
 
 ##-----------------------------FIN AFFICHAGE---------------------------------##
 
 ##--------------------------DECOUPAGE IMPRESSION-----------------------------##
 
-Fonction.Print(deck.PrintPath, yf, zf, deck.widthPrintable, deck.heightPrintable, deck.NbImage, speckle.List_Sheets, List_Unfolded[0], WingFrameUnfolded)
+Fonction.Print(deck, yf, zf, speckle.List_Sheets, List_Unfolded[0], WingFrameUnfolded)
+##------------------------FIN DECOUPAGE IMPRESSION---------------------------##
 
 
 '''

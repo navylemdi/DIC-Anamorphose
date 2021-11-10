@@ -80,14 +80,14 @@ class Sheets:
         self.PntCentreCadreProjection = (self.Centre/sol4).astype(float)#delta[:,:,None]# Coordonnées des points projetés
         return self.Pntprojection,  self.PntCentreCadreProjection
     
-    def Unfold(self, surface):
+    def Unfold(self, Surface):
         ProjVector = np.array([-1, 0, 0])
         x, y, z = Symbol('x'), Symbol('y'), Symbol('z')
-        GradF = surface.Gradient()
+        GradF = Surface.Gradient()
         self.UnfoldedPnt = [None]*len(self.contours)
         print('Start of speckle unfolding')
         start = time.time()
-        if surface.SurfaceType == 'Plan':
+        if Surface.Surface_type == 'Plan':
             for i in range(self.debut, len(self.contours), self.saut):
                 self.UnfoldedPnt[i] = np.empty( [len(self.contours[i]), 3], dtype=np.float32)
                 sys.stdout.write('\r' + str(round((i/(len(self.contours)-1))*100,2)) + '% ')#Affichage pourcentage de l'avancement
@@ -102,10 +102,10 @@ class Sheets:
                     self.rotation_matrix = np.eye(3) + kmat + kmat.dot(kmat) * (1/(1+c))
                     self.UnfoldedPnt[i][j, :] = np.dot(self.rotation_matrix, self.Pntprojection[i][j, :])
             self.roulement_matrix = None
-        elif surface.SurfaceType == 'Cylindre':
+        elif Surface.Surface_type == 'Cylindre':
             ProjVector2 = np.array([0, 1, 0])#Vecteur horizontal vers les positifs
             ProjVector3 = np.array([-1, 0, 0])#Vecteur vertical vers les positifs
-            CylAxe = np.array([surface.a, surface.b, surface.c])/np.linalg.norm(np.array([surface.a, surface.b, surface.c]))
+            CylAxe = np.array([Surface.a, Surface.b, Surface.c])/np.linalg.norm(np.array([Surface.a, Surface.b, Surface.c]))
             v = np.cross(CylAxe, ProjVector2)
             cos = np.dot(CylAxe, ProjVector2)
             kmat = np.array([[0, -v[2], v[1]], 
@@ -131,7 +131,7 @@ class Sheets:
                     NormalVector = np.dot(self.roulement_matrix, np.squeeze(NormalVector))#Vecteur normaux à la surface tournée à la verticale
                     v2 = np.cross(NormalVector, ProjVector3)#Calcul des angles avec la verticale
                     theta = np.arcsin(v2[1])
-                    self.UnfoldedPnt[i][j, :] = [0, RolledPnt[1], -surface.Radius*theta]
+                    self.UnfoldedPnt[i][j, :] = [0, RolledPnt[1], -Surface.Radius*theta]
         sys.stdout.flush()
         print('\nEnd of speckle Unfolding')
         end = time.time()
