@@ -1,6 +1,6 @@
 from Module import *
 
-deck = Deck('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet technique/AnamorphosePlane/deck.yaml')
+deck = Deck('./AnamorphosePlane/deck.yaml')
 
 Camera = Camera(deck)
 #Creation of the surface object

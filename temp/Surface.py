@@ -1,10 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Jul 21 09:36:31 2021
-
-@author: yvan
-"""
 import sympy as sym
 from sympy import Symbol
 

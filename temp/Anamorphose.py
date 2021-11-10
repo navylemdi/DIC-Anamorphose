@@ -14,7 +14,7 @@ import glob
 import sys
 
 
-deck = Deck('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet technique/AnamorphosePlane/temp/deck.yaml')
+deck = Deck('./temp/deck.yaml')
 #print(deck.doc)
 
 plt.close('all')
@@ -33,10 +33,10 @@ width = 21e-2#21e-2 #21e-2#largeur en m de l'image de reference(m)
 
 heightPrintable = 27.9e-2
 widthPrintable = 21.6e-2
-PrintPath = '/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet technique/AnamorphosePlane/ImagePrintable'
+PrintPath = './ImagePrintable'
 
-image1 = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet technique/Banque_Speckle/2mm/Speckle_1.png")
-image2 = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet technique/Banque_Speckle/2mm/Speckle_2.png")
+image1 = cv2.imread("./Banque_Speckle/2mm/Speckle_1.png")
+image2 = cv2.imread("./Banque_Speckle/2mm/Speckle_2.png")
 List_image = [image1, image2]
 Nbimage=len(List_image)
 

@@ -1,10 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Jul  6 09:26:15 2021
-
-@author: yvan
-"""
 import cv2 as cv2
 import numpy as np
 import Fonction
