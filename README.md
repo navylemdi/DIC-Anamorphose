@@ -76,7 +76,7 @@ You need to implement the size of the speckle sheets you want to anamorphose and
 
 In the *Position_centre* list you must put the center position of all your sheets. It is organised like [x, y, z] refering to the figure.
 
-<img width="796" alt="Capture d’écran 2021-10-18 à 11 40 58" src="https://user-images.githubusercontent.com/84194324/137764384-164a5440-43dc-4f38-8fa8-75deda7809c8.png">
+<img width="628" alt="Capture d’écran 2021-11-09 à 20 24 42" src="https://user-images.githubusercontent.com/84194324/141032568-872ec514-2716-4acb-a321-eb7dfd5d4731.png">
 
 #### Surface section
 ```
