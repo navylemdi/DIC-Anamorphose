@@ -1,16 +1,16 @@
 Camera:
-  focal_length: 50 #mm
-  sensor_height: 29 #mm
+  Focal_length: 50 #mm
+  Sensor_height: 29 #mm
 
-Input_Speckle: 
-  step: 500
-  begining: 3
-  height: 27e-2
-  width: 21e-2
+Input_speckle: 
+  Step: 500
+  Begining: 3
+  Height: 27e-2
+  Width: 21e-2
   Path: '/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet technique/Banque_Speckle/2mm/'
-  Generic_Name: 'Speckle_'
+  Generic_name: 'Speckle_'
   NbImage: 3
-  PositionCentre: [[2.6516760266572756, 0, -0.3325620275974964], 
+  Position_centre: [[2.6516760266572756, 0, -0.3325620275974964], 
                    [2.6516760266572756, 0, -0.0625620275974964], 
                    [2.6516760266572756, 0, 0.2074379724025036]]
 
@@ -20,14 +20,14 @@ Surface :
   c: 0.9788623578263015
   Radius : 0.4
   Position : [2.65167603,  0.        ,-0.46756203]
-  Surface_Type : 'Plan'
+  Surface_type : 'Plan'
   Wingframe : [[ 2.65167603,  0.        , -0.46756203],
                [ 5.5882631 ,  0.        ,  0.14599837],
                [ 4.11996956,  0.3       , -0.16078183],
                [ 4.11996956, -0.3       , -0.16078183]]
 
-Output_Speckle:
-  heightPrintable: 27.9e-2
-  widthPrintable: 21.6e-2
-  PrintPath: '/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet technique/AnamorphosePlane/ImagePrintable'
+Output_speckle:
+  Height_printable: 27.9e-2
+  Width_printable: 21.6e-2
+  Print_path: '/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet technique/AnamorphosePlane/ImagePrintable'
 
