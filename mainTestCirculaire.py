@@ -33,8 +33,8 @@ WingHeight = 1 #hauteur zone analyse de l'aile (m)
 widthPrintable = 27.9e-2
 heightPrintable = 21.6e-2
 
-image1 = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Banque_Speckle/2mm/Speckle_1.png")
-image2 = cv2.imread("/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/Banque_Speckle/2mm/Speckle_2.png")
+image1 = cv2.imread("./Banque_Speckle/2mm/Speckle_1.png")
+image2 = cv2.imread("./Banque_Speckle/2mm/Speckle_2.png")
 
 #cv2.imshow('Reference', image)
 
@@ -222,7 +222,7 @@ plt.grid()
 ##--------------------------DECOUPAGE IMPRESSION-----------------------------##
 #Decoupe la derniere figure en morceau de taille (widthPrintable,heightPrintable)
 #pour pouvoir l'imprimer facilement. Sauvegarde dans un folder au format .pdf
-files = glob.glob('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/AnamorphosePlane/ImagePrintable4mmTestCirculaire/*.pdf')
+files = glob.glob('./ImagePrintable4mmTestCirculaire/*.pdf')
 for f in files:
     os.remove(f)
 
@@ -259,7 +259,7 @@ for i in range (yf.shape[0]-1):
         plt.box(False)
         plt.close(fig)
         fig.tight_layout()#Supprime les marges
-        fig.savefig('/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892/AnamorphosePlane/ImagePrintable4mmTestCirculaire/Image'+str(i+1)+','+str(j+1)+'.pdf')
+        fig.savefig('./ImagePrintable4mmTestCirculaire/Image'+str(i+1)+','+str(j+1)+'.pdf')
 
 plt.show()
 ##------------------------FIN DECOUPAGE IMPRESSION---------------------------##
