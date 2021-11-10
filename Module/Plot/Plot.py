@@ -123,12 +123,17 @@ class Plot:
                 ax.plot(Liste_Projection[j][i][:, 0], Liste_Projection[j][i][:, 1], Liste_Projection[j][i][:, 2], color='k', marker=None)
                 ax.scatter([Liste_Feuille[j].d]*4, Liste_Feuille[j].Cadre[:,0], Liste_Feuille[j].Cadre[:,1], color='k', marker='+')
         ax.scatter(CadreAile[:,0], CadreAile[:,1], CadreAile[:,2], color='c', label='Wingframe')
+        for i in range (0,len(CadreAile[:,0])):
+            ax.text(CadreAile[i,0], CadreAile[i,1], CadreAile[i,2], str(i+1))
 
-        ax.plot([0,v[0]],[0,v[1]], [0,v[2]],  color='g', label='Field of view')
-        ax.plot([0,v1[0]],[0,v1[1]], [0,v1[2]],  color='g')
-        ax.plot([0,v2[0]],[0,v2[1]], [0,v2[2]],  color='g')
-        ax.plot([0,v3[0]],[0,v3[1]], [0,v3[2]],  color='g')
+        ax.plot([0,v[0]],[0,v[1]], [0,v[2]],  color='g', label='Field of view', linewidth= 1, alpha=0.5)
+        ax.plot([0,v1[0]],[0,v1[1]], [0,v1[2]],  color='g', linewidth= 1, alpha=0.5)
+        ax.plot([0,v2[0]],[0,v2[1]], [0,v2[2]],  color='g', linewidth= 1, alpha=0.5)
+        ax.plot([0,v3[0]],[0,v3[1]], [0,v3[2]],  color='g', linewidth= 1, alpha=0.5)
         ax.plot([0, axeoptique[0]], [0, axeoptique[1]], [0, axeoptique[2]], '--k', linewidth= 1, label='Optical axis')
+        ax.quiver(0,0,0,1/2,0,0,color='r', linewidth= 1)
+        ax.quiver(0,0,0,0,1/2,0,color='g', linewidth= 1)
+        ax.quiver(0,0,0,0,0,1/2,color='b', linewidth= 1)
         ax.set_xlabel('X')
         ax.set_ylabel('Y')
         ax.set_zlabel('Z')
@@ -152,6 +157,8 @@ class Plot:
                 plt.plot(Liste_depliage[j][i][:, 1], Liste_depliage[j][i][:, 2], color='black')
                 plt.fill(Liste_depliage[j][i][:, 1], Liste_depliage[j][i][:, 2], color='black')
         plt.scatter(CadreAileUnfolded[:,1], CadreAileUnfolded[:,2], color='c', marker='+')
+        for i in range (len(CadreAileUnfolded[:,0])):
+            plt.text(CadreAileUnfolded[i,1], CadreAileUnfolded[i,2], str(i+1), color='c')
         plt.scatter( yf, zf, marker='+', color='m')
         for i in range (yf.shape[0]-1):
             for j in range (yf.shape[1]-1):

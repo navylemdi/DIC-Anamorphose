@@ -8,7 +8,7 @@ from sympy import Symbol
 
 class Sheets:
     
-    def __init__(self, centreH, centreV, d, image, height, width, debut, saut):
+    def __init__(self, d, centreH, centreV, image, height, width, debut, saut):
         self.centreH = centreH
         self.centreV = centreV
         self.d = d

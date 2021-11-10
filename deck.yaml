@@ -10,7 +10,7 @@ Input_Speckle:
   Path: '/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet technique/Banque_Speckle/2mm'
   Generic_Name: 'Speckle_'
   NbImage: 1
-  PositionCentre: [[0, 0, 2], [-21e-2, 0, 2], [21e-2, 0, 2]]
+  PositionCentre: [[2, 0, 0], [2, -21e-2, 0], [2, 21e-2, 0]]
 
 Surface : 
   a: 0
@@ -19,8 +19,8 @@ Surface :
   Radius : 0.4
   Position : [3, 0, 0]
   Surface_Type : 'Cylindre'
-  Wingframe : [[ 2.6,  0.,   0.2],
-               [ 2.6,  0.,  -0.2],
+  Wingframe : [[ 2.6,  0.,   .5],
+               [ 2.6,  0.,  -.5],
                [ 3.,  -0.4,  0. ],
                [ 3.,   0.4,  0. ]]
 

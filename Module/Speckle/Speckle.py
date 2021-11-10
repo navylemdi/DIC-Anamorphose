@@ -7,7 +7,7 @@ class Speckle(Sheets):
         self.Nbimage = int(Nbimage)
         self.List_Sheets=[]
         for i in range(self.Nbimage):
-            self.List_Sheets.append(Sheets(Sheets_pos[i, 0], Sheets_pos[i, 1], Sheets_pos[i, 2], List_image[i], height, width, begining, step))
+            self.List_Sheets.append(Sheets(Sheets_pos[i, 0], Sheets_pos[i, 1], Sheets_pos[i, 2],  List_image[i], height, width, begining, step))
     
     def ProjectionSpeckle(self, S):
         Liste_Projection = []
