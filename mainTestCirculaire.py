@@ -1,10 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Jul  6 09:34:39 2021
-
-@author: yvan
-"""
 import numpy as np
 import matplotlib.pyplot as plt
 import sympy as sym
