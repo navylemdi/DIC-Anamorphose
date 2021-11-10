@@ -23,7 +23,7 @@ Input_Speckle:
   Path: '.'
   Generic_Name: 'Speckle_'
   NbImage: 3
-  PositionCentre: [[0, 0, 2], [-21e-2, 0, 2], [21e-2, 0, 2]]
+  PositionCentre: [[2, 0, 0], [2, -21e-2, 0], [2, 21e-2, 0]]
 
 Surface : 
   a: 0
