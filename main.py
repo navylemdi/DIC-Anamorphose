@@ -1,6 +1,6 @@
 from Module import *
 
-deck = Deck('./AnamorphosePlane/deck.yaml')
+deck = Deck('./deck.yaml')
 
 Camera = Camera(deck)
 #Creation of the surface object
