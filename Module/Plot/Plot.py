@@ -2,12 +2,30 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 class Plot:
+    """A class to plot the results of anamorphose
+    
+    Methods
+    -------
+    set_aspect_equal_3d(ax)
+        Fix equal aspect for 3D plots
+    Plot3D(deck, deck, Liste_Feuille, Liste_Projection, Camera)
+        Plots in a 3D plot the camera position, speckle sheets position, anamorphic speckle sheets position
+    PlotReference(deck, Liste_Feuille)
+        Plots all the input speckle sheets
+    PlotUnfolded(deck, Liste_Feuille, Liste_depliage, CadreAileUnfolded, yf, zf)
+        Plots the unfolded anamorphic speckles
+    """
     def __init__(self) -> None:
-        print("Display of the graphs")
+        print("Display of graphics..")
         pass
 
     def set_aspect_equal_3d(self, ax):
-        """Fix equal aspect bug for 3D plots."""
+        """
+        Parameters
+        ----------
+        ax : matplotlib.pyplot.axis
+            Axis of the 3D plot
+        """
 
         xlim = ax.get_xlim3d()
         ylim = ax.get_ylim3d()
@@ -28,11 +46,47 @@ class Plot:
         ax.set_ylim3d([ymean - plot_radius, ymean + plot_radius])
         ax.set_zlim3d([zmean - plot_radius, zmean + plot_radius])
     
-    
-
     def Plot3D(self, deck, Liste_Feuille, Liste_Projection, Camera):
-        
+        """
+        Parameters
+        ----------
+        deck : Module.deck.data.Deck
+            Variable that contains input data
+        Liste_Feuille : list
+            List of speckle sheets
+        Liste_Projection : list
+            List of projected speckle sheets
+        Camera : Module.Camera.Camera.Camera
+            Camera informations
+
+        Methods
+        -------
+        plan
+            Meshgrid of a plane
+        cylindre
+            Meshgrid of a cylinder
+        """
+
         def plan(a, b, c, Pos, Wingframe):
+            """
+            Parameters
+            ----------
+            a : float
+                X coordinate of normal vector's plane
+            b : float
+                Y coordinate of normal vector's plane
+            c : float
+                Z coordinate of normal vector's plane
+            Pos : numpy.ndarray
+                3D position a a point that's on the plane
+            Wingframe : numpy.ndarray
+                4 points that define the frame of the wing
+            
+            Returns
+            -------
+            x, y, z : numpy.ndarray
+                Meshgrid of a plane
+            """
             xmin = min(Wingframe[0,0],Wingframe[1,0])
             xmax = max(Wingframe[0,0],Wingframe[1,0])
             ymin = min(Wingframe[2,1],Wingframe[3,1])
@@ -44,6 +98,25 @@ class Plot:
             return x, y, z
 
         def cylindre(a, b, c, Pos, R, Wingframe):
+            """
+            Parameters
+            ----------
+            a : float
+                X coordinate of cylinder axis
+            b : float
+                Y coordinate of cylinder axis
+            c : float
+                Z coordinate of cylinder axis
+            Pos : numpy.ndarray
+                3D position a a point that's on the cylinder axis
+            Wingframe : numpy.ndarray
+                4 points that define the frame of the wing
+            
+            Returns
+            -------
+            x, y, z : numpy.ndarray
+                Meshgrid of a plane
+            """
             p0 = Wingframe[0,:]
             p1 = Wingframe[1,:]
             #vector in direction of axis
@@ -143,6 +216,14 @@ class Plot:
         self.set_aspect_equal_3d(ax)
 
     def PlotReference(self, deck, Liste_Feuille):
+        """
+        Parameters
+        ----------
+        deck : Module.deck.data.Deck
+            Variable that contains input data
+        Liste_Feuille : list
+            List of speckle sheets
+        """
         Nbimage =deck.NbImage
         for i in range(Nbimage):
             fig=plt.figure(i+1)
@@ -154,6 +235,22 @@ class Plot:
             ax.set_title('Image référence '+ str(i+1) +' (pix)')
 
     def PlotUnfolded(self, deck, Liste_Feuille, Liste_depliage, CadreAileUnfolded, yf, zf):
+        """
+        Parameters
+        ----------
+        deck : Module.deck.data.Deck
+            Variable that contains input data
+        Liste_Feuille : list
+            List of speckle sheets
+        Liste_depliage : list
+            List of unfolded speckle sheets
+        CadreAileUnfolded : numpy.ndarray
+            Array of unfolded position of the wing frame
+        yf : numpy.ndarray
+            Array of a y coordinate of mesh inside the wing frame
+        zf : numpy.ndarray
+            Array of a x coordinate of mesh inside the wing frame
+        """
         Nbimage =deck.NbImage
         fig=plt.figure(Nbimage+2)
         ax = fig.add_subplot(111, aspect='equal')

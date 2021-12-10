@@ -4,12 +4,31 @@ import numpy as np
 import cv2 as cv2
 
 class Deck():
-    def __init__(self, inputhpath):
-        if not os.path.exists(inputhpath):
-            print("File " + inputhpath + " not found")
+    """
+    A class to parse input data
+    
+    Attributes
+    ----------
+    inputpath : str
+        The file location of the deck
+    
+    Methods
+    -------
+    Images():
+        Loads all the speckle sheets in one list
+    """
+    def __init__(self, inputpath):
+        """
+        Parameters
+        ----------
+        inputpath : str
+            The file location of the deck
+        """
+        if not os.path.exists(inputpath):
+            print("File " + inputpath + " not found")
             sys.exit(1)
         else:
-            with open(inputhpath, 'r') as f:
+            with open(inputpath, 'r') as f:
                 self.doc = yaml.load(f, Loader=yaml.BaseLoader)
                 try: 
                     self.Camera = self.doc['Camera']
@@ -43,6 +62,12 @@ class Deck():
                     print('You probably misspelled a keyword.\nProgram stop')
                     sys.exit()
     def Images(self):
+        """
+        Returns
+        ----------
+        list
+            A list of numpy arrays that represents the speckle image 
+        """
         list=[]
         i=0
         while len(list) < self.NbImage:

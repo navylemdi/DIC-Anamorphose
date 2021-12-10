@@ -96,7 +96,28 @@ import matplotlib.pyplot as plt
 #     print('Temps ecoulé: ', time.strftime("%H:%M:%S", time.gmtime(end-start)))
 #     return UnfoldedPnt, rotation_matrix, roulement_matrix
     
-def Unfold_object_frame(deck, S, rotation_matrix, roulement_matrix):   
+def Unfold_object_frame(deck, S, rotation_matrix, roulement_matrix):
+    """
+    Parameters
+    ----------
+    deck : Module.deck.data.Deck
+        Variable that contains input data
+    S : Module.Surface.Surface.Surface
+        Projection surface object
+    rotation_matrix : numpy.ndarray
+        Matrix to rotate by Y axis
+    roulement_matrix : numpy.ndarray
+        Matrix to rotate by Z axis
+    
+    Returns
+    -------
+    CadreAileUnfolded : numpy.ndarray
+        Position of unfolded wingframe
+    yf : numpy.ndarray
+        Array of a y coordinate of mesh inside the wing frame
+    zf : numpy.ndarray
+        Array of a x coordinate of mesh inside the wing frame
+    """
     CadreAile = deck.Wingframe
     SurfaceType = deck.Surface_type
     Gradient = S.Gradient()
@@ -125,6 +146,22 @@ def Unfold_object_frame(deck, S, rotation_matrix, roulement_matrix):
         return CadreAileUnfolded, yf, zf 
 
 def Print(deck, yf, zf, Liste_Feuille, Liste_depliage, CadreAileUnfolded):
+    """
+    Parameters
+    ----------
+    deck : Module.deck.data.Deck
+        Variable that contains input data
+    yf : numpy.ndarray
+        Array of a y coordinate of mesh inside the wing frame
+    zf : numpy.ndarray
+        Array of a x coordinate of mesh inside the wing frame
+    Liste_Feuille : list
+        List of positions of all sheets
+    Liste_depliage : list
+            List of unfold positions of all sheets
+    CadreAileUnfolded : numpy.ndarray
+        Position of unfolded wingframe
+    """
     PrintPath = deck.Print_path
     widthPrintable = deck.Width_printable
     heightPrintable = deck.Height_printable

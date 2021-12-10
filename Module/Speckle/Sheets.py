@@ -7,8 +7,61 @@ import matplotlib.pyplot as plt
 from sympy import Symbol
 
 class Sheets:
+    """A class to work on a speckle sheet
     
+    Attributes
+    ----------
+    d : float
+        X position of the speckle sheet center
+    centreH : float
+        Y position of the speckle sheet center
+    centreV : float
+        Z position of the speckle sheet center
+    image : numpy.ndarray
+        Numpy array representing the speckle sheet
+    height : float
+        Height in meter of the speckle sheet
+    width : 
+        Width in meter of the speckle sheet
+    debut : int
+        Starting index of the loop over the speckle dots
+    saut : int
+        Step value of the loop over the speckle dots
+    
+    Methods
+    -------
+    Pix2Meter
+        Converts pixels position to meter position
+    Projection
+        Computes the projection position of the speckle sheet
+    Unfold
+        Computes the projection position of the speckle sheet
+    Affichage_reference
+        Plots the original speckle sheet
+    """
+
     def __init__(self, d, centreH, centreV, image, height, width, debut, saut):
+        """
+        Parameters
+        ----------
+        d : float
+            X position of the speckle sheet center
+        centreH : float
+            Y position of the speckle sheet center
+        centreV : float
+            Z position of the speckle sheet center
+        image : numpy.ndarray
+            Numpy array representing the speckle sheet
+        height : float
+            Height in meter of the speckle sheet
+        width : 
+            Width in meter of the speckle sheet
+        debut : int
+            Starting index of the loop over the speckle dots
+        saut : int
+            Step value of the loop over the speckle dots
+        """
+
         self.centreH = centreH
         self.centreV = centreV
         self.d = d
@@ -44,12 +97,51 @@ class Sheets:
         self.Centre=np.array([d, 0, 0])
 
     def Pix2Meter(self, Pospix, image, Lim_inf_H, Lim_max_H, Lim_inf_V, Lim_max_V, CentreH, CentreV):
+        """
+        Parameters
+        ----------
+        Pospix : numpy.ndarray
+            Position of a pixel in pixel dimension
+        image : numpy.ndarray
+            Numpy array representing the speckle sheet
+        Lim_inf_H :
+            Minimum horizontal position in meter of the speckle sheet
+        Lim_max_H :
+            Maximum horizontal position in meter of the speckle sheet
+        Lim_inf_V :
+            Minimum vertical position in meter of the speckle sheet
+        Lim_max_V :
+            Maximum vertical position in meter of the speckle sheet
+        CentreH : float
+            Y position of the speckle sheet center
+        CentreV : float
+            Z position of the speckle sheet center
+        
+        Returns
+        -------
+        Posmet : 
+            Position in meter unit of the pixel
+        """
+
         self.Posmet = np.zeros((len(Pospix),2), np.float32)
         self.Posmet[:, 1] = ((Lim_max_V-Lim_inf_V)*Pospix[:,1])/image.shape[0] + Lim_inf_V + CentreV
         self.Posmet[:, 0] = ((Lim_max_H-Lim_inf_H)*Pospix[:,0])/image.shape[1] + Lim_inf_H + CentreH
         return self.Posmet
 
-    def projection(self, Surface):
+    def Projection(self, Surface):
+        """
+        Parameters
+        ----------
+        Surface : Module.Surface.Surface.Surface
+            Projection surface object
+        
+        Returns
+        -------
+        Pntprojection : numpy.ndarray
+            Position of projection speckle dots
+        PntCentreCadreProjection : numpy.ndarray
+            Position of projected speckle sheet center
+        """
         F = Surface.Equation() 
         x, y, z = Symbol('x'), Symbol('y'), Symbol('z')
         delta = Symbol('delta', positive=True)
@@ -81,6 +173,21 @@ class Sheets:
         return self.Pntprojection,  self.PntCentreCadreProjection
     
     def Unfold(self, Surface):
+        """
+        Parameters
+        ----------
+        Surface : Module.Surface.Surface.Surface
+            Projection surface object
+        
+        Returns
+        -------
+        UnfoldedPnt : numpy.ndarray
+            Unfold positions of speckle dots
+        rotation_matrix : numpy.ndarray
+            Matrix to rotate by Y axis
+        roulement_matrix : numpy.ndarray
+            Matrix to rotate by Z axis
+        """
         ProjVector = np.array([-1, 0, 0])
         x, y, z = Symbol('x'), Symbol('y'), Symbol('z')
         GradF = Surface.Gradient()
@@ -139,6 +246,14 @@ class Sheets:
         return self.UnfoldedPnt, self.rotation_matrix, self.roulement_matrix
 
     def Affichage_reference(self, n, gcolor):
+        """
+        Parameters
+        ----------
+        n : int
+            Index number of matplotlib.pyplot figure
+        gcolor : str
+            Color of the plot
+        """
         fig=plt.figure(n)
         ax = fig.add_subplot(111, aspect='equal')
         for i in range(self.debut, len(self.contours), self.saut):
