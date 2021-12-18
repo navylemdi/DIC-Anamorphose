@@ -1,6 +1,6 @@
 from Module import *
 
-deck = Deck(r'/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet technique/AnamorphosePlane/deck.yaml')
+deck = Deck(r'./deck.yaml')
 
 camera = Camera(deck)
 #Creation of the surface object
@@ -38,6 +38,6 @@ Fonction.Print(deck, yf, zf, speckle.List_Sheets, List_Unfolded[0], WingFrameUnf
 
 project = Project()
 
-project.save('New_project', r'/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet technique/AnamorphosePlane', deck, List_Unfolded[0], WingFrameUnfolded, yf, zf, Liste_Projection)
+project.save('New_project', r'.', deck, List_Unfolded[0], WingFrameUnfolded, yf, zf, Liste_Projection)
 
 p.Show_plots()
