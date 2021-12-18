@@ -33,3 +33,9 @@ p.PlotUnfolded(deck, speckle.List_Sheets, List_Unfolded[0], WingFrameUnfolded, y
 
 Fonction.Print(deck, yf, zf, speckle.List_Sheets, List_Unfolded[0], WingFrameUnfolded)
 ##------------------------FIN DECOUPAGE IMPRESSION---------------------------##
+
+project = Project()
+
+project.save('TestETS', r'./TestETS', deck, List_Unfolded[0], WingFrameUnfolded, yf, zf, Liste_Projection)
+
+p.Show_plots()

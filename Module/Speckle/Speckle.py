@@ -1,6 +1,5 @@
 from Module.Speckle.Sheets import Sheets
 
-
 class Speckle(Sheets):
     """A class to regroup all the speckle sheets
     
@@ -48,12 +47,14 @@ class Speckle(Sheets):
         Liste_Projection : list
             List of projection positions of all sheets
         """        
-        Liste_Projection = []
+        Liste_Projection = [0]*self.Nbimage
+        print("------------------------\n")
         for i in range(self.Nbimage):
             Compute_information = self.Generic_name + str(i+1)
             print("------------------------\n")
             print(Compute_information+':\n')
-            Liste_Projection.append(self.List_Sheets[i].Projection(S)[0])
+            Liste_Projection[i] = self.List_Sheets[i].Projection(S)[0]
+        print("------------------------\n")
         return Liste_Projection
 
     def UnfoldSpeckle(self, S):

@@ -196,5 +196,4 @@ def Print(deck, yf, zf, Liste_Feuille, Liste_depliage, CadreAileUnfolded):
             plt.close(fig)
             fig.tight_layout()#Supprime les marges
             fig.savefig(PrintPath + '/Image'+str(i+1)+','+str(j+1)+'.pdf')
-    plt.show()
 

@@ -1,13 +1,13 @@
-Camera:
+Camera :
   Focal_length: 50 #mm
   Sensor_height: 29 #mm
 
-Input_speckle: 
+Input_speckle : 
   Step: 500
   Begining: 4
   Height: 27e-2
   Width: 21e-2
-  Path: './Banque_Speckle/2mm'
+  Path: '/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet technique/Banque_Speckle/2mm'
   Generic_name: 'Speckle_'
   NbImage: 1
   Position_centre: [[2, 0, 0]]
@@ -20,12 +20,12 @@ Surface :
   Position : [3, 0, 0]
   Surface_type : 'Cylindre'
   Wingframe : [[ 2.6,  0.,   .5],
-               [ 2.6,  0.,  -.5],
-               [ 3.,  -0.4,  0. ],
-               [ 3.,   0.4,  0. ]]
+              [ 2.6,  0.,  -.5],
+              [ 3.,  -0.4,  0. ],
+              [ 3.,   0.4,  0. ]]
 
-Output_speckle:
+Output_speckle :
   Height_printable: 27.9e-2
   Width_printable: 21.6e-2
-  Print_path: './ImagePrintable'
+  Print_path: '/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet technique/AnamorphosePlane/ImagePrintable'
 

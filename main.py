@@ -1,8 +1,8 @@
 from Module import *
 
-deck = Deck('./deck.yaml')
+deck = Deck(r'/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet technique/AnamorphosePlane/deck.yaml')
 
-Camera = Camera(deck)
+camera = Camera(deck)
 #Creation of the surface object
 S = Surface(deck)
 #Creation of the speckle
@@ -20,10 +20,11 @@ WingFrameUnfolded, yf, zf = Fonction.Unfold_object_frame(deck, S, rotation_matri
 
 ##--------------------------------AFFICHAGE----------------------------------##
 
-p=Plot()
+p = Plot()
+
 p.PlotReference(deck, speckle.List_Sheets)#Plot the loaded speckle
 
-p.Plot3D(deck, speckle.List_Sheets, Liste_Projection, Camera)#Plot in 3D the loaded speckle and the anamorphosed
+p.Plot3D(deck, speckle.List_Sheets, Liste_Projection, camera)#Plot in 3D the loaded speckle and the anamorphosed
 
 p.PlotUnfolded(deck, speckle.List_Sheets, List_Unfolded[0], WingFrameUnfolded, yf, zf)#Plot the unfolded speckle
 
@@ -32,4 +33,11 @@ p.PlotUnfolded(deck, speckle.List_Sheets, List_Unfolded[0], WingFrameUnfolded, y
 ##--------------------------DECOUPAGE IMPRESSION-----------------------------##
 
 Fonction.Print(deck, yf, zf, speckle.List_Sheets, List_Unfolded[0], WingFrameUnfolded)
+
 ##------------------------FIN DECOUPAGE IMPRESSION---------------------------##
+
+project = Project()
+
+project.save('New_project', r'/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet technique/AnamorphosePlane', deck, List_Unfolded[0], WingFrameUnfolded, yf, zf, Liste_Projection)
+
+p.Show_plots()

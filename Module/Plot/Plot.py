@@ -18,7 +18,7 @@ class Plot:
     def __init__(self) -> None:
         print("Display of graphics..")
         pass
-
+    
     def set_aspect_equal_3d(self, ax):
         """
         Parameters
@@ -270,3 +270,5 @@ class Plot:
         ax.set_ylim(min(CadreAileUnfolded[:,2]), max(CadreAileUnfolded[:,2]))
         ax.grid()
 
+    def Show_plots(self):
+        plt.show()

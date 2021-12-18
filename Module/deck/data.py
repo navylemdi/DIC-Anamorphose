@@ -24,13 +24,44 @@ class Deck():
         inputpath : str
             The file location of the deck
         """
-        if not os.path.exists(inputpath):
-            print("File " + inputpath + " not found")
+        self.inputpath = inputpath
+        if not os.path.exists(self.inputpath):
+            print("File " + self.inputpath + " not found")
             sys.exit(1)
         else:
-            with open(inputpath, 'r') as f:
-                self.doc = yaml.load(f, Loader=yaml.BaseLoader)
+            with open(self.inputpath, 'r') as f:
                 try: 
+                    self.doc = yaml.load(f, Loader=yaml.UnsafeLoader)
+                    self.deck = self.doc['Deck']
+                    self.Camera = self.deck['Camera']
+                    self.Focal_length = float(self.Camera['Focal_length'])
+                    self.Sensor_height = float(self.Camera['Sensor_height'])
+
+                    self.Input_Speckle = self.deck['Input_speckle']
+                    self.Step = int(self.Input_Speckle['Step'])
+                    self.Begining = int(self.Input_Speckle['Begining'])
+                    self.Height = float(self.Input_Speckle['Height'])
+                    self.Width = float(self.Input_Speckle['Width'])
+                    self.Path = self.Input_Speckle['Path']
+                    self.Generic_name = self.Input_Speckle['Generic_name']
+                    self.NbImage = int(self.Input_Speckle['NbImage'])
+                    self.Position_centre = np.array(self.Input_Speckle['Position_centre'], dtype = float)
+
+                    self.Surface = self.deck['Surface']
+                    self.a = float(self.Surface['a'])
+                    self.b = float(self.Surface['b'])
+                    self.c = float(self.Surface['c'])
+                    self.Position = np.array(self.Surface['Position'], dtype = float)
+                    self.Radius = float(self.Surface['Radius'])
+                    self.Surface_type = self.Surface['Surface_type']
+                    self.Wingframe = np.array(self.Surface['Wingframe'], dtype = float)
+
+                    self.Output_Speckle = self.deck['Output_speckle']
+                    self.Height_printable = float(self.Output_Speckle['Height_printable'])
+                    self.Width_printable = float(self.Output_Speckle['Width_printable'])
+                    self.Print_path = self.Output_Speckle['Print_path']
+
+                except KeyError:
                     self.Camera = self.doc['Camera']
                     self.Focal_length = float(self.Camera['Focal_length'])
                     self.Sensor_height = float(self.Camera['Sensor_height'])
@@ -58,9 +89,7 @@ class Deck():
                     self.Height_printable = float(self.Output_Speckle['Height_printable'])
                     self.Width_printable = float(self.Output_Speckle['Width_printable'])
                     self.Print_path = self.Output_Speckle['Print_path']
-                except KeyError:
-                    print('You probably misspelled a keyword.\nProgram stop')
-                    sys.exit()
+
     def Images(self):
         """
         Returns
