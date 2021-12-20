@@ -1,4 +1,3 @@
-from numpy.core.shape_base import block
 import yaml
 import subprocess
 import os
@@ -14,39 +13,56 @@ class Project:
     def __init__(self):
         pass
 
-    def save(self, Project_name, path, deck, List_Unfolded_0, WingFrameUnfolded, yf, zf, Liste_projection):# yf, zf, camera, Liste_Projection):
+    def save(self, Project_name, path, inputdeck, List_Unfolded_0, WingFrameUnfolded, yf, zf, InputListe_projection):
         self.Project_name = Project_name
         self.path = path
         os.chdir(path)
         bashCommand = "touch " + Project_name + ".yaml"
         process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
         output, error = process.communicate()
-        data = dict(Deck = {'Camera': {'Focal_length': deck.Focal_length, 'Sensor_height': deck.Sensor_height},
+        print("save project " + Project_name)
+        Liste_Projection = InputListe_projection.copy()
+        for i in range(inputdeck.NbImage):
+            for j in range(len(InputListe_projection[i][:])):
+                if type(InputListe_projection[i][j]) is np.ndarray:
+                    Liste_Projection[i][j] = InputListe_projection[i][j].tolist()
+                else:
+                    Liste_Projection[i][j] = InputListe_projection[i][j]
+        List_Unfolded = List_Unfolded_0.copy()
+        for i in range(inputdeck.NbImage):
+            for j in range(len(List_Unfolded_0[i][:])):
+                if type(List_Unfolded_0[i][j]) is np.ndarray:
+                    List_Unfolded[i][j] = List_Unfolded_0[i][j].tolist()
+                else:
+                    List_Unfolded[i][j] = List_Unfolded_0[i][j]
 
-                    'Input_speckle': {'Step': deck.Step,
-                    'Begining': deck.Begining,
-                    'Height': deck.Height,
-                    'Width': deck.Width,
-                    'Path': deck.Path,
-                    'Generic_name': deck.Generic_name,
-                    'NbImage': deck.NbImage,
-                    'Position_centre': deck.Position_centre.tolist()},
+        data = dict(Deck = {'Camera': {'Focal_length': inputdeck.Focal_length, 'Sensor_height': inputdeck.Sensor_height},
 
-                    'Surface': {'a': deck.a,
-                    'b': deck.b,
-                    'c': deck.c,
-                    'Radius': deck.Radius,
-                    'Position': deck.Position.tolist(),
-                    'Surface_type': deck.Surface_type,
-                    'Wingframe': deck.Wingframe.tolist()},
+                    'Input_speckle': {'Step': inputdeck.Step,
+                    'Begining':  inputdeck.Begining,
+                    'Height': inputdeck.Height,
+                    'Width': inputdeck.Width,
+                    'Path': inputdeck.Path,
+                    'Generic_name': inputdeck.Generic_name,
+                    'NbImage': inputdeck.NbImage,
+                    'Position_centre': inputdeck.Position_centre.tolist()},
 
-                    'Output_speckle': {'Height_printable': deck.Height_printable,
-                    'Width_printable': deck.Width_printable,
-                    'Print_path': deck.Print_path}},
-                    Unfolded = {'List_Unfolded' : [[List_Unfolded_0[0][i].tolist() if type(List_Unfolded_0[0][i]) is np.ndarray else List_Unfolded_0[0][i] for i in range(len(List_Unfolded_0[0][:]))]], 'WingFrameUnfolded' : WingFrameUnfolded.tolist()},
+                    'Surface': {'a': inputdeck.a,
+                    'b': inputdeck.b,
+                    'c': inputdeck.c,
+                    'Radius': inputdeck.Radius,
+                    'Position': inputdeck.Position.tolist(),
+                    'Surface_type': inputdeck.Surface_type,
+                    'Wingframe': inputdeck.Wingframe.tolist()},
+
+                    'Output_speckle': {'Height_printable': inputdeck.Height_printable,
+                    'Width_printable': inputdeck.Width_printable,
+                    'Print_path': inputdeck.Print_path}},
+                    Unfolded = {'List_Unfolded' : List_Unfolded, 'WingFrameUnfolded' : WingFrameUnfolded.tolist()},
                     yf = yf.tolist(),
                     zf = zf.tolist(),
-                    Liste_Projection = [[Liste_projection[0][i].tolist() if type(Liste_projection[0][i]) is np.ndarray else Liste_projection[0][i] for i in range(len(Liste_projection[0][:]))]])
+                    Liste_Projection = Liste_Projection)
+
 
         with open(self.path+'/'+self.Project_name+'.yaml', 'w') as yaml_file:
             yaml.dump(data, yaml_file, default_flow_style=False)
@@ -66,14 +82,16 @@ class Project:
                 self.doc = yaml.load(f, Loader=yaml.UnsafeLoader)
                 self.Unfolded = self.doc['Unfolded']
                 self.List_Unfolded_0 = np.array(self.Unfolded['List_Unfolded'], dtype=object)
-                for i in range(len(self.List_Unfolded_0[0])):
-                    self.List_Unfolded_0[0][i] = np.array(self.List_Unfolded_0[0][i])
+                for j in range(self.deck.NbImage):
+                    for i in range(len(self.List_Unfolded_0[j])):
+                        self.List_Unfolded_0[j][i] = np.array(self.List_Unfolded_0[j][i])
                 self.WingFrameUnfolded = np.array(self.Unfolded['WingFrameUnfolded'])
                 self.yf = np.array(self.doc['yf'])
                 self.zf = np.array(self.doc['zf'])
                 self.projection = np.array(self.doc['Liste_Projection'], dtype=object)
-                for i in range(len(self.projection[0])):
-                    self.projection[0][i] = np.array(self.projection[0][i])
+                for j in range(self.deck.NbImage):
+                    for i in range(len(self.projection[j])):
+                        self.projection[j][i] = np.array(self.projection[j][i])
 
     def PlotReference(self):
         p = Plot()
