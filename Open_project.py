@@ -5,5 +5,4 @@ p.open(r'/Users/yvan/Desktop/ETS_montreal/Cours/E21/MTR892 - Projet technique/An
 p.PlotReference()
 p.Plot3D()
 p.PlotUnfolded()
-#Plot().PlotReference(p.deck, p.List_Sheets)
 p.Show_plots()
