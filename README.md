@@ -8,7 +8,7 @@
 
 ### Installation
 To begin, you have to download some packages listed in the requirements.txt file
-To use main.py, you also have to download Module folder.
+To use main.py, you also have to download Module folder. If you want to open anamorphosed speckle project, you can download the Open_project.py file
 
 ### deck.yaml initialisation
 
