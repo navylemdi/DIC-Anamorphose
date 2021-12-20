@@ -6,19 +6,21 @@ class Plot:
     
     Methods
     -------
-    set_aspect_equal_3d(ax)
+    set_aspect_equal_3d
         Fix equal aspect for 3D plots
-    Plot3D(deck, deck, Liste_Feuille, Liste_Projection, Camera)
+    Plot3D
         Plots in a 3D plot the camera position, speckle sheets position, anamorphic speckle sheets position
-    PlotReference(deck, Liste_Feuille)
+    PlotReference
         Plots all the input speckle sheets
-    PlotUnfolded(deck, Liste_Feuille, Liste_depliage, CadreAileUnfolded, yf, zf)
+    PlotUnfolded
         Plots the unfolded anamorphic speckles
+    Show_plots
+        Shows the plots
     """
     def __init__(self) -> None:
         print("Display of graphics..")
         pass
-    
+
     def set_aspect_equal_3d(self, ax):
         """
         Parameters

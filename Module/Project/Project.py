@@ -10,10 +10,48 @@ from Module.Plot.Plot import Plot
 import matplotlib.pyplot as plt
 
 class Project:
+    """A class to save and open anamorphose projects
+    
+    Methods
+    -------
+    save
+        Save all project's data
+    open
+        Load saved data
+    Plot3D
+        Plots in a 3D plot the camera position, speckle sheets position, anamorphic speckle sheets position
+    PlotReference
+        Plots all the input speckle sheets
+    PlotUnfolded
+        Plots the unfolded anamorphic speckles
+    Show_plots
+        Shows the plots
+    """
     def __init__(self):
         pass
 
     def save(self, Project_name, path, inputdeck, List_Unfolded_0, WingFrameUnfolded, yf, zf, InputListe_projection):
+        """
+        Parameters
+        ----------
+        Project_name : str
+            Name of the yaml project file
+        path : str
+            Path to the yaml project file
+        inputdeck : Module.deck.data.Deck
+            Deck of the current project
+        List_Unfolded_0 : list
+            List of position of unfolded speckle
+        WingFrameUnfolded : numpy.ndarray
+            Position of frame of the wing
+        yf : numpy.ndarray
+            Array of a y coordinate of mesh inside the wing frame
+        zf : numpy.ndarray
+            Array of a x coordinate of mesh inside the wing frame
+        InputListe_projection : list
+            List of position of projected speckle
+        """
+
         self.Project_name = Project_name
         self.path = path
         os.chdir(path)
@@ -68,6 +106,12 @@ class Project:
             yaml.dump(data, yaml_file, default_flow_style=False)
 
     def open(self, Project_path):
+        """
+        Parameters
+        ----------
+        Project_path : str
+            Path to the project data
+        """
         Project_Name = Project_path[Project_path.rfind('/')+1:]
         print('Open ' + Project_Name)
         self.Project_path = Project_path
@@ -94,16 +138,20 @@ class Project:
                         self.projection[j][i] = np.array(self.projection[j][i])
 
     def PlotReference(self):
+        """"""
         p = Plot()
         p.PlotReference(self.deck, self.List_Sheets)
 
     def Plot3D(self):
+        """"""
         p = Plot()
         p.Plot3D(self.deck, self.List_Sheets, self.projection, self.camera)
 
     def PlotUnfolded(self):
+        """"""
         p = Plot()
         p.PlotUnfolded(self.deck, self.List_Sheets, self.List_Unfolded_0, self.WingFrameUnfolded, self.yf, self.zf)
     
     def Show_plots(self):
+        """"""
         plt.show()
