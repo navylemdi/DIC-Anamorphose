@@ -1,5 +1,4 @@
 import yaml
-import subprocess
 import os
 import sys
 import numpy as np
@@ -56,8 +55,6 @@ class Project:
         self.path = path
         os.chdir(path)
         bashCommand = "touch " + Project_name + ".yaml"
-        process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
-        output, error = process.communicate()
         print("save project " + Project_name)
         Liste_Projection = InputListe_projection.copy()
         for i in range(inputdeck.NbImage):
