@@ -267,7 +267,7 @@ class Plot:
         for i in range (yf.shape[0]-1):
             for j in range (yf.shape[1]-1):
                 ax.text((yf[i,j]+yf[i,j+1])/2, (zf[i,j]+zf[i+1,j])/2, str((i+1)*(j+1)), color='black')
-        ax.set_title('Dépliée')
+        ax.set_title('Unfolded Speckle')
         ax.set_xlim(min(CadreAileUnfolded[:,1]), max(CadreAileUnfolded[:,1]))
         ax.set_ylim(min(CadreAileUnfolded[:,2]), max(CadreAileUnfolded[:,2]))
         ax.grid()
